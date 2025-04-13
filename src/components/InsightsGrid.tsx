@@ -1,5 +1,5 @@
 
-import { Lightbulb, Building, AlertTriangle, PuzzlePiece, DollarSign, TrendingUp } from "lucide-react";
+import { Lightbulb, Building, AlertTriangle, Puzzle, DollarSign, TrendingUp } from "lucide-react";
 import InsightCard from "./InsightCard";
 
 export interface Insights {
@@ -42,7 +42,7 @@ const InsightsGrid = ({ insights }: InsightsGridProps) => {
       <InsightCard
         title="Solution"
         content={insights.solution}
-        icon={<PuzzlePiece className="h-5 w-5 text-insight-solution" />}
+        icon={<Puzzle className="h-5 w-5 text-insight-solution" />}
         type="solution"
       />
       
