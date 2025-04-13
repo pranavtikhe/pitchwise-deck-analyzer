@@ -1,12 +1,16 @@
-
 import * as pdfjs from 'pdfjs-dist';
 import { supabase } from "@/integrations/supabase/client";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import { createWorker } from 'tesseract.js';
 
 // Set the worker source
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
+// Initialize Gemini API with the correct API key
+const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+
 /**
- * Extract text from a PDF file
+ * Extract text from a PDF file, including text in images
  */
 export const extractTextFromPdf = async (file: File): Promise<string> => {
   try {
@@ -22,17 +26,69 @@ export const extractTextFromPdf = async (file: File): Promise<string> => {
     // Initialize an empty string to store the text
     let fullText = '';
     
+    // Initialize Tesseract worker with minimal configuration
+    const worker = await createWorker();
+    
+    // Load English language data
+    await worker.loadLanguage('eng');
+    await worker.initialize('eng');
+    
     // Loop through each page and extract text
     for (let i = 1; i <= numPages; i++) {
+      console.log(`Processing page ${i} of ${numPages}...`);
       const page = await pdf.getPage(i);
+      
+      // Extract regular text content
       const textContent = await page.getTextContent();
       const pageText = textContent.items
         .map((item: any) => item.str)
         .join(' ');
+      
+      console.log(`Regular text extracted from page ${i}: ${pageText.length} characters`);
+      
+      // Extract images from the page using a more reliable method
+      let imageText = '';
+      
+      try {
+        // Create a canvas to render the page
+        const canvas = document.createElement('canvas');
+        const viewport = page.getViewport({ scale: 2.0 }); // Slightly lower scale to avoid memory issues
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
         
-      fullText += pageText + '\n\n';
+        // Render the page to the canvas
+        const renderContext = {
+          canvasContext: canvas.getContext('2d'),
+          viewport: viewport
+        };
+        
+        await page.render(renderContext).promise;
+        
+        // Perform OCR on the entire page
+        console.log(`Starting OCR on page ${i}...`);
+        const { data: { text } } = await worker.recognize(canvas);
+        if (text && text.trim()) {
+          imageText = text;
+          console.log(`OCR extracted ${imageText.length} characters from page ${i}`);
+        }
+      } catch (imgError) {
+        console.error(`Error processing page ${i} with OCR:`, imgError);
+      }
+      
+      // Combine regular text and OCR text
+      fullText += `--- PAGE ${i} ---\n`;
+      fullText += pageText + '\n';
+      if (imageText) {
+        fullText += `--- OCR TEXT FROM PAGE ${i} ---\n`;
+        fullText += imageText + '\n';
+      }
+      fullText += '\n\n';
     }
     
+    // Terminate the Tesseract worker
+    await worker.terminate();
+    
+    console.log(`Total extracted text: ${fullText.length} characters`);
     return fullText;
   } catch (error) {
     console.error('Error extracting text from PDF:', error);
@@ -57,51 +113,90 @@ export interface GeminiResponse {
  */
 export const analyzeWithBackend = async (text: string): Promise<GeminiResponse> => {
   try {
-    // Mock response for development since the backend endpoint is not available
-    // This avoids the JSON parsing error while still providing a functional experience
-    return {
-      innovation: "This pitch deck presents an innovative approach to streamlining document analysis using AI technology.",
-      industry: "Technology / AI / Business Intelligence",
-      problem: "Companies struggle to efficiently extract and analyze key insights from large volumes of documents and pitch decks.",
-      solution: "An AI-powered platform that automatically extracts, categorizes, and presents key business metrics and insights from uploaded documents.",
-      funding: "Seeking $2 million in seed funding to expand the development team and enhance the AI models.",
-      market: "The global business intelligence market is projected to reach $33.3 billion by 2025, with a growing segment focused on document analysis automation."
-    };
+    // Initialize the model with the correct model name
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+
+    // Create the prompt for analysis
+    const prompt = `Analyze the following pitch deck text and extract key information in a structured format. 
+    Focus on these aspects:
+    1. Innovation: What is the main innovative aspect?
+    2. Industry: Which industry or sector does this belong to?
+    3. Problem: What problem does it solve?
+    4. Solution: How does it solve the problem?
+    5. Funding: What are the funding requirements or financial aspects?
+    6. Market: What is the market size and opportunity?
+
+    The text includes both regular PDF text and OCR-extracted text from images. Please analyze ALL content thoroughly.
     
-    /* Commented out the actual API call until the backend endpoint is available
-    // In a real implementation, this would be your actual backend endpoint
-    const apiUrl = "/api/analyze-pitch-deck";
+    Here's the pitch deck text:
+    ${text}
+
+    Please provide the analysis in a JSON format with these exact keys: innovation, industry, problem, solution, funding, market.
+    Return ONLY the JSON object without any markdown formatting or code blocks.`;
+
+    // Generate content with proper error handling
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const analysisText = response.text();
     
-    // Make the API request to your backend
-    const response = await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ text: text.substring(0, 14000) })
-    });
-    
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(`Backend API error: ${errorData.message || 'Unknown error'}`);
-    }
-    
-    // Parse the JSON response directly from the backend
-    const analysisResults = await response.json();
-    
-    // Validate that all required fields exist
-    const requiredFields = ['innovation', 'industry', 'problem', 'solution', 'funding', 'market'];
-    for (const field of requiredFields) {
-      if (!analysisResults[field]) {
-        analysisResults[field] = "Information not found in the pitch deck.";
+    try {
+      // Clean the response text to handle markdown formatting
+      let cleanJsonText = analysisText;
+      
+      // Remove markdown code block syntax if present
+      cleanJsonText = cleanJsonText.replace(/```json\s*/g, '');
+      cleanJsonText = cleanJsonText.replace(/```\s*$/g, '');
+      
+      // Try to parse the cleaned response as JSON
+      const parsedResponse = JSON.parse(cleanJsonText);
+      
+      // Validate and return the response
+      return {
+        innovation: parsedResponse.innovation || "Information not found in the pitch deck.",
+        industry: parsedResponse.industry || "Information not found in the pitch deck.",
+        problem: parsedResponse.problem || "Information not found in the pitch deck.",
+        solution: parsedResponse.solution || "Information not found in the pitch deck.",
+        funding: parsedResponse.funding || "Information not found in the pitch deck.",
+        market: parsedResponse.market || "Information not found in the pitch deck."
+      };
+    } catch (parseError) {
+      console.error('Error parsing Gemini response:', parseError);
+      console.log('Raw response:', analysisText);
+      
+      // If JSON parsing fails, try to extract information using regex
+      try {
+        // Attempt to extract JSON from the response using regex
+        const jsonMatch = analysisText.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const extractedJson = jsonMatch[0];
+          const parsedResponse = JSON.parse(extractedJson);
+          
+          return {
+            innovation: parsedResponse.innovation || "Information not found in the pitch deck.",
+            industry: parsedResponse.industry || "Information not found in the pitch deck.",
+            problem: parsedResponse.problem || "Information not found in the pitch deck.",
+            solution: parsedResponse.solution || "Information not found in the pitch deck.",
+            funding: parsedResponse.funding || "Information not found in the pitch deck.",
+            market: parsedResponse.market || "Information not found in the pitch deck."
+          };
+        }
+      } catch (extractionError) {
+        console.error('Error extracting JSON from response:', extractionError);
       }
+      
+      // If all parsing attempts fail, return a structured error
+      return {
+        innovation: "Error processing the response. Please try again.",
+        industry: "Error processing the response. Please try again.",
+        problem: "Error processing the response. Please try again.",
+        solution: "Error processing the response. Please try again.",
+        funding: "Error processing the response. Please try again.",
+        market: "Error processing the response. Please try again."
+      };
     }
-    
-    return analysisResults as GeminiResponse;
-    */
   } catch (error) {
-    console.error('Error analyzing with backend:', error);
-    throw error;
+    console.error('Error analyzing with Gemini:', error);
+    throw new Error('Failed to analyze the pitch deck. Please try again.');
   }
 };
 
