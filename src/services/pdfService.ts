@@ -1,5 +1,6 @@
 
 import * as pdfjs from 'pdfjs-dist';
+import { supabase } from "@/integrations/supabase/client";
 
 // Set the worker source
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
@@ -88,5 +89,71 @@ export const analyzeWithBackend = async (text: string): Promise<GeminiResponse> 
   } catch (error) {
     console.error('Error analyzing with backend:', error);
     throw error;
+  }
+};
+
+/**
+ * Save insights to Supabase
+ */
+export const saveInsightsToSupabase = async (
+  insights: GeminiResponse, 
+  fileName: string, 
+  companyName: string
+): Promise<void> => {
+  try {
+    const { error } = await supabase
+      .from('pitch_insights')
+      .insert({
+        innovation: insights.innovation,
+        industry: insights.industry,
+        problem: insights.problem,
+        solution: insights.solution,
+        funding: insights.funding,
+        market: insights.market,
+        company_name: companyName,
+        file_name: fileName
+      });
+    
+    if (error) throw error;
+  } catch (error) {
+    console.error('Error saving insights to database:', error);
+    throw new Error('Failed to save analysis results to database');
+  }
+};
+
+/**
+ * Fetch insights from Supabase
+ */
+export const fetchInsightsFromSupabase = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('pitch_insights')
+      .select('*')
+      .order('created_at', { ascending: false });
+      
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Error fetching insights from database:', error);
+    throw new Error('Failed to load analysis history');
+  }
+};
+
+/**
+ * Fetch a single insight by ID
+ */
+export const fetchInsightById = async (id: string) => {
+  try {
+    const { data, error } = await supabase
+      .from('pitch_insights')
+      .select('*')
+      .eq('id', id)
+      .single();
+      
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error('Error fetching insight from database:', error);
+    throw new Error('Failed to load insight details');
   }
 };

@@ -1,17 +1,22 @@
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import FileUpload from "@/components/FileUpload";
 import InsightsGrid, { Insights } from "@/components/InsightsGrid";
-import { extractTextFromPdf, analyzeWithBackend } from "@/services/pdfService";
+import { extractTextFromPdf, analyzeWithBackend, saveInsightsToSupabase } from "@/services/pdfService";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/sonner";
-import { Lightbulb, RefreshCw } from "lucide-react";
+import { Lightbulb, RefreshCw, History, Save } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 const Index = () => {
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [insights, setInsights] = useState<Insights | null>(null);
+  const [companyName, setCompanyName] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const navigate = useNavigate();
 
   const handleFileSelected = (selectedFile: File) => {
     setFile(selectedFile);
@@ -46,6 +51,33 @@ const Index = () => {
     }
   };
 
+  const handleSaveInsights = async () => {
+    if (!insights || !file) {
+      toast.error("No analysis to save");
+      return;
+    }
+    
+    if (!companyName.trim()) {
+      toast.error("Please enter a company name");
+      return;
+    }
+    
+    try {
+      setIsSaving(true);
+      await saveInsightsToSupabase(insights, file.name, companyName);
+      toast.success("Analysis saved successfully");
+    } catch (error) {
+      console.error("Error saving insights:", error);
+      toast.error("Failed to save analysis");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const goToHistory = () => {
+    navigate("/history");
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -59,6 +91,12 @@ const Index = () => {
             Upload your pitch deck and get instant insights on innovation, industry fit, 
             problem statement, solution viability, funding needs, and market potential.
           </p>
+          <div className="mt-4">
+            <Button variant="outline" onClick={goToHistory} className="flex items-center">
+              <History className="mr-2 h-4 w-4" />
+              View Analysis History
+            </Button>
+          </div>
         </section>
         
         <section className="mb-12">
@@ -67,16 +105,41 @@ const Index = () => {
 
         {insights && (
           <section className="mb-12">
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
               <h3 className="text-2xl font-semibold flex items-center gap-2">
                 <Lightbulb className="h-5 w-5 text-purple" />
                 Analysis Results
               </h3>
               
-              <Button variant="outline" onClick={handleReanalyze} disabled={isLoading}>
-                <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
-                Reanalyze
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                <div className="flex-1 sm:flex-initial">
+                  <Input 
+                    placeholder="Enter company name to save"
+                    value={companyName}
+                    onChange={(e) => setCompanyName(e.target.value)}
+                    className="w-full sm:w-auto"
+                  />
+                </div>
+                
+                <div className="flex gap-2">
+                  <Button 
+                    variant="outline" 
+                    onClick={handleReanalyze} 
+                    disabled={isLoading}
+                  >
+                    <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
+                    Reanalyze
+                  </Button>
+                  
+                  <Button 
+                    onClick={handleSaveInsights} 
+                    disabled={isSaving || !companyName.trim()}
+                  >
+                    <Save className={`mr-2 h-4 w-4 ${isSaving ? "animate-spin" : ""}`} />
+                    {isSaving ? "Saving..." : "Save Analysis"}
+                  </Button>
+                </div>
+              </div>
             </div>
             
             <InsightsGrid insights={insights} />

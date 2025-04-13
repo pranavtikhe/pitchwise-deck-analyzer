@@ -9,7 +9,54 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      pitch_insights: {
+        Row: {
+          company_name: string
+          created_at: string
+          file_name: string | null
+          fund_value: number | null
+          funding: string | null
+          id: string
+          industry: string | null
+          innovation: string | null
+          market: string | null
+          problem: string | null
+          solution: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          company_name: string
+          created_at?: string
+          file_name?: string | null
+          fund_value?: number | null
+          funding?: string | null
+          id?: string
+          industry?: string | null
+          innovation?: string | null
+          market?: string | null
+          problem?: string | null
+          solution?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          company_name?: string
+          created_at?: string
+          file_name?: string | null
+          fund_value?: number | null
+          funding?: string | null
+          id?: string
+          industry?: string | null
+          innovation?: string | null
+          market?: string | null
+          problem?: string | null
+          solution?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
