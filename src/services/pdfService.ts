@@ -52,91 +52,41 @@ export interface GeminiResponse {
 }
 
 /**
- * Analyze text using Google Gemini API
+ * Analyze text using backend service (which will use Google Gemini API)
  */
-export const analyzeWithGemini = async (text: string, apiKey: string): Promise<GeminiResponse> => {
+export const analyzeWithBackend = async (text: string): Promise<GeminiResponse> => {
   try {
-    // Base URL for Gemini API
-    const apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
+    // In a real implementation, this would be your actual backend endpoint
+    const apiUrl = "/api/analyze-pitch-deck";
     
-    // Create the prompt for Gemini
-    const prompt = `
-      Analyze the following pitch deck text and extract key business insights. 
-      Return the analysis as a JSON object with the following structure:
-      {
-        "innovation": "Brief description of the innovative aspects",
-        "industry": "The industry sector and relevant verticals",
-        "problem": "Key problem(s) the business is trying to solve",
-        "solution": "How the business solves the identified problems",
-        "funding": "Information about current funding, investment needs, or financial projections",
-        "market": "Target market information, market size, growth potential"
-      }
-      
-      Make each section concise (2-3 sentences) but informative. Ensure the response is strictly JSON formatted.
-      
-      Pitch deck text:
-      ${text.substring(0, 14000)}
-    `;
-    
-    // Prepare the request body
-    const requestBody = {
-      contents: [
-        {
-          parts: [
-            {
-              text: prompt
-            }
-          ]
-        }
-      ],
-      generationConfig: {
-        temperature: 0.2,
-        maxOutputTokens: 1024
-      }
-    };
-    
-    // Make the API request
-    const response = await fetch(`${apiUrl}?key=${apiKey}`, {
+    // Make the API request to your backend
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(requestBody)
+      body: JSON.stringify({ text: text.substring(0, 14000) })
     });
     
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(`Gemini API error: ${errorData.error?.message || 'Unknown error'}`);
+      throw new Error(`Backend API error: ${errorData.message || 'Unknown error'}`);
     }
     
-    const responseData = await response.json();
+    // Parse the JSON response directly from the backend
+    const analysisResults = await response.json();
     
-    // Extract the JSON response from the text
-    const responseText = responseData.candidates[0]?.content?.parts[0]?.text || '';
-    
-    // Try to parse the JSON from the response
-    try {
-      // Find JSON content within the response
-      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) throw new Error('No JSON found in response');
-      
-      const jsonData = JSON.parse(jsonMatch[0]);
-      
-      // Validate that all required fields exist
-      const requiredFields = ['innovation', 'industry', 'problem', 'solution', 'funding', 'market'];
-      for (const field of requiredFields) {
-        if (!jsonData[field]) {
-          jsonData[field] = "Information not found in the pitch deck.";
-        }
+    // Validate that all required fields exist
+    const requiredFields = ['innovation', 'industry', 'problem', 'solution', 'funding', 'market'];
+    for (const field of requiredFields) {
+      if (!analysisResults[field]) {
+        analysisResults[field] = "Information not found in the pitch deck.";
       }
-      
-      return jsonData as GeminiResponse;
-    } catch (parseError) {
-      console.error('Error parsing Gemini response:', parseError);
-      throw new Error('Failed to parse the analysis results. Please try again.');
     }
+    
+    return analysisResults as GeminiResponse;
   } catch (error) {
-    console.error('Error analyzing with Gemini:', error);
+    console.error('Error analyzing with backend:', error);
     throw error;
   }
 };

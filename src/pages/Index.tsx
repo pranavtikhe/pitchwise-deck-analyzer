@@ -3,8 +3,7 @@ import { useState } from "react";
 import Header from "@/components/Header";
 import FileUpload from "@/components/FileUpload";
 import InsightsGrid, { Insights } from "@/components/InsightsGrid";
-import ApiKeyInput from "@/components/ApiKeyInput";
-import { extractTextFromPdf, analyzeWithGemini } from "@/services/pdfService";
+import { extractTextFromPdf, analyzeWithBackend } from "@/services/pdfService";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/sonner";
 import { Lightbulb, RefreshCw } from "lucide-react";
@@ -13,28 +12,13 @@ const Index = () => {
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [insights, setInsights] = useState<Insights | null>(null);
-  const [apiKey, setApiKey] = useState<string>("");
 
   const handleFileSelected = (selectedFile: File) => {
     setFile(selectedFile);
-    if (apiKey) {
-      processFile(selectedFile, apiKey);
-    }
+    processFile(selectedFile);
   };
 
-  const handleKeySubmit = (key: string) => {
-    setApiKey(key);
-    if (file) {
-      processFile(file, key);
-    }
-  };
-
-  const processFile = async (pdfFile: File, key: string) => {
-    if (!key) {
-      toast.error("Please enter your Gemini API key first");
-      return;
-    }
-
+  const processFile = async (pdfFile: File) => {
     setIsLoading(true);
     setInsights(null);
 
@@ -42,8 +26,8 @@ const Index = () => {
       // Extract text from PDF
       const extractedText = await extractTextFromPdf(pdfFile);
       
-      // Analyze the text with Gemini API
-      const analysisResults = await analyzeWithGemini(extractedText, key);
+      // Analyze the text with the backend service
+      const analysisResults = await analyzeWithBackend(extractedText);
       
       // Set the insights
       setInsights(analysisResults);
@@ -57,8 +41,8 @@ const Index = () => {
   };
 
   const handleReanalyze = () => {
-    if (file && apiKey) {
-      processFile(file, apiKey);
+    if (file) {
+      processFile(file);
     }
   };
 
@@ -75,10 +59,6 @@ const Index = () => {
             Upload your pitch deck and get instant insights on innovation, industry fit, 
             problem statement, solution viability, funding needs, and market potential.
           </p>
-        </section>
-        
-        <section className="mb-12">
-          <ApiKeyInput onKeySubmit={handleKeySubmit} isLoading={isLoading} />
         </section>
         
         <section className="mb-12">
@@ -123,7 +103,7 @@ const Index = () => {
               </div>
               <h4 className="text-lg font-medium mb-2">AI Analysis</h4>
               <p className="text-sm text-muted-foreground">
-                Our AI powered by Google Gemini extracts and analyzes key business insights.
+                Our secure backend powered by Google Gemini extracts and analyzes key business insights.
               </p>
             </div>
             
