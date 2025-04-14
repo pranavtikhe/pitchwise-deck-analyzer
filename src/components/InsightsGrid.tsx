@@ -1,16 +1,9 @@
-
 import { Lightbulb, Building, AlertTriangle, Puzzle, DollarSign, TrendingUp } from "lucide-react";
 import InsightCard from "./InsightCard";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { GeminiResponse } from "@/services/pdfService";
 
-export interface Insights {
-  innovation: string;
-  industry: string;
-  problem: string;
-  solution: string;
-  funding: string;
-  market: string;
-}
+export type Insights = GeminiResponse;
 
 interface InsightsGridProps {
   insights: Insights;
