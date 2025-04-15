@@ -2,6 +2,7 @@ import * as pdfjs from 'pdfjs-dist';
 import { supabase } from "@/integrations/supabase/client";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { createWorker } from 'tesseract.js';
+import { analyzePitchDeck } from './apiService';
 
 // Import Supabase URL and key
 const SUPABASE_URL = "https://objyddwihcupdeflwcty.supabase.co";
@@ -104,39 +105,52 @@ export const extractTextFromPdf = async (file: File): Promise<string> => {
  * Interface for the response from Gemini API
  */
 export interface GeminiResponse {
-  innovation: string;
+  industry_type: string;
+  pitch_clarity: number;
+  investment_score: number;
+  market_position: string;
+  company_overview: {
+    company_name: string;
   industry: string;
-  problem: string;
-  solution: string;
-  funding: string;
-  market: string;
-  strengths: string;
-  weaknesses: string;
-  competitors: string;
-  funding_history: string;
-  expert_opinions: string;
-  key_questions: string;
-  suggested_improvements: string;
+    business_model: string;
+    key_offerings: string;
+    market_position: string;
+    founded_on: string;
+  };
+  strengths: string[];
+  weaknesses: string[];
+  funding_history: {
+    rounds: {
+      type: string;
+      amount: string;
+      key_investors: string[];
+    }[];
+  };
+  proposed_deal_structure: {
+    investment_amount: string;
+    valuation_cap: string;
+    equity_stake: string;
+    anti_dilution_protection: string;
+    board_seat: string;
+    liquidation_preference: string;
+    vesting_schedule: string;
+    other_terms: string;
+  };
+  key_questions: {
+    market_strategy: string[];
+    user_relation: string[];
+    regulatory_compliance: string[];
+  };
+  final_verdict: {
+    product_viability: number;
+    market_potential: number;
+    sustainability: number;
+    innovation: number;
+    exit_potential: number;
+    risk_factor: number;
+    competitive_edge: number;
+  };
   key_insights: string;
-  market_comparison: string;
-  exit_potential: string;
-  overall_reputation: string;
-  ratings: {
-    innovation_rating: number;
-    market_potential_rating: number;
-    competitive_advantage_rating: number;
-    financial_strength_rating: number;
-    team_rating: number;
-    overall_rating: number;
-  };
-  rating_insights: {
-    innovation_insights: string;
-    market_potential_insights: string;
-    competitive_advantage_insights: string;
-    financial_strength_insights: string;
-    team_insights: string;
-    overall_insights: string;
-  };
 }
 
 /**
@@ -144,440 +158,62 @@ export interface GeminiResponse {
  */
 export const analyzeWithBackend = async (text: string): Promise<GeminiResponse> => {
   try {
-    // Initialize the model with the correct model name
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
-
-    // Create the prompt for analysis
-    const prompt = `Analyze the following pitch deck text and extract key information in a structured format. 
-    Focus on these aspects:
-    1. Innovation: What is the main innovative aspect?
-    2. Industry: Which industry or sector does this belong to?
-    3. Problem: What problem does it solve?
-    4. Solution: How does it solve the problem?
-    5. Funding: What are the funding requirements or financial aspects?
-    6. Market: What is the market size and opportunity?
-    7. Strengths: What are the key strengths of this business/idea?
-    8. Weaknesses: What are the potential weaknesses or risks?
-    9. Competitors: Who are the main competitors and how does this compare?
-    10. Funding History: What is the company's funding history and trajectory?
-    11. Expert Opinions: What do industry experts or potential investors think?
-    12. Key Questions: What critical questions should be addressed?
-    13. Suggested Improvements: What improvements could strengthen the pitch?
-    14. Key Insights: What are the most important takeaways?
-    15. Market Comparison: How does this compare to market standards?
-    16. Exit Potential: What are the potential exit strategies and valuations?
-    17. Overall Reputation: What is the overall reputation and perception?
-
-    Additionally, provide ratings (on a scale of 1-10) for:
-    - Innovation Rating: How innovative is the solution?
-    - Market Potential Rating: How large is the market opportunity?
-    - Competitive Advantage Rating: How strong is the competitive position?
-    - Financial Strength Rating: How strong is the financial position?
-    - Team Rating: How strong is the team?
-    - Overall Rating: Overall assessment of the pitch
-
-    For each rating, provide a brief explanation of why you assigned that score.
+    const data = await analyzePitchDeck(text);
     
-    Also, analyze the relationship between these ratings and provide insights on:
-    - Which areas are strongest and why
-    - Which areas need improvement and why
-    - How the ratings compare to industry standards
-    - What specific actions could improve the ratings
-    - How the ratings affect the overall investment potential
+    // Ensure all required fields are present
+    const defaultResponse: GeminiResponse = {
+      industry_type: data.industry_type || 'Not Specified',
+      pitch_clarity: data.pitch_clarity || 5,
+      investment_score: data.investment_score || 5,
+      market_position: data.market_position || 'Not Specified',
+      company_overview: {
+        company_name: data.company_overview?.company_name || 'Not Specified',
+        industry: data.company_overview?.industry || 'Not Specified',
+        business_model: data.company_overview?.business_model || 'Not Specified',
+        key_offerings: data.company_overview?.key_offerings || 'Not Specified',
+        market_position: data.company_overview?.market_position || 'Not Specified',
+        founded_on: data.company_overview?.founded_on || 'Not Specified',
+      },
+      strengths: data.strengths || ['Not Specified'],
+      weaknesses: data.weaknesses || ['Not Specified'],
+      funding_history: {
+        rounds: data.funding_history?.rounds || [{
+          type: 'Seed',
+          amount: 'Not Specified',
+          key_investors: ['Not Specified']
+        }]
+      },
+      proposed_deal_structure: {
+        investment_amount: data.proposed_deal_structure?.investment_amount || 'Not Specified',
+        valuation_cap: data.proposed_deal_structure?.valuation_cap || 'Not Specified',
+        equity_stake: data.proposed_deal_structure?.equity_stake || 'Not Specified',
+        anti_dilution_protection: data.proposed_deal_structure?.anti_dilution_protection || 'Not Specified',
+        board_seat: data.proposed_deal_structure?.board_seat || 'Not Specified',
+        liquidation_preference: data.proposed_deal_structure?.liquidation_preference || 'Not Specified',
+        vesting_schedule: data.proposed_deal_structure?.vesting_schedule || 'Not Specified',
+        other_terms: data.proposed_deal_structure?.other_terms || 'Not Specified',
+      },
+      key_questions: {
+        market_strategy: data.key_questions?.market_strategy || ['Not Specified'],
+        user_relation: data.key_questions?.user_relation || ['Not Specified'],
+        regulatory_compliance: data.key_questions?.regulatory_compliance || ['Not Specified'],
+      },
+      final_verdict: {
+        product_viability: data.final_verdict?.product_viability || 5,
+        market_potential: data.final_verdict?.market_potential || 5,
+        sustainability: data.final_verdict?.sustainability || 5,
+        innovation: data.final_verdict?.innovation || 5,
+        exit_potential: data.final_verdict?.exit_potential || 5,
+        risk_factor: data.final_verdict?.risk_factor || 5,
+        competitive_edge: data.final_verdict?.competitive_edge || 5,
+      },
+      key_insights: data.key_insights || 'Not Specified',
+    };
 
-    The text includes both regular PDF text and OCR-extracted text from images. Please analyze ALL content thoroughly.
-    
-    Here's the pitch deck text:
-    ${text}
-
-    Please provide the analysis in a JSON format with these exact keys: innovation, industry, problem, solution, funding, market, strengths, weaknesses, competitors, funding_history, expert_opinions, key_questions, suggested_improvements, key_insights, market_comparison, exit_potential, overall_reputation, ratings (which should be an object with the rating keys), and rating_insights (which should be an object with keys for each rating category explaining the score and providing recommendations).
-    Return ONLY the JSON object without any markdown formatting or code blocks.
-    Ensure the JSON is properly formatted with no trailing commas or syntax errors.`;
-
-    // Generate content with proper error handling
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const analysisText = response.text();
-    
-    try {
-      // Clean the response text to handle markdown formatting
-      let cleanJsonText = analysisText;
-      
-      // Remove markdown code block syntax if present
-      cleanJsonText = cleanJsonText.replace(/```json\s*/g, '');
-      cleanJsonText = cleanJsonText.replace(/```\s*$/g, '');
-      
-      // Try to parse the cleaned response as JSON
-      const parsedResponse = JSON.parse(cleanJsonText);
-      
-      // Check if expert_opinions is missing or contains default text
-      let expertOpinions = parsedResponse.expert_opinions || "Information not found in the pitch deck.";
-      
-      // If expert opinions are missing or contain default text, generate them based on other data
-      if (expertOpinions === "Information not found in the pitch deck." || 
-          expertOpinions === "No expert opinions found in the pitch deck.") {
-        
-        // Create a follow-up prompt to generate expert opinions based on the available data
-        const expertPrompt = `Based on the following pitch deck analysis, generate expert opinions from industry experts and potential investors. 
-        Consider the innovation, market potential, competitive advantage, financial strength, and team aspects.
-        
-        Innovation: ${parsedResponse.innovation || "Not available"}
-        Industry: ${parsedResponse.industry || "Not available"}
-        Problem: ${parsedResponse.problem || "Not available"}
-        Solution: ${parsedResponse.solution || "Not available"}
-        Market: ${parsedResponse.market || "Not available"}
-        Strengths: ${parsedResponse.strengths || "Not available"}
-        Weaknesses: ${parsedResponse.weaknesses || "Not available"}
-        Competitors: ${parsedResponse.competitors || "Not available"}
-        
-        Ratings:
-        - Innovation: ${parsedResponse.ratings?.innovation_rating || 5}/10
-        - Market Potential: ${parsedResponse.ratings?.market_potential_rating || 5}/10
-        - Competitive Advantage: ${parsedResponse.ratings?.competitive_advantage_rating || 5}/10
-        - Financial Strength: ${parsedResponse.ratings?.financial_strength_rating || 5}/10
-        - Team: ${parsedResponse.ratings?.team_rating || 5}/10
-        
-        Please provide expert opinions from 3-5 different perspectives (e.g., industry expert, venture capitalist, market analyst, etc.) 
-        on the potential of this business based on the pitch deck. Include both positive aspects and areas of concern.
-        Format the response as a JSON object with a single key "expert_opinions" containing the generated opinions.`;
-        
-        try {
-          // Generate expert opinions
-          const expertResult = await model.generateContent(expertPrompt);
-          const expertResponse = await expertResult.response;
-          const expertText = expertResponse.text();
-          
-          // Clean and parse the expert opinions
-          let cleanExpertText = expertText.replace(/```json\s*/g, '').replace(/```\s*$/g, '');
-          
-          try {
-            const parsedExpertResponse = JSON.parse(cleanExpertText);
-            expertOpinions = parsedExpertResponse.expert_opinions || expertOpinions;
-          } catch (expertParseError) {
-            console.error('Error parsing expert opinions response:', expertParseError);
-            // If parsing fails, try to extract the expert opinions using regex
-            const expertMatch = cleanExpertText.match(/"expert_opinions"\s*:\s*"([^"]+)"/);
-            if (expertMatch && expertMatch[1]) {
-              expertOpinions = expertMatch[1];
-            }
-          }
-        } catch (expertError) {
-          console.error('Error generating expert opinions:', expertError);
-          // Continue with the default expert opinions if generation fails
-        }
-      }
-      
-      // Validate and return the response
-      return {
-        innovation: parsedResponse.innovation || "Information not found in the pitch deck.",
-        industry: parsedResponse.industry || "Information not found in the pitch deck.",
-        problem: parsedResponse.problem || "Information not found in the pitch deck.",
-        solution: parsedResponse.solution || "Information not found in the pitch deck.",
-        funding: parsedResponse.funding || "Information not found in the pitch deck.",
-        market: parsedResponse.market || "Information not found in the pitch deck.",
-        strengths: parsedResponse.strengths || "Information not found in the pitch deck.",
-        weaknesses: parsedResponse.weaknesses || "Information not found in the pitch deck.",
-        competitors: parsedResponse.competitors || "Information not found in the pitch deck.",
-        funding_history: parsedResponse.funding_history || "Information not found in the pitch deck.",
-        expert_opinions: expertOpinions,
-        key_questions: parsedResponse.key_questions || "Information not found in the pitch deck.",
-        suggested_improvements: parsedResponse.suggested_improvements || "Information not found in the pitch deck.",
-        key_insights: parsedResponse.key_insights || "Information not found in the pitch deck.",
-        market_comparison: parsedResponse.market_comparison || "Information not found in the pitch deck.",
-        exit_potential: parsedResponse.exit_potential || "Information not found in the pitch deck.",
-        overall_reputation: parsedResponse.overall_reputation || "Information not found in the pitch deck.",
-        ratings: parsedResponse.ratings || {
-          innovation_rating: 5,
-          market_potential_rating: 5,
-          competitive_advantage_rating: 5,
-          financial_strength_rating: 5,
-          team_rating: 5,
-          overall_rating: 5
-        },
-        rating_insights: parsedResponse.rating_insights || {
-          innovation_insights: "No insights provided for innovation rating.",
-          market_potential_insights: "No insights provided for market potential rating.",
-          competitive_advantage_insights: "No insights provided for competitive advantage rating.",
-          financial_strength_insights: "No insights provided for financial strength rating.",
-          team_insights: "No insights provided for team rating.",
-          overall_insights: "No insights provided for overall rating."
-        }
-      };
-    } catch (parseError) {
-      console.error('Error parsing Gemini response:', parseError);
-      console.log('Raw response:', analysisText);
-      
-      // If JSON parsing fails, try to extract information using regex
-      try {
-        // Attempt to extract JSON from the response using regex
-        const jsonMatch = analysisText.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-          const extractedJson = jsonMatch[0];
-          
-          // Try to fix common JSON syntax errors
-          let fixedJson = extractedJson
-            // Fix trailing commas in objects
-            .replace(/,(\s*[}\]])/g, '$1')
-            // Fix missing quotes around property names
-            .replace(/([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)\s*:/g, '$1"$2":')
-            // Fix single quotes around string values
-            .replace(/'([^']*)'/g, '"$1"');
-          
-          try {
-            const parsedResponse = JSON.parse(fixedJson);
-            
-            // Check if expert_opinions is missing or contains default text
-            let expertOpinions = parsedResponse.expert_opinions || "Information not found in the pitch deck.";
-            
-            // If expert opinions are missing or contain default text, generate them based on other data
-            if (expertOpinions === "Information not found in the pitch deck." || 
-                expertOpinions === "No expert opinions found in the pitch deck.") {
-              
-              // Create a follow-up prompt to generate expert opinions based on the available data
-              const expertPrompt = `Based on the following pitch deck analysis, generate expert opinions from industry experts and potential investors. 
-              Consider the innovation, market potential, competitive advantage, financial strength, and team aspects.
-              
-              Innovation: ${parsedResponse.innovation || "Not available"}
-              Industry: ${parsedResponse.industry || "Not available"}
-              Problem: ${parsedResponse.problem || "Not available"}
-              Solution: ${parsedResponse.solution || "Not available"}
-              Market: ${parsedResponse.market || "Not available"}
-              Strengths: ${parsedResponse.strengths || "Not available"}
-              Weaknesses: ${parsedResponse.weaknesses || "Not available"}
-              Competitors: ${parsedResponse.competitors || "Not available"}
-              
-              Ratings:
-              - Innovation: ${parsedResponse.ratings?.innovation_rating || 5}/10
-              - Market Potential: ${parsedResponse.ratings?.market_potential_rating || 5}/10
-              - Competitive Advantage: ${parsedResponse.ratings?.competitive_advantage_rating || 5}/10
-              - Financial Strength: ${parsedResponse.ratings?.financial_strength_rating || 5}/10
-              - Team: ${parsedResponse.ratings?.team_rating || 5}/10
-              
-              Please provide expert opinions from 3-5 different perspectives (e.g., industry expert, venture capitalist, market analyst, etc.) 
-              on the potential of this business based on the pitch deck. Include both positive aspects and areas of concern.
-              Format the response as a JSON object with a single key "expert_opinions" containing the generated opinions.`;
-              
-              try {
-                // Generate expert opinions
-                const expertResult = await model.generateContent(expertPrompt);
-                const expertResponse = await expertResult.response;
-                const expertText = expertResponse.text();
-                
-                // Clean and parse the expert opinions
-                let cleanExpertText = expertText.replace(/```json\s*/g, '').replace(/```\s*$/g, '');
-                
-                try {
-                  const parsedExpertResponse = JSON.parse(cleanExpertText);
-                  expertOpinions = parsedExpertResponse.expert_opinions || expertOpinions;
-                } catch (expertParseError) {
-                  console.error('Error parsing expert opinions response:', expertParseError);
-                  // If parsing fails, try to extract the expert opinions using regex
-                  const expertMatch = cleanExpertText.match(/"expert_opinions"\s*:\s*"([^"]+)"/);
-                  if (expertMatch && expertMatch[1]) {
-                    expertOpinions = expertMatch[1];
-                  }
-                }
-              } catch (expertError) {
-                console.error('Error generating expert opinions:', expertError);
-                // Continue with the default expert opinions if generation fails
-              }
-            }
-            
-            return {
-              innovation: parsedResponse.innovation || "Information not found in the pitch deck.",
-              industry: parsedResponse.industry || "Information not found in the pitch deck.",
-              problem: parsedResponse.problem || "Information not found in the pitch deck.",
-              solution: parsedResponse.solution || "Information not found in the pitch deck.",
-              funding: parsedResponse.funding || "Information not found in the pitch deck.",
-              market: parsedResponse.market || "Information not found in the pitch deck.",
-              strengths: parsedResponse.strengths || "Information not found in the pitch deck.",
-              weaknesses: parsedResponse.weaknesses || "Information not found in the pitch deck.",
-              competitors: parsedResponse.competitors || "Information not found in the pitch deck.",
-              funding_history: parsedResponse.funding_history || "Information not found in the pitch deck.",
-              expert_opinions: expertOpinions,
-              key_questions: parsedResponse.key_questions || "Information not found in the pitch deck.",
-              suggested_improvements: parsedResponse.suggested_improvements || "Information not found in the pitch deck.",
-              key_insights: parsedResponse.key_insights || "Information not found in the pitch deck.",
-              market_comparison: parsedResponse.market_comparison || "Information not found in the pitch deck.",
-              exit_potential: parsedResponse.exit_potential || "Information not found in the pitch deck.",
-              overall_reputation: parsedResponse.overall_reputation || "Information not found in the pitch deck.",
-              ratings: parsedResponse.ratings || {
-                innovation_rating: 5,
-                market_potential_rating: 5,
-                competitive_advantage_rating: 5,
-                financial_strength_rating: 5,
-                team_rating: 5,
-                overall_rating: 5
-              },
-              rating_insights: parsedResponse.rating_insights || {
-                innovation_insights: "No insights provided for innovation rating.",
-                market_potential_insights: "No insights provided for market potential rating.",
-                competitive_advantage_insights: "No insights provided for competitive advantage rating.",
-                financial_strength_insights: "No insights provided for financial strength rating.",
-                team_insights: "No insights provided for team rating.",
-                overall_insights: "No insights provided for overall rating."
-              }
-            };
-          } catch (fixedJsonError) {
-            console.error('Error parsing fixed JSON:', fixedJsonError);
-            
-            // If all parsing attempts fail, try to extract individual fields using regex
-            const extractField = (fieldName: string): string => {
-              const regex = new RegExp(`"${fieldName}"\\s*:\\s*"([^"]*)"`, 'i');
-              const match = analysisText.match(regex);
-              return match ? match[1] : "Information not found in the pitch deck.";
-            };
-            
-            const extractRating = (ratingName: string): number => {
-              const regex = new RegExp(`"${ratingName}"\\s*:\\s*(\\d+)`, 'i');
-              const match = analysisText.match(regex);
-              return match ? parseInt(match[1], 10) : 5;
-            };
-            
-            const extractInsight = (insightName: string): string => {
-              const regex = new RegExp(`"${insightName}"\\s*:\\s*"([^"]*)"`, 'i');
-              const match = analysisText.match(regex);
-              return match ? match[1] : "No insights provided for this rating.";
-            };
-            
-            // Extract expert opinions
-            let expertOpinions = extractField('expert_opinions');
-            
-            // If expert opinions are missing or contain default text, generate them based on other data
-            if (expertOpinions === "Information not found in the pitch deck." || 
-                expertOpinions === "No expert opinions found in the pitch deck.") {
-              
-              // Create a follow-up prompt to generate expert opinions based on the available data
-              const expertPrompt = `Based on the following pitch deck analysis, generate expert opinions from industry experts and potential investors. 
-              Consider the innovation, market potential, competitive advantage, financial strength, and team aspects.
-              
-              Innovation: ${extractField('innovation')}
-              Industry: ${extractField('industry')}
-              Problem: ${extractField('problem')}
-              Solution: ${extractField('solution')}
-              Market: ${extractField('market')}
-              Strengths: ${extractField('strengths')}
-              Weaknesses: ${extractField('weaknesses')}
-              Competitors: ${extractField('competitors')}
-              
-              Ratings:
-              - Innovation: ${extractRating('innovation_rating')}/10
-              - Market Potential: ${extractRating('market_potential_rating')}/10
-              - Competitive Advantage: ${extractRating('competitive_advantage_rating')}/10
-              - Financial Strength: ${extractRating('financial_strength_rating')}/10
-              - Team: ${extractRating('team_rating')}/10
-              
-              Please provide expert opinions from 3-5 different perspectives (e.g., industry expert, venture capitalist, market analyst, etc.) 
-              on the potential of this business based on the pitch deck. Include both positive aspects and areas of concern.
-              Format the response as a JSON object with a single key "expert_opinions" containing the generated opinions.`;
-              
-              try {
-                // Generate expert opinions
-                const expertResult = await model.generateContent(expertPrompt);
-                const expertResponse = await expertResult.response;
-                const expertText = expertResponse.text();
-                
-                // Clean and parse the expert opinions
-                let cleanExpertText = expertText.replace(/```json\s*/g, '').replace(/```\s*$/g, '');
-                
-                try {
-                  const parsedExpertResponse = JSON.parse(cleanExpertText);
-                  expertOpinions = parsedExpertResponse.expert_opinions || expertOpinions;
-                } catch (expertParseError) {
-                  console.error('Error parsing expert opinions response:', expertParseError);
-                  // If parsing fails, try to extract the expert opinions using regex
-                  const expertMatch = cleanExpertText.match(/"expert_opinions"\s*:\s*"([^"]+)"/);
-                  if (expertMatch && expertMatch[1]) {
-                    expertOpinions = expertMatch[1];
-                  }
-                }
-              } catch (expertError) {
-                console.error('Error generating expert opinions:', expertError);
-                // Continue with the default expert opinions if generation fails
-              }
-            }
-            
-            return {
-              innovation: extractField('innovation'),
-              industry: extractField('industry'),
-              problem: extractField('problem'),
-              solution: extractField('solution'),
-              funding: extractField('funding'),
-              market: extractField('market'),
-              strengths: extractField('strengths'),
-              weaknesses: extractField('weaknesses'),
-              competitors: extractField('competitors'),
-              funding_history: extractField('funding_history'),
-              expert_opinions: expertOpinions,
-              key_questions: extractField('key_questions'),
-              suggested_improvements: extractField('suggested_improvements'),
-              key_insights: extractField('key_insights'),
-              market_comparison: extractField('market_comparison'),
-              exit_potential: extractField('exit_potential'),
-              overall_reputation: extractField('overall_reputation'),
-              ratings: {
-                innovation_rating: extractRating('innovation_rating'),
-                market_potential_rating: extractRating('market_potential_rating'),
-                competitive_advantage_rating: extractRating('competitive_advantage_rating'),
-                financial_strength_rating: extractRating('financial_strength_rating'),
-                team_rating: extractRating('team_rating'),
-                overall_rating: extractRating('overall_rating')
-              },
-              rating_insights: {
-                innovation_insights: extractInsight('innovation_insights'),
-                market_potential_insights: extractInsight('market_potential_insights'),
-                competitive_advantage_insights: extractInsight('competitive_advantage_insights'),
-                financial_strength_insights: extractInsight('financial_strength_insights'),
-                team_insights: extractInsight('team_insights'),
-                overall_insights: extractInsight('overall_insights')
-              }
-            };
-          }
-        }
-      } catch (extractionError) {
-        console.error('Error extracting JSON from response:', extractionError);
-      }
-      
-      // If all parsing attempts fail, return a structured error
-      return {
-        innovation: "Error processing the response. Please try again.",
-        industry: "Error processing the response. Please try again.",
-        problem: "Error processing the response. Please try again.",
-        solution: "Error processing the response. Please try again.",
-        funding: "Error processing the response. Please try again.",
-        market: "Error processing the response. Please try again.",
-        strengths: "Error processing the response. Please try again.",
-        weaknesses: "Error processing the response. Please try again.",
-        competitors: "Error processing the response. Please try again.",
-        funding_history: "Error processing the response. Please try again.",
-        expert_opinions: "Error processing the response. Please try again.",
-        key_questions: "Error processing the response. Please try again.",
-        suggested_improvements: "Error processing the response. Please try again.",
-        key_insights: "Error processing the response. Please try again.",
-        market_comparison: "Error processing the response. Please try again.",
-        exit_potential: "Error processing the response. Please try again.",
-        overall_reputation: "Error processing the response. Please try again.",
-        ratings: {
-          innovation_rating: 5,
-          market_potential_rating: 5,
-          competitive_advantage_rating: 5,
-          financial_strength_rating: 5,
-          team_rating: 5,
-          overall_rating: 5
-        },
-        rating_insights: {
-          innovation_insights: "No insights provided for innovation rating.",
-          market_potential_insights: "No insights provided for market potential rating.",
-          competitive_advantage_insights: "No insights provided for competitive advantage rating.",
-          financial_strength_insights: "No insights provided for financial strength rating.",
-          team_insights: "No insights provided for team rating.",
-          overall_insights: "No insights provided for overall rating."
-        }
-      };
-    }
+    return defaultResponse;
   } catch (error) {
-    console.error('Error analyzing with Gemini:', error);
-    throw new Error('Failed to analyze the pitch deck. Please try again.');
+    console.error('Error analyzing pitch deck:', error);
+    throw error;
   }
 };
 

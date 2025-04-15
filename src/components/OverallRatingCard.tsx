@@ -6,7 +6,22 @@ interface OverallRatingCardProps {
 }
 
 const OverallRatingCard: React.FC<OverallRatingCardProps> = ({ insights }) => {
-  const rating = insights.ratings.overall_rating;
+  // Calculate overall rating from final verdict scores
+  const calculateOverallRating = () => {
+    const scores = [
+      insights.final_verdict.product_viability,
+      insights.final_verdict.market_potential,
+      insights.final_verdict.sustainability,
+      insights.final_verdict.innovation,
+      insights.final_verdict.exit_potential,
+      insights.final_verdict.risk_factor,
+      insights.final_verdict.competitive_edge
+    ];
+    const sum = scores.reduce((acc, score) => acc + score, 0);
+    return Math.round((sum / scores.length) * 10) / 10; // Round to 1 decimal place
+  };
+
+  const rating = calculateOverallRating();
   const percentage = (rating / 10) * 100;
   
   // Determine color based on rating

@@ -1,45 +1,41 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useRef } from "react";
 import Header from "@/components/Header";
 import FileUpload from "@/components/FileUpload";
-import InsightsGrid, { Insights } from "@/components/InsightsGrid";
-import ComprehensiveAnalysis from "@/components/ComprehensiveAnalysis";
-import OverallRatingCard from "@/components/OverallRatingCard";
-import RatingRadarChart from "@/components/RatingRadarChart";
-import { extractTextFromPdf, analyzeWithBackend, saveInsightsToSupabase } from "@/services/pdfService";
+import { extractTextFromPdf, analyzeWithBackend } from "@/services/pdfService";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/sonner";
-import { Lightbulb, RefreshCw, History, Save, ChevronDown, ChevronUp, Upload } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { ArrowRight } from "lucide-react";
+import AnalysisReport from "@/components/AnalysisReport";
+import LoadingScreen from "@/components/LoadingScreen";
+import styles from "@/styles/upload.module.scss";
 
 const Index = () => {
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [insights, setInsights] = useState<Insights | null>(null);
-  const [companyName, setCompanyName] = useState("");
-  const [isSaving, setIsSaving] = useState(false);
-  const [showComprehensiveAnalysis, setShowComprehensiveAnalysis] = useState(false);
-  const [showUpload, setShowUpload] = useState(true);
-  const navigate = useNavigate();
+  const [insights, setInsights] = useState<any>(null);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelected = (selectedFile: File) => {
     setFile(selectedFile);
-    setShowUpload(false); // Hide the upload component after file is selected
-    processFile(selectedFile);
   };
 
-  const processFile = async (pdfFile: File) => {
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleAnalyze = async () => {
+    if (!file) {
+      toast.error("Please select a PDF file first");
+      return;
+    }
+
     setIsLoading(true);
     setInsights(null);
 
     try {
-      // Extract text from PDF
-      const extractedText = await extractTextFromPdf(pdfFile);
-      
-      // Analyze the text with the backend service
+      const extractedText = await extractTextFromPdf(file);
       const analysisResults = await analyzeWithBackend(extractedText);
-      
-      // Set the insights
       setInsights(analysisResults);
       toast.success("Analysis complete!");
     } catch (error) {
@@ -50,187 +46,52 @@ const Index = () => {
     }
   };
 
-  const handleReanalyze = () => {
-    if (file) {
-      processFile(file);
-    }
-  };
-
-  const handleAnalyzeAnother = () => {
-    setFile(null);
-    setInsights(null);
-    setCompanyName("");
-    setShowUpload(true);
-  };
-
-  const handleSaveInsights = async () => {
-    if (!insights || !file) {
-      toast.error("No analysis to save");
-      return;
-    }
-    
-    if (!companyName.trim()) {
-      toast.error("Please enter a company name");
-      return;
-    }
-    
-    try {
-      setIsSaving(true);
-      await saveInsightsToSupabase(insights, file.name, companyName);
-      toast.success("Analysis saved successfully");
-    } catch (error) {
-      console.error("Error saving insights:", error);
-      toast.error("Failed to save analysis");
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const goToHistory = () => {
-    navigate("/history");
-  };
-
-  const toggleComprehensiveAnalysis = () => {
-    setShowComprehensiveAnalysis(!showComprehensiveAnalysis);
-  };
-
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen bg-[#1C1C1C] flex flex-col">
       <Header />
-      
-      <main className="flex-1 container py-8 px-4">
-        <section className="mb-12">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2 gap-4">
-            <h1 className="text-3xl font-bold">Pitch Deck Analyzer</h1>
-            {!showUpload && (
-              <div className="flex flex-col items-end">
-                <span className="text-sm text-muted-foreground mb-1">Analyze another pitch deck</span>
-                <Button 
-                  variant="default" 
-                  onClick={handleAnalyzeAnother}
-                  className="flex items-center px-6 py-2 text-lg"
-                  size="lg"
-                >
-                  <Upload className="mr-2 h-5 w-5" />
-                  Upload
-                </Button>
-              </div>
-            )}
-          </div>
-          <p className="text-muted-foreground mb-6">
-            Upload a pitch deck PDF to get AI-powered insights and analysis
-          </p>
-          
-          {showUpload && (
-            <FileUpload onFileSelected={handleFileSelected} isLoading={isLoading} />
-          )}
-          
-          {isLoading && (
-            <div className="mt-8 text-center">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-purple"></div>
-              <p className="mt-2 text-muted-foreground">Analyzing your pitch deck...</p>
-            </div>
-          )}
-        </section>
 
-        {insights && (
-          <section className="mb-12">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-              <h3 className="text-2xl font-semibold flex items-center gap-2">
-                <Lightbulb className="h-5 w-5 text-purple" />
-                Analysis Results
-              </h3>
-              
-              <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-                <div className="flex-1 sm:flex-initial">
-                  <Input 
-                    placeholder="Enter company name to save"
-                    value={companyName}
-                    onChange={(e) => setCompanyName(e.target.value)}
-                    className="w-full sm:w-auto"
-                  />
+      <main className="flex-1 container py-16">
+        <h1 className={styles.title}>Start Analysis</h1>
+
+        <div className={styles.uploadContainer}>
+          {!insights && !isLoading && (
+            <div className={styles.gradientWrapper}>
+              <img
+                src="/images/backgroundgradiant.png"
+                alt="Gradient Background"
+                className={styles.gradientBackground}
+              />
+              <div className={styles.innerBox}>
+                <h2 className="text-xl font-medium text-white mb-2">Upload Your Pitch Deck</h2>
+
+                <div className={styles.uploadArea} onClick={handleUploadClick} role="button" tabIndex={0}>
+                  <FileUpload ref={fileInputRef} onFileSelected={handleFileSelected} isLoading={isLoading} />
                 </div>
-                
-                <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    onClick={handleReanalyze} 
-                    disabled={isLoading}
-                  >
-                    <RefreshCw className={`mr-2 h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
-                    Reanalyze
-                  </Button>
-                  
-                  <Button 
-                    onClick={handleSaveInsights} 
-                    disabled={isSaving || !companyName.trim()}
-                  >
-                    <Save className={`mr-2 h-4 w-4 ${isSaving ? "animate-spin" : ""}`} />
-                    {isSaving ? "Saving..." : "Save Analysis"}
-                  </Button>
-                </div>
+
+                <button
+                  onClick={handleAnalyze}
+                  className={styles.analyzeButton}
+                  disabled={!file || isLoading}
+                >
+                  Analyze your document now
+                  <ArrowRight className="w-5 h-5" />
+                </button>
               </div>
             </div>
-            
-            {/* Rating Radar Chart - Always visible */}
-            {/* <div className="mb-8">
-              <RatingRadarChart insights={insights} />
-            </div> */}
-            
-            {/* Overall Rating Card - Always visible */}
-            <div className="mb-8">
-              <OverallRatingCard insights={insights} />
+          )}
+
+          {isLoading && <LoadingScreen />}
+
+          {insights && !isLoading && (
+            <div className="mt-8">
+              <AnalysisReport insights={insights} analyzedAt={new Date()} />
             </div>
-            
-            <InsightsGrid insights={insights} />
-            
-            {/* Comprehensive Analysis Toggle */}
-            <div className="mt-8 text-center">
-              <Button 
-                variant="outline" 
-                onClick={toggleComprehensiveAnalysis}
-                className="flex items-center mx-auto"
-              >
-                {showComprehensiveAnalysis ? (
-                  <>
-                    <ChevronUp className="mr-2 h-4 w-4" />
-                    Hide Comprehensive Analysis
-                  </>
-                ) : (
-                  <>
-                    <ChevronDown className="mr-2 h-4 w-4" />
-                    Show Comprehensive Analysis
-                  </>
-                )}
-              </Button>
-            </div>
-            
-            {/* Comprehensive Analysis */}
-            {showComprehensiveAnalysis && (
-              <div className="mt-6">
-                <ComprehensiveAnalysis insights={insights} />
-              </div>
-            )}
-          </section>
-        )}
-        
-        <section className="mb-12">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-semibold flex items-center gap-2">
-              <History className="h-5 w-5 text-purple" />
-              Previous Analyses
-            </h2>
-            <Button onClick={goToHistory}>
-              View All
-            </Button>
-          </div>
-          
-          {/* You can add a preview of recent analyses here */}
-        </section>
+          )}
+        </div>
       </main>
-      
-      <footer className="py-6 border-t">
-        <div className="container text-center text-sm text-muted-foreground">
+
+      <footer className="py-6 border-t border-gray-800">
+        <div className="container text-center text-sm text-gray-500">
           <p>© 2025 PitchDeck Analyzer. All rights reserved.</p>
         </div>
       </footer>
