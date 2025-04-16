@@ -29,7 +29,7 @@ const steps = [
   }
 ];
 
-const LoadingScreen = () => {
+const LoadingScreen = ({ currentStep }) => {
   return (
     <div className={styles.gradientWrapper}>
       <img
@@ -37,41 +37,44 @@ const LoadingScreen = () => {
         alt="Gradient Background"
         className={styles.gradientBackground}
       />
+
       <div className={styles.innerBox}>
-        <h2 className="text-2xl font-medium text-white mb-8">Generating...</h2>
-        
+        <h2 className="text-2xl font-medium text-white mb-8">Generating<span className="animate-pulse">...</span></h2>
+
         <div className="flex flex-col items-center space-y-8 max-w-xl mx-auto">
           {steps.map((step, index) => (
             <div key={index} className="w-full flex items-start gap-4">
-              {/* Timeline line */}
+              {/* Timeline line and dot */}
               <div className="flex flex-col items-center">
-                <div className={`w-3 h-3 rounded-full ${
-                  step.status === 'completed' ? 'bg-[#4776E6]' :
-                  step.status === 'in-progress' ? 'bg-[#4776E6] animate-pulse' :
-                  'bg-gray-600'
-                }`} />
+                <div className={`
+                  w-3 h-3 rounded-full 
+                  ${step.status === 'completed' ? 'bg-[#4776E6]' :
+                    step.status === 'in-progress' ? 'bg-[#4776E6] animate-pulse' :
+                      'bg-gray-600'}
+                `} />
+
+                {/* Connecting line */}
                 {index < steps.length - 1 && (
-                  <div className={`w-0.5 h-24 ${
-                    step.status === 'completed' ? 'bg-[#4776E6]' :
-                    'bg-gray-600'
-                  }`} />
+                  <div className={`
+                    w-0.5 h-24
+                    ${step.status === 'completed' ? 'bg-[#4776E6]' :
+                      'bg-gray-600'}
+                  `} />
                 )}
               </div>
 
-              {/* Content */}
+              {/* Step content */}
               <div className="flex-1">
-                <h3 className={`text-lg font-medium mb-1 ${
-                  step.status === 'completed' || step.status === 'in-progress' 
-                    ? 'text-white' 
-                    : 'text-gray-400'
-                }`}>
+                <h3 className={`
+                  text-lg font-medium mb-1 
+                  ${step.status === 'completed' || step.status === 'in-progress' ? 'text-white' : 'text-gray-400'}
+                `}>
                   {step.title}
                 </h3>
-                <p className={`text-sm ${
-                  step.status === 'completed' || step.status === 'in-progress'
-                    ? 'text-gray-300' 
-                    : 'text-gray-500'
-                }`}>
+                <p className={`
+                  text-sm 
+                  ${step.status === 'completed' || step.status === 'in-progress' ? 'text-gray-300' : 'text-gray-500'}
+                `}>
                   {step.description}
                 </p>
               </div>
@@ -83,4 +86,4 @@ const LoadingScreen = () => {
   );
 };
 
-export default LoadingScreen; 
+export default LoadingScreen;

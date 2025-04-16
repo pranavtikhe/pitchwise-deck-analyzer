@@ -1,5 +1,5 @@
 import { useState, useRef, DragEvent, ChangeEvent, forwardRef } from "react";
-import { Upload, FilePlus, AlertCircle } from "lucide-react";
+import { Upload, FilePlus, AlertCircle, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/sonner";
 
@@ -11,6 +11,7 @@ interface FileUploadProps {
 const FileUpload = forwardRef<HTMLInputElement, FileUploadProps>(({ onFileSelected, isLoading }, ref) => {
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
 
   const handleDragEnter = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -59,6 +60,7 @@ const FileUpload = forwardRef<HTMLInputElement, FileUploadProps>(({ onFileSelect
       const file = files[0];
       if (validateFile(file)) {
         onFileSelected(file);
+        setFile(file);
       }
     }
   };
@@ -69,6 +71,7 @@ const FileUpload = forwardRef<HTMLInputElement, FileUploadProps>(({ onFileSelect
       const file = files[0];
       if (validateFile(file)) {
         onFileSelected(file);
+        setFile(file);
       }
     }
   };
@@ -96,16 +99,17 @@ const FileUpload = forwardRef<HTMLInputElement, FileUploadProps>(({ onFileSelect
         <img src="/images/upload.svg" alt="Upload" className="h-16 w-16" />
 
         <div className="space-y-2">
-          <p className="text-sm text-gray-400 text-center">
-            {isDragging ? (
-              "Drop your file here"
-            ) : (
-              <>
-                Drag & drop your file here, or{" "}
-                <span className="text-primary cursor-pointer">Choose File..</span>
-              </>
-            )}
-          </p>
+          {file ? (
+            <div className="text-white flex items-center gap-2">
+              <FileText className="w-5 h-5" />
+              <span>{file.name}</span>
+            </div>
+          ) : (
+            <>
+              Drag & drop your file here, or{" "}
+              <span className="text-primary cursor-pointer">Choose File..</span>
+            </>
+          )}
         </div>
 
         {error && (

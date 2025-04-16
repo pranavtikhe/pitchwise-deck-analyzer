@@ -11,6 +11,7 @@ import styles from "@/styles/upload.module.scss";
 
 const Index = () => {
   const [file, setFile] = useState<File | null>(null);
+  const [currentStep, setCurrentStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [insights, setInsights] = useState<any>(null);
 
@@ -46,9 +47,36 @@ const Index = () => {
     }
   };
 
+  const steps = [
+    'Document Processing',
+    'Startup Profile',
+    'Market Analysis',
+    'Sentiment Analysis',
+    'Report Generation'
+  ];
+
+  // Start loading and progress simulation
+  const startProcessing = () => {
+    setIsLoading(true);
+    setCurrentStep(0);
+
+    const interval = setInterval(() => {
+      setCurrentStep(prev => {
+        if (prev < steps.length - 1) {
+          return prev + 1;
+        } else {
+          clearInterval(interval);
+          setIsLoading(false); // hide loader when done
+          return prev;
+        }
+      });
+    }, 2000); // Adjust timing as needed
+  };
+
   return (
     <div className="min-h-screen bg-[#1C1C1C] flex flex-col">
-      <Header />
+      <img src="/images/slogo.svg" alt="logo" className="w-[68px] h-[72px] mx-auto" />
+
 
       <main className="flex-1 container py-16">
         <h1 className={styles.title}>Start Analysis</h1>
@@ -80,7 +108,7 @@ const Index = () => {
             </div>
           )}
 
-          {isLoading && <LoadingScreen />}
+          {isLoading && <LoadingScreen currentStep={currentStep} />}
 
           {insights && !isLoading && (
             <div className="mt-8">
