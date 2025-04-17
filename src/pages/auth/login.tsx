@@ -84,7 +84,6 @@ const LoginPage = () => {
       ...formData,
       [name]: value,
     });
-    // Clear error when user types
     if (errors[name as keyof FormErrors]) {
       setErrors({
         ...errors,
@@ -96,30 +95,40 @@ const LoginPage = () => {
   const validateForm = () => {
     const newErrors: FormErrors = {};
     
-    if (!formData.fullName) {
-      newErrors.fullName = 'Full name is required';
-    }
-    
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
-    }
-    
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (!validatePassword(formData.password)) {
-      newErrors.password = 'Password must meet all requirements';
-    }
+    if (activeTab === 'signup') {
+      if (!formData.fullName) {
+        newErrors.fullName = 'Full name is required';
+      }
+      
+      if (!formData.email) {
+        newErrors.email = 'Email is required';
+      } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+        newErrors.email = 'Email is invalid';
+      }
+      
+      if (!formData.password) {
+        newErrors.password = 'Password is required';
+      } else if (!validatePassword(formData.password)) {
+        newErrors.password = 'Password must meet all requirements';
+      }
 
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
+      if (!formData.confirmPassword) {
+        newErrors.confirmPassword = 'Please confirm your password';
+      } else if (formData.password !== formData.confirmPassword) {
+        newErrors.confirmPassword = 'Passwords do not match';
+      }
 
-    if (formData.mobile && !/^\d{10}$/.test(formData.mobile)) {
-      newErrors.mobile = 'Please enter a valid 10-digit mobile number';
+      if (formData.mobile && !/^\d{10}$/.test(formData.mobile)) {
+        newErrors.mobile = 'Please enter a valid 10-digit mobile number';
+      }
+    } else {
+      if (!formData.email) {
+        newErrors.email = 'Email is required';
+      }
+      
+      if (!formData.password) {
+        newErrors.password = 'Password is required';
+      }
     }
 
     setErrors(newErrors);
@@ -137,10 +146,19 @@ const LoginPage = () => {
     }
 
     try {
-      localStorage.setItem('auth_token', 'demo_token');
-      navigate('/spider');
-    } catch (err) {
-      setError('Invalid credentials');
+      if (activeTab === 'signup') {
+        if (formData.password !== formData.confirmPassword) {
+          throw new Error('Passwords do not match');
+        }
+        localStorage.setItem('auth_token', 'demo_token');
+        localStorage.setItem('user_email', formData.email);
+        navigate('/spider');
+      } else {
+        localStorage.setItem('auth_token', 'demo_token');
+        navigate('/spider');
+      }
+    } catch (err: any) {
+      setError(err.message || 'An error occurred');
     } finally {
       setLoading(false);
     }
@@ -238,7 +256,7 @@ const LoginPage = () => {
                 transition={{ duration: 0.3 }}
               >
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-white">User Name</label>
+                  <label className="block text-sm font-medium text-white">Email</label>
                   <div className="relative">
                     <input
                       type="email"
@@ -248,7 +266,7 @@ const LoginPage = () => {
                       className={`w-full bg-[#2A2A2A] border ${
                         errors.email ? 'border-destructive' : 'border-[#3A3A3A]'
                       } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
-                      placeholder="JohnDoe"
+                      placeholder="Enter your email"
                       required
                     />
                   </div>
@@ -268,7 +286,7 @@ const LoginPage = () => {
                       className={`w-full bg-[#2A2A2A] border ${
                         errors.password ? 'border-destructive' : 'border-[#3A3A3A]'
                       } rounded-lg py-2 pl-4 pr-10 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
-                      placeholder="........."
+                      placeholder="Enter your password"
                       required
                     />
                     <button
@@ -314,7 +332,7 @@ const LoginPage = () => {
                       className={`w-full bg-[#2A2A2A] border ${
                         errors.fullName ? 'border-destructive' : 'border-[#3A3A3A]'
                       } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
-                      placeholder="John Doe"
+                      placeholder="Enter your full name"
                       required
                     />
                   </div>
@@ -334,7 +352,7 @@ const LoginPage = () => {
                       className={`w-full bg-[#2A2A2A] border ${
                         errors.email ? 'border-destructive' : 'border-[#3A3A3A]'
                       } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
-                      placeholder="example@gmail.com"
+                      placeholder="Enter your email"
                       required
                     />
                   </div>
@@ -409,7 +427,7 @@ const LoginPage = () => {
                       className={`w-full bg-[#2A2A2A] border ${
                         errors.mobile ? 'border-destructive' : 'border-[#3A3A3A]'
                       } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
-                      placeholder="9966701238"
+                      placeholder="Enter your mobile number"
                     />
                   </div>
                   {errors.mobile && (
