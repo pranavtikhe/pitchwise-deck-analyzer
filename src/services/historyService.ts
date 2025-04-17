@@ -1,9 +1,9 @@
-import { GeminiResponse } from './pdfService';
+import { MistralResponse } from './pdfService';
 
 export interface HistoryEntry {
   id: string;
   timestamp: string;
-  insights: GeminiResponse;
+  insights: MistralResponse;
   riskLevel: string;
   clausesIdentified: number;
   status: 'Completed' | 'Failed' | 'In Progress';
@@ -11,7 +11,7 @@ export interface HistoryEntry {
 
 const HISTORY_STORAGE_KEY = 'pitch-deck-analysis-history';
 
-export const saveToHistory = (insights: GeminiResponse): void => {
+export const saveToHistory = (insights: MistralResponse): void => {
   try {
     const history = getHistory();
     const entry: HistoryEntry = {
@@ -44,7 +44,7 @@ const generateId = (): string => {
   return Math.random().toString(36).substring(2) + Date.now().toString(36);
 };
 
-const calculateRiskLevel = (insights: GeminiResponse): string => {
+const calculateRiskLevel = (insights: MistralResponse): string => {
   const riskScore = insights.final_verdict.risk_factor;
   if (riskScore >= 8) return 'High Risk';
   if (riskScore >= 5) return 'Medium Risk';

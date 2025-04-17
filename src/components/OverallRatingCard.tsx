@@ -1,8 +1,8 @@
 import React from 'react';
-import { GeminiResponse } from '@/services/pdfService';
+import { MistralResponse } from '@/services/pdfService';
 
 interface OverallRatingCardProps {
-  insights: GeminiResponse;
+  insights: MistralResponse;
 }
 
 const OverallRatingCard: React.FC<OverallRatingCardProps> = ({ insights }) => {

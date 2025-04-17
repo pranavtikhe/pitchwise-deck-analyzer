@@ -1,10 +1,10 @@
 import React from 'react';
-import { GeminiResponse } from '@/services/pdfService';
+import { MistralResponse } from '@/services/pdfService';
 import { RadarChart, PolarAngleAxis, PolarGrid, Radar, ResponsiveContainer } from 'recharts';
 import { ChartTooltip } from '@/components/ui/chart';
 
 interface RatingRadarChartProps {
-  insights: GeminiResponse;
+  insights: MistralResponse;
 }
 
 const RatingRadarChart: React.FC<RatingRadarChartProps> = ({ insights }) => {

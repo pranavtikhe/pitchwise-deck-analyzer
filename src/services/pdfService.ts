@@ -1,8 +1,9 @@
 import * as pdfjs from 'pdfjs-dist';
 import { supabase } from "@/integrations/supabase/client";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import { createWorker } from 'tesseract.js';
 import { analyzePitchDeck } from './apiService';
+import { processDocument } from './ocrService';
+import { MistralResponse } from '@/types/mistral';
 
 // Import Supabase URL and key
 const SUPABASE_URL = "https://objyddwihcupdeflwcty.supabase.co";
@@ -10,9 +11,6 @@ const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiO
 
 // Set the worker source
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
-
-// Initialize Gemini API with the correct API key
-const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 
 /**
  * Extract text from a PDF file, including text in images
@@ -102,66 +100,15 @@ export const extractTextFromPdf = async (file: File): Promise<string> => {
 };
 
 /**
- * Interface for the response from Gemini API
+ * Analyze text using backend service (which will use Mistral API)
  */
-export interface GeminiResponse {
-  industry_type: string;
-  pitch_clarity: number;
-  investment_score: number;
-  market_position: string;
-  company_overview: {
-    company_name: string;
-  industry: string;
-    business_model: string;
-    key_offerings: string;
-    market_position: string;
-    founded_on: string;
-  };
-  strengths: string[];
-  weaknesses: string[];
-  funding_history: {
-    rounds: {
-      type: string;
-      amount: string;
-      key_investors: string[];
-    }[];
-  };
-  proposed_deal_structure: {
-    investment_amount: string;
-    valuation_cap: string;
-    equity_stake: string;
-    anti_dilution_protection: string;
-    board_seat: string;
-    liquidation_preference: string;
-    vesting_schedule: string;
-    other_terms: string;
-  };
-  key_questions: {
-    market_strategy: string[];
-    user_relation: string[];
-    regulatory_compliance: string[];
-  };
-  final_verdict: {
-    product_viability: number;
-    market_potential: number;
-    sustainability: number;
-    innovation: number;
-    exit_potential: number;
-    risk_factor: number;
-    competitive_edge: number;
-  };
-  key_insights: string;
-}
-
-/**
- * Analyze text using backend service (which will use Google Gemini API)
- */
-export const analyzeWithBackend = async (text: string): Promise<GeminiResponse> => {
+export const analyzeWithBackend = async (file: File): Promise<MistralResponse> => {
   try {
-    const data = await analyzePitchDeck(text);
+    console.log('Starting document analysis with Mistral...');
+    const data = await processDocument(file);
     
     // Ensure all required fields are present
-    const defaultResponse: GeminiResponse = {
+    const defaultResponse: MistralResponse = {
       industry_type: data.industry_type || 'Not Specified',
       pitch_clarity: data.pitch_clarity || 5,
       investment_score: data.investment_score || 5,
@@ -206,10 +153,10 @@ export const analyzeWithBackend = async (text: string): Promise<GeminiResponse> 
         exit_potential: data.final_verdict?.exit_potential || 5,
         risk_factor: data.final_verdict?.risk_factor || 5,
         competitive_edge: data.final_verdict?.competitive_edge || 5,
-      },
-      key_insights: data.key_insights || 'Not Specified',
+      }
     };
 
+    console.log('Analysis completed successfully');
     return defaultResponse;
   } catch (error) {
     console.error('Error analyzing pitch deck:', error);
@@ -221,7 +168,7 @@ export const analyzeWithBackend = async (text: string): Promise<GeminiResponse> 
  * Save insights to Supabase
  */
 export const saveInsightsToSupabase = async (
-  insights: GeminiResponse, 
+  insights: MistralResponse, 
   fileName: string, 
   companyName: string
 ): Promise<void> => {

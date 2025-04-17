@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { GeminiResponse } from '@/services/pdfService';
+import { MistralResponse } from '@/services/pdfService';
 import { format } from 'date-fns';
 import styles from '@/styles/upload.module.scss';
 import RadarChart from './RadarChart';
@@ -9,7 +9,7 @@ import { saveToHistory } from '@/services/historyService';
 import History from './History';
 
 interface AnalysisReportProps {
-  insights: GeminiResponse;
+  insights: MistralResponse;
   analyzedAt: Date;
 }
 

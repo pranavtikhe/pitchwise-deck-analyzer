@@ -1,9 +1,8 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
-
-const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
+import { API_CONFIG } from '../config/api';
 
 export const analyzePitchDeck = async (text: string) => {
-  const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+  console.log('Starting pitch deck analysis with Mistral AI...');
+  console.log(`Total characters to analyze: ${text.length}`);
 
   const prompt = `
     Analyze this pitch deck and provide a comprehensive analysis in the following JSON format. 
@@ -48,14 +47,14 @@ export const analyzePitchDeck = async (text: string) => {
         ]
       },
       "proposed_deal_structure": {
-        "investment_amount": "string (e.g., '$2M', 'Not specified' is not acceptable. Provide a reasonable range based on company stage and industry)",
-        "valuation_cap": "string (e.g., '$10M', 'Not specified' is not acceptable. Provide a reasonable estimate based on metrics)",
-        "equity_stake": "string (e.g., '15-20%', 'Not specified' is not acceptable. Provide a reasonable range)",
-        "anti_dilution_protection": "string (e.g., 'Full ratchet', 'Weighted average', 'Not specified' is not acceptable. Provide standard terms)",
-        "board_seat": "string (e.g., '1 board seat', 'Observer rights', 'Not specified' is not acceptable. Provide standard terms)",
-        "liquidation_preference": "string (e.g., '1x', '2x', 'Not specified' is not acceptable. Provide standard terms)",
-        "vesting_schedule": "string (e.g., '4 years with 1-year cliff', 'Not specified' is not acceptable. Provide standard terms)",
-        "other_terms": "string (e.g., 'Information rights', 'ROFR', 'Not specified' is not acceptable. Provide standard terms)"
+        "investment_amount": "string",
+        "valuation_cap": "string",
+        "equity_stake": "string",
+        "anti_dilution_protection": "string",
+        "board_seat": "string",
+        "liquidation_preference": "string",
+        "vesting_schedule": "string",
+        "other_terms": "string"
       },
       "key_questions": {
         "market_strategy": string[],
@@ -73,124 +72,79 @@ export const analyzePitchDeck = async (text: string) => {
       }
     }
 
-    Pitch Deck Text:
-    ${text}
-  `;
+    Pitch Deck Text: ${text}`;
 
   try {
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    let responseText = response.text();
+    console.log('Sending request to Mistral AI API...');
+    console.log(`Using model: ${API_CONFIG.MODEL}`);
     
-    // Clean the response text
-    responseText = responseText.replace(/```json\s*/g, '');
-    responseText = responseText.replace(/```\s*$/g, '');
-    responseText = responseText.trim();
-    
-    // Try to parse the JSON response
-    try {
-      const parsedResponse = JSON.parse(responseText);
-      
-      // Ensure proposed_deal_structure has meaningful values
-      const dealStructure = parsedResponse.proposed_deal_structure;
-      if (dealStructure) {
-        // Set default values based on company stage if not provided
-        const defaultDealStructure = {
-          investment_amount: "Based on company stage and industry standards",
-          valuation_cap: "Based on comparable companies and metrics",
-          equity_stake: "Standard range for company stage",
-          anti_dilution_protection: "Standard market terms",
-          board_seat: "Standard investor rights",
-          liquidation_preference: "Standard market terms",
-          vesting_schedule: "Standard vesting terms",
-          other_terms: "Standard investor protections"
-        };
-
-        // Replace any "Not specified" values with meaningful defaults
-        Object.keys(dealStructure).forEach(key => {
-          if (dealStructure[key] === "Not specified" || !dealStructure[key]) {
-            dealStructure[key] = defaultDealStructure[key];
+    const response = await fetch(API_CONFIG.BASE_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${import.meta.env.VITE_MISTRAL_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: API_CONFIG.MODEL,
+        messages: [
+          {
+            role: 'system',
+            content: 'You are an expert pitch deck analyzer. Provide detailed analysis in JSON format.'
+          },
+          {
+            role: 'user',
+            content: prompt
           }
-        });
+        ],
+        temperature: 0.7,
+        max_tokens: 4000
+      })
+    });
+
+    console.log('Received response from Mistral AI API');
+    console.log(`Response status: ${response.status}`);
+
+    if (!response.ok) {
+      console.error('Mistral AI API request failed:', response.status, response.statusText);
+      throw new Error(`Analysis failed with status ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log('Successfully parsed Mistral AI response');
+    console.log(`Response model: ${result.model}`);
+    console.log(`Total tokens used: ${result.usage?.total_tokens || 'N/A'}`);
+
+    const analysisText = result.choices[0].message.content;
+    console.log(`Received analysis text length: ${analysisText.length} characters`);
+
+    try {
+      // Clean the response text and parse JSON
+      let cleanJsonText = analysisText.replace(/```json\s*/g, '').replace(/```\s*$/g, '');
+      const parsedData = JSON.parse(cleanJsonText);
+      console.log('Successfully parsed analysis JSON');
+      console.log('Analysis completed successfully using Mistral AI');
+      return parsedData;
+    } catch (parseError) {
+      console.error('Error parsing Mistral response:', parseError);
+      
+      // Attempt to extract and fix JSON if parsing fails
+      try {
+        const jsonMatch = analysisText.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const extractedJson = jsonMatch[0];
+          const fixedJson = extractedJson
+            .replace(/,(\s*[}\]])/g, '$1')
+            .replace(/([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)\s*:/g, '$1"$2":')
+            .replace(/'([^']*)'/g, '"$1"');
+          const parsedData = JSON.parse(fixedJson);
+          console.log('Successfully extracted and fixed JSON');
+          return parsedData;
+        }
+      } catch (extractError) {
+        console.error('Failed to extract JSON:', extractError);
       }
       
-      return parsedResponse;
-    } catch (error) {
-      console.error('Error parsing JSON response:', error);
-      console.log('Raw response:', responseText);
-      
-      // If JSON parsing fails, try to extract fields using improved regex patterns
-      const extractField = (fieldName: string, defaultValue: string = "Based on analysis"): string => {
-        const regex = new RegExp(`"${fieldName}"\\s*:\\s*"([^"]*)"`, 'i');
-        const match = responseText.match(regex);
-        return match ? match[1] : defaultValue;
-      };
-
-      const extractNumber = (fieldName: string, defaultValue: number = 0): number => {
-        const regex = new RegExp(`"${fieldName}"\\s*:\\s*(\\d+)`, 'i');
-        const match = responseText.match(regex);
-        return match ? parseInt(match[1], 10) : defaultValue;
-      };
-
-      const extractArray = (fieldName: string): string[] => {
-        const regex = new RegExp(`"${fieldName}"\\s*:\\s*\\[([^\\]]*)\\]`, 'i');
-        const match = responseText.match(regex);
-        if (!match) return [];
-        
-        try {
-          return JSON.parse(`[${match[1]}]`);
-        } catch {
-          return match[1].split(',').map(s => s.trim().replace(/"/g, ''));
-        }
-      };
-
-      const extractedData = {
-        industry_type: extractField('industry_type'),
-        pitch_clarity: extractNumber('pitch_clarity'),
-        investment_score: extractNumber('investment_score'),
-        market_position: extractField('market_position'),
-        company_overview: {
-          company_name: extractField('company_name'),
-          industry: extractField('industry'),
-          business_model: extractField('business_model'),
-          key_offerings: extractField('key_offerings'),
-          market_position: extractField('market_position'),
-          founded_on: extractField('founded_on')
-        },
-        strengths: extractArray('strengths'),
-        weaknesses: extractArray('weaknesses'),
-        funding_history: {
-          rounds: JSON.parse(responseText.match(/rounds":\s*(\[[^\]]+\])/)?.[1] || '[]').map(round => ({
-            ...round,
-            key_investors: Array.isArray(round.key_investors) ? round.key_investors : []
-          }))
-        },
-        proposed_deal_structure: {
-          investment_amount: extractField('investment_amount', "Based on company stage and industry standards"),
-          valuation_cap: extractField('valuation_cap', "Based on comparable companies and metrics"),
-          equity_stake: extractField('equity_stake', "Standard range for company stage"),
-          anti_dilution_protection: extractField('anti_dilution_protection', "Standard market terms"),
-          board_seat: extractField('board_seat', "Standard investor rights"),
-          liquidation_preference: extractField('liquidation_preference', "Standard market terms"),
-          vesting_schedule: extractField('vesting_schedule', "Standard vesting terms"),
-          other_terms: extractField('other_terms', "Standard investor protections")
-        },
-        key_questions: {
-          market_strategy: extractArray('market_strategy'),
-          user_relation: extractArray('user_relation'),
-          regulatory_compliance: extractArray('regulatory_compliance')
-        },
-        final_verdict: {
-          product_viability: extractNumber('product_viability'),
-          market_potential: extractNumber('market_potential'),
-          sustainability: extractNumber('sustainability'),
-          innovation: extractNumber('innovation'),
-          exit_potential: extractNumber('exit_potential'),
-          risk_factor: extractNumber('risk_factor'),
-          competitive_edge: extractNumber('competitive_edge')
-        }
-      };
-      return extractedData;
+      throw new Error('Failed to parse analysis response');
     }
   } catch (error) {
     console.error('Error analyzing pitch deck:', error);

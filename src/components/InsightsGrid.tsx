@@ -1,9 +1,9 @@
 import { Lightbulb, Building, AlertTriangle, Puzzle, DollarSign, TrendingUp } from "lucide-react";
 import InsightCard from "./InsightCard";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { GeminiResponse } from "@/services/pdfService";
+import { MistralResponse } from "@/services/pdfService";
 
-export type Insights = GeminiResponse;
+export type Insights = MistralResponse;
 
 interface InsightsGridProps {
   insights: Insights;

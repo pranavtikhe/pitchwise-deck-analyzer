@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -28,7 +27,7 @@ const ApiKeyInput = ({ onKeySubmit, isLoading }: ApiKeyInputProps) => {
     }
 
     // Save to localStorage
-    localStorage.setItem("gemini_api_key", apiKey);
+    localStorage.setItem("mistral_api_key", apiKey);
     setIsKeySet(true);
     onKeySubmit(apiKey);
     toast.success("API key saved");
@@ -36,7 +35,7 @@ const ApiKeyInput = ({ onKeySubmit, isLoading }: ApiKeyInputProps) => {
 
   // Check localStorage on mount
   useState(() => {
-    const savedKey = localStorage.getItem("gemini_api_key");
+    const savedKey = localStorage.getItem("mistral_api_key");
     if (savedKey) {
       setApiKey(savedKey);
       setIsKeySet(true);
@@ -47,7 +46,7 @@ const ApiKeyInput = ({ onKeySubmit, isLoading }: ApiKeyInputProps) => {
   return (
     <div className="w-full max-w-md mx-auto mb-8">
       <div className="flex items-center gap-2 mb-2">
-        <h3 className="text-sm font-medium">Google Gemini API Key</h3>
+        <h3 className="text-sm font-medium">Mistral API Configuration</h3>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -55,40 +54,16 @@ const ApiKeyInput = ({ onKeySubmit, isLoading }: ApiKeyInputProps) => {
             </TooltipTrigger>
             <TooltipContent>
               <p className="max-w-xs text-xs">
-                Get your API key from{" "}
-                <a
-                  href="https://makersuite.google.com/app/apikey"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-purple underline"
-                >
-                  Google AI Studio
-                </a>
+                The API key is configured in the backend environment variables.
+                Contact your administrator if you need access.
               </p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </div>
-
-      <form onSubmit={handleSubmit} className="flex gap-2">
-        <div className="relative flex-1">
-          <Input
-            type="password"
-            value={apiKey}
-            onChange={(e) => setApiKey(e.target.value)}
-            placeholder="Enter your Gemini API key"
-            className="pr-10"
-            disabled={isLoading}
-          />
-          <Key className="absolute right-3 top-2.5 h-4 w-4 text-muted-foreground" />
-        </div>
-        <Button type="submit" disabled={isLoading || !apiKey.trim()}>
-          {isKeySet ? "Update" : "Save"}
-        </Button>
-      </form>
       
       <p className="text-xs text-muted-foreground mt-2">
-        Your API key is stored locally in your browser and never sent to our servers.
+        API authentication is handled securely through environment variables.
       </p>
     </div>
   );
