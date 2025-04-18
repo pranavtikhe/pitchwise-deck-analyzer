@@ -1,29 +1,26 @@
-import { AppProps } from 'next/app';
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import '@/styles/globals.css';
 
-function MyApp({ Component, pageProps }: AppProps) {
-  const router = useRouter();
+function App() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    // Check if user is authenticated
     const token = localStorage.getItem('auth_token');
     setIsAuthenticated(!!token);
 
-    // If not authenticated and not on auth pages, redirect to login
-    if (!token && !router.pathname.startsWith('/auth/')) {
-      router.push('/auth/login');
+    if (!token && !location.pathname.startsWith('/auth/')) {
+      navigate('/auth/login');
     }
 
-    // If authenticated and on auth pages, redirect to main app
-    if (token && router.pathname.startsWith('/auth/')) {
-      router.push('/');
+    if (token && location.pathname.startsWith('/auth/')) {
+      navigate('/');
     }
-  }, [router.pathname]);
+  }, [location.pathname, navigate]);
 
-  return <Component {...pageProps} />;
+  return null;
 }
 
-export default MyApp; 
+export default App; 

@@ -1,0 +1,50 @@
+.tokenUsage {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    padding: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+
+    &:hover {
+        border-color: rgba(255, 255, 255, 0.1);
+        background: rgba(0, 0, 0, 0.2);
+    }
+}
+
+.tokenHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.tokenLabel {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.tokenCount {
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
+}
+
+.errorText {
+    font-size: 14px;
+    color: #ef4444;
+    font-style: italic;
+}
+
+.progressBar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background: linear-gradient(90deg, #8A30FF, #F842B2);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+} 

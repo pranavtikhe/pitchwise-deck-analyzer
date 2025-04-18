@@ -3,10 +3,10 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import LandingPage from "./pages/landing/LandingPage";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import History from "./pages/History";
-import ViewInsight from "./pages/ViewInsight";
 import LoginPage from "./pages/auth/login";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -19,7 +19,8 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<LoginPage />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/auth/signin" element={<LoginPage />} />
           <Route
             path="/spider"
             element={
@@ -33,14 +34,6 @@ const App = () => (
             element={
               <ProtectedRoute>
                 <History />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/insight/:id"
-            element={
-              <ProtectedRoute>
-                <ViewInsight />
               </ProtectedRoute>
             }
           />

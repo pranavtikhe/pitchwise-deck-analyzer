@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, ArrowRight, Eye, EyeOff, Phone } from 'lucide-react';
 import { motion } from 'framer-motion';
 import styles from '../../styles/upload.module.scss';
+import { signIn, signUp } from '@/services/authService';
+import { toast } from 'sonner';
 
 interface FormData {
   fullName: string;
@@ -39,9 +41,9 @@ const PasswordStrength = ({ password }: { password: string }) => {
     <div className="mt-2">
       <div className="flex items-center gap-2">
         <div className="flex-1 h-1 bg-[#3A3A3A] rounded-full overflow-hidden">
-          <div 
-            className="h-full transition-all duration-300" 
-            style={{ 
+          <div
+            className="h-full transition-all duration-300"
+            style={{
               width: `${(strength / 5) * 100}%`,
               backgroundColor: strengthColor
             }}
@@ -74,7 +76,7 @@ const LoginPage = () => {
     const hasLowerCase = /[a-z]/.test(password);
     const hasNumbers = /[0-9]/.test(password);
     const hasSpecialChar = /[^A-Za-z0-9]/.test(password);
-    
+
     return hasMinLength && hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar;
   };
 
@@ -94,18 +96,18 @@ const LoginPage = () => {
 
   const validateForm = () => {
     const newErrors: FormErrors = {};
-    
+
     if (activeTab === 'signup') {
       if (!formData.fullName) {
         newErrors.fullName = 'Full name is required';
       }
-      
+
       if (!formData.email) {
         newErrors.email = 'Email is required';
       } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
         newErrors.email = 'Email is invalid';
       }
-      
+
       if (!formData.password) {
         newErrors.password = 'Password is required';
       } else if (!validatePassword(formData.password)) {
@@ -125,7 +127,7 @@ const LoginPage = () => {
       if (!formData.email) {
         newErrors.email = 'Email is required';
       }
-      
+
       if (!formData.password) {
         newErrors.password = 'Password is required';
       }
@@ -147,18 +149,23 @@ const LoginPage = () => {
 
     try {
       if (activeTab === 'signup') {
-        if (formData.password !== formData.confirmPassword) {
-          throw new Error('Passwords do not match');
+        const { error } = await signUp(formData.email, formData.password, formData.fullName);
+        if (error) {
+          throw new Error(error.message);
         }
-        localStorage.setItem('auth_token', 'demo_token');
-        localStorage.setItem('user_email', formData.email);
-        navigate('/spider');
+        toast.success('Account created successfully! Please check your email to verify your account.');
+        setActiveTab('login');
       } else {
-        localStorage.setItem('auth_token', 'demo_token');
+        const { error } = await signIn(formData.email, formData.password);
+        if (error) {
+          throw new Error(error.message);
+        }
+        toast.success('Logged in successfully!');
         navigate('/spider');
       }
     } catch (err: any) {
       setError(err.message || 'An error occurred');
+      toast.error(err.message || 'An error occurred');
     } finally {
       setLoading(false);
     }
@@ -168,6 +175,57 @@ const LoginPage = () => {
     <div className="min-h-screen bg-[#1C1C1C] flex flex-col items-center justify-center p-6">
       <img src="/images/slogo.svg" alt="logo" className="w-[68px] h-[72px] mb-10" />
 
+      <div className="flex justify-center mb-6">
+        <motion.div
+          className="bg-[#2A2A2A] rounded-full p-1 inline-flex"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <motion.button
+            className={`px-8 py-2 rounded-full text-sm font-medium transition-all duration-200 ${activeTab === 'login'
+              ? 'bg-gradient-to-r from-[#2B8CFF] to-[#7B5AFF] text-white'
+              : 'text-muted-foreground hover:text-white'
+              }`}
+            onClick={() => {
+              setActiveTab('login');
+              setFormData({
+                fullName: '',
+                email: '',
+                password: '',
+                confirmPassword: '',
+                mobile: ''
+              });
+              setErrors({});
+            }}
+            whileHover={{ scale: activeTab === 'login' ? 1 : 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            Log In
+          </motion.button>
+          <motion.button
+            className={`px-8 py-2 rounded-full text-sm font-medium transition-all duration-200 ${activeTab === 'signup'
+              ? 'bg-gradient-to-r from-[#2B8CFF] to-[#7B5AFF] text-white'
+              : 'text-muted-foreground hover:text-white'
+              }`}
+            onClick={() => {
+              setActiveTab('signup');
+              setFormData({
+                fullName: '',
+                email: '',
+                password: '',
+                confirmPassword: '',
+                mobile: ''
+              });
+              setErrors({});
+            }}
+            whileHover={{ scale: activeTab === 'signup' ? 1 : 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            Sign Up
+          </motion.button>
+        </motion.div>
+      </div>
       <div className={`${styles.gradientWrapper} w-[676px] min-h-[580px] max-w-[90vw]`}>
         <img
           src="/images/backgroundgradiant.png"
@@ -175,62 +233,10 @@ const LoginPage = () => {
           className={styles.gradientBackground}
         />
         <div className={`${styles.innerBox} w-full h-full p-8 flex flex-col`}>
-          <div className="flex justify-center mb-6">
-            <motion.div 
-              className="bg-[#2A2A2A] rounded-full p-1 inline-flex"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <motion.button
-                className={`px-8 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                  activeTab === 'login'
-                    ? 'bg-gradient-to-r from-[#2B8CFF] to-[#7B5AFF] text-white'
-                    : 'text-muted-foreground hover:text-white'
-                }`}
-                onClick={() => {
-                  setActiveTab('login');
-                  setFormData({
-                    fullName: '',
-                    email: '',
-                    password: '',
-                    confirmPassword: '',
-                    mobile: ''
-                  });
-                  setErrors({});
-                }}
-                whileHover={{ scale: activeTab === 'login' ? 1 : 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                Log In
-              </motion.button>
-              <motion.button
-                className={`px-8 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                  activeTab === 'signup'
-                    ? 'bg-gradient-to-r from-[#2B8CFF] to-[#7B5AFF] text-white'
-                    : 'text-muted-foreground hover:text-white'
-                }`}
-                onClick={() => {
-                  setActiveTab('signup');
-                  setFormData({
-                    fullName: '',
-                    email: '',
-                    password: '',
-                    confirmPassword: '',
-                    mobile: ''
-                  });
-                  setErrors({});
-                }}
-                whileHover={{ scale: activeTab === 'signup' ? 1 : 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                Sign Up
-              </motion.button>
-            </motion.div>
-          </div>
+
 
           {error && (
-            <motion.div 
+            <motion.div
               className="mb-4 text-destructive text-sm text-center"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -248,24 +254,23 @@ const LoginPage = () => {
             className="flex-1 flex flex-col"
           >
             {activeTab === 'login' ? (
-              <motion.form 
-                onSubmit={handleSubmit} 
+              <motion.form
+                onSubmit={handleSubmit}
                 className="space-y-4 w-full max-w-[400px] mx-auto"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
               >
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-white">Email</label>
+                  <label className="block text-sm font-medium text-white text-left">Username</label>
                   <div className="relative">
                     <input
                       type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className={`w-full bg-[#2A2A2A] border ${
-                        errors.email ? 'border-destructive' : 'border-[#3A3A3A]'
-                      } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
+                      className={`w-[548px] bg-[#2A2A2A] border ${errors.email ? 'border-destructive' : 'border-[#3A3A3A]'
+                        } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 `}
                       placeholder="Enter your email"
                       required
                     />
@@ -276,16 +281,15 @@ const LoginPage = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-white">Password</label>
+                  <label className="block text-sm font-medium text-white text-left">Password</label>
                   <div className="relative">
                     <input
                       type={showPassword ? "text" : "password"}
                       name="password"
                       value={formData.password}
                       onChange={handleInputChange}
-                      className={`w-full bg-[#2A2A2A] border ${
-                        errors.password ? 'border-destructive' : 'border-[#3A3A3A]'
-                      } rounded-lg py-2 pl-4 pr-10 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
+                      className={`w-full bg-[#2A2A2A] border ${errors.password ? 'border-destructive' : 'border-[#3A3A3A]'
+                        } rounded-lg py-2 pl-4 pr-10 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
                       placeholder="Enter your password"
                       required
                     />
@@ -302,8 +306,8 @@ const LoginPage = () => {
                   )}
                 </div>
 
-                <motion.button 
-                  type="submit" 
+                <motion.button
+                  type="submit"
                   className={`${styles.analyzeButton} ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -314,8 +318,8 @@ const LoginPage = () => {
                 </motion.button>
               </motion.form>
             ) : (
-              <motion.form 
-                onSubmit={handleSubmit} 
+              <motion.form
+                onSubmit={handleSubmit}
                 className="space-y-4 w-full max-w-[400px] mx-auto"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -329,9 +333,8 @@ const LoginPage = () => {
                       name="fullName"
                       value={formData.fullName}
                       onChange={handleInputChange}
-                      className={`w-full bg-[#2A2A2A] border ${
-                        errors.fullName ? 'border-destructive' : 'border-[#3A3A3A]'
-                      } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
+                      className={`w-full bg-[#2A2A2A] border ${errors.fullName ? 'border-destructive' : 'border-[#3A3A3A]'
+                        } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
                       placeholder="Enter your full name"
                       required
                     />
@@ -349,9 +352,8 @@ const LoginPage = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className={`w-full bg-[#2A2A2A] border ${
-                        errors.email ? 'border-destructive' : 'border-[#3A3A3A]'
-                      } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
+                      className={`w-full bg-[#2A2A2A] border ${errors.email ? 'border-destructive' : 'border-[#3A3A3A]'
+                        } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
                       placeholder="Enter your email"
                       required
                     />
@@ -369,9 +371,8 @@ const LoginPage = () => {
                       name="password"
                       value={formData.password}
                       onChange={handleInputChange}
-                      className={`w-full bg-[#2A2A2A] border ${
-                        errors.password ? 'border-destructive' : 'border-[#3A3A3A]'
-                      } rounded-lg py-2 pl-4 pr-10 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
+                      className={`w-full bg-[#2A2A2A] border ${errors.password ? 'border-destructive' : 'border-[#3A3A3A]'
+                        } rounded-lg py-2 pl-4 pr-10 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
                       placeholder="Create a password"
                       required
                     />
@@ -397,9 +398,8 @@ const LoginPage = () => {
                       name="confirmPassword"
                       value={formData.confirmPassword}
                       onChange={handleInputChange}
-                      className={`w-full bg-[#2A2A2A] border ${
-                        errors.confirmPassword ? 'border-destructive' : 'border-[#3A3A3A]'
-                      } rounded-lg py-2 pl-4 pr-10 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
+                      className={`w-full bg-[#2A2A2A] border ${errors.confirmPassword ? 'border-destructive' : 'border-[#3A3A3A]'
+                        } rounded-lg py-2 pl-4 pr-10 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
                       placeholder="Confirm your password"
                       required
                     />
@@ -424,9 +424,8 @@ const LoginPage = () => {
                       name="mobile"
                       value={formData.mobile}
                       onChange={handleInputChange}
-                      className={`w-full bg-[#2A2A2A] border ${
-                        errors.mobile ? 'border-destructive' : 'border-[#3A3A3A]'
-                      } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
+                      className={`w-full bg-[#2A2A2A] border ${errors.mobile ? 'border-destructive' : 'border-[#3A3A3A]'
+                        } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
                       placeholder="Enter your mobile number"
                     />
                   </div>
@@ -435,8 +434,8 @@ const LoginPage = () => {
                   )}
                 </div>
 
-                <motion.button 
-                  type="submit" 
+                <motion.button
+                  type="submit"
                   className={`${styles.analyzeButton} ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -458,7 +457,7 @@ const LoginPage = () => {
             </div>
           </div>
 
-          <motion.button 
+          <motion.button
             type="button"
             className={styles.googleButton}
             whileHover={{ scale: 1.02 }}

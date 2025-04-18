@@ -2,8 +2,6 @@ import * as pdfjs from 'pdfjs-dist';
 import { supabase } from "@/integrations/supabase/client";
 import { createWorker } from 'tesseract.js';
 import { analyzePitchDeck } from './apiService';
-import { processDocument } from './ocrService';
-import { MistralResponse } from '@/types/mistral';
 
 // Import Supabase URL and key
 const SUPABASE_URL = "https://objyddwihcupdeflwcty.supabase.co";
@@ -100,12 +98,92 @@ export const extractTextFromPdf = async (file: File): Promise<string> => {
 };
 
 /**
+ * Interface for the response from Mistral API
+ */
+export interface MistralResponse {
+  industry_type: string;
+  pitch_clarity: number;
+  investment_score: number;
+  market_position: string;
+  company_overview: {
+    company_name: string;
+    industry: string;
+    business_model: string;
+    key_offerings: string;
+    market_position: string;
+    founded_on: string;
+  };
+  strengths: string[];
+  weaknesses: string[];
+  funding_history: {
+    rounds: {
+      type: string;
+      amount: string;
+      key_investors: string[];
+    }[];
+  };
+  proposed_deal_structure: {
+    investment_amount: string;
+    valuation_cap: string;
+    equity_stake: string;
+    anti_dilution_protection: string;
+    board_seat: string;
+    liquidation_preference: string;
+    vesting_schedule: string;
+    other_terms: string;
+  };
+  key_questions: {
+    market_strategy: string[];
+    user_relation: string[];
+    regulatory_compliance: string[];
+  };
+  final_verdict: {
+    product_viability: number;
+    market_potential: number;
+    sustainability: number;
+    innovation: number;
+    exit_potential: number;
+    risk_factor: number;
+    competitive_edge: number;
+  };
+  // Additional fields for extended analysis
+  innovation: string;
+  industry: string;
+  problem: string;
+  solution: string;
+  funding: string;
+  market: string;
+  competitors: string[];
+  expert_opinions: string[];
+  suggested_improvements: string[];
+  market_comparison: string;
+  key_insights: string;
+  exit_potential: string;
+  overall_reputation: string;
+  ratings: {
+    innovation_rating: number;
+    market_potential_rating: number;
+    competitive_advantage_rating: number;
+    financial_strength_rating: number;
+    team_rating: number;
+    overall_rating: number;
+  };
+  rating_insights: {
+    innovation_insights: string;
+    market_potential_insights: string;
+    competitive_advantage_insights: string;
+    financial_strength_insights: string;
+    team_insights: string;
+    overall_insights: string;
+  };
+}
+
+/**
  * Analyze text using backend service (which will use Mistral API)
  */
-export const analyzeWithBackend = async (file: File): Promise<MistralResponse> => {
+export const analyzeWithBackend = async (text: string): Promise<MistralResponse> => {
   try {
-    console.log('Starting document analysis with Mistral...');
-    const data = await processDocument(file);
+    const data = await analyzePitchDeck(text);
     
     // Ensure all required fields are present
     const defaultResponse: MistralResponse = {
@@ -153,10 +231,38 @@ export const analyzeWithBackend = async (file: File): Promise<MistralResponse> =
         exit_potential: data.final_verdict?.exit_potential || 5,
         risk_factor: data.final_verdict?.risk_factor || 5,
         competitive_edge: data.final_verdict?.competitive_edge || 5,
-      }
+      },
+      innovation: data.innovation || 'Not Specified',
+      industry: data.industry || 'Not Specified',
+      problem: data.problem || 'Not Specified',
+      solution: data.solution || 'Not Specified',
+      funding: data.funding || 'Not Specified',
+      market: data.market || 'Not Specified',
+      competitors: data.competitors || ['Not Specified'],
+      expert_opinions: data.expert_opinions || ['Not Specified'],
+      suggested_improvements: data.suggested_improvements || ['Not Specified'],
+      market_comparison: data.market_comparison || 'Not Specified',
+      key_insights: data.key_insights || 'Not Specified',
+      exit_potential: data.exit_potential || 'Not Specified',
+      overall_reputation: data.overall_reputation || 'Not Specified',
+      ratings: {
+        innovation_rating: data.ratings?.innovation_rating || 5,
+        market_potential_rating: data.ratings?.market_potential_rating || 5,
+        competitive_advantage_rating: data.ratings?.competitive_advantage_rating || 5,
+        financial_strength_rating: data.ratings?.financial_strength_rating || 5,
+        team_rating: data.ratings?.team_rating || 5,
+        overall_rating: data.ratings?.overall_rating || 5,
+      },
+      rating_insights: {
+        innovation_insights: data.rating_insights?.innovation_insights || 'Not Specified',
+        market_potential_insights: data.rating_insights?.market_potential_insights || 'Not Specified',
+        competitive_advantage_insights: data.rating_insights?.competitive_advantage_insights || 'Not Specified',
+        financial_strength_insights: data.rating_insights?.financial_strength_insights || 'Not Specified',
+        team_insights: data.rating_insights?.team_insights || 'Not Specified',
+        overall_insights: data.rating_insights?.overall_insights || 'Not Specified',
+      },
     };
 
-    console.log('Analysis completed successfully');
     return defaultResponse;
   } catch (error) {
     console.error('Error analyzing pitch deck:', error);

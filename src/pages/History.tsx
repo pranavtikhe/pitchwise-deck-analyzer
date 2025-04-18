@@ -1,7 +1,6 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "@/components/Header";
+import Navbar from "@/components/Navbar";
 import InsightsTable from "@/components/InsightsTable";
 import { fetchInsightsFromSupabase } from "@/services/pdfService";
 import { toast } from "@/components/ui/sonner";
@@ -35,7 +34,7 @@ const History = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
+      <Navbar />
       
       <main className="flex-1 container py-8 px-4">
         <section className="mb-8">

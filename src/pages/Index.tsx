@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import Header from "@/components/Header";
+import Navbar from "@/components/Navbar";
 import FileUpload from "@/components/FileUpload";
 import { extractTextFromPdf, analyzeWithBackend } from "@/services/pdfService";
 import { Button } from "@/components/ui/button";
@@ -75,9 +75,8 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-[#1C1C1C] flex flex-col">
-      <img src="/images/slogo.svg" alt="logo" className="w-[68px] h-[72px] mx-auto" />
-
-
+      <Navbar />
+      
       <main className="flex-1 container py-16">
         <h1 className={styles.title}>Start Analysis</h1>
 

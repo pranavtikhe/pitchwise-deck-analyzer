@@ -1,0 +1,139 @@
+// Colors
+$n1: #ffffff;
+$n2: #f8f8f8;
+$n3: #282828;
+$n4: #121212;
+
+$background-color: $n4;
+$text-color: $n2;
+$text-primary: rgba($n2, 0.95);
+$text-secondary: rgba($n2, 0.70);
+$text-tertiary: rgba($n2, 0.50);
+
+// Gradients
+$gradient-primary: linear-gradient(90deg, #00F5A0 0%, #00D9F5 100%);
+$gradient-secondary: linear-gradient(135deg, rgba(0, 245, 160, 0.1) 0%, rgba(0, 217, 245, 0.1) 100%);
+
+// Media queries
+@mixin xl {
+    @media only screen and (max-width: 1519px) {
+        @content;
+    }
+}
+
+@mixin w {
+    @media only screen and (max-width: 1419px) {
+        @content;
+    }
+}
+
+@mixin d {
+    @media only screen and (max-width: 1259px) {
+        @content;
+    }
+}
+
+@mixin t {
+    @media only screen and (max-width: 1023px) {
+        @content;
+    }
+}
+
+@mixin m {
+    @media only screen and (max-width: 767px) {
+        @content;
+    }
+}
+
+@mixin s {
+    @media only screen and (max-width: 474px) {
+        @content;
+    }
+}
+
+@mixin r($width) {
+    @media only screen and (max-width: #{$width}px) {
+        @content;
+    }
+}
+
+@mixin rmin($width) {
+    @media only screen and (min-width: #{$width}px) {
+        @content;
+    }
+}
+
+// Typography
+@mixin title {
+    font-size: 20px;
+    line-height: 1.2;
+    font-weight: 500;
+}
+
+@mixin info {
+    font-size: 20px;
+    line-height: 1.6;
+    font-weight: 300;
+}
+
+@mixin base-r {
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+@mixin base-m {
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+@mixin base-2m {
+    font-size: 14px;
+    line-height: 1.4;
+    font-weight: 500;
+}
+
+@mixin base-2r {
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+@mixin base-2s {
+    font-size: 14px;
+    line-height: 1.4;
+    font-weight: 600;
+}
+
+@mixin caption-r {
+    font-size: 12px;
+    line-height: 1.33;
+}
+
+@mixin caption-sm {
+    font-size: 12px;
+    line-height: 1.33;
+    font-weight: 600;
+}
+
+@mixin small {
+    font-size: 10px;
+    line-height: 1.2;
+}
+
+@mixin small-sm {
+    font-size: 10px;
+    line-height: 1.2;
+    font-weight: 600;
+}
+
+@mixin hairline {
+    font-size: 12px;
+    line-height: 1.65;
+    font-weight: 500;
+}
+
+@mixin gradient-text {
+    background-image: linear-gradient(93deg, rgba($n2, 0.9), rgba($n2, 0.5));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
