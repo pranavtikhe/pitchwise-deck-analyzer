@@ -205,7 +205,8 @@ const LandingPage = () => {
                     <img
                         src="/images/white-radial.svg"
                         alt="Radial gradient"
-                        className={styles.radialImage}
+                        width={1000}
+                        height={1000}
                     />
                 </motion.div>
             </div>
@@ -232,7 +233,7 @@ const LandingPage = () => {
                         AI-Powered Investment Analysis
                     </motion.h1>
 
-                    {/* <motion.div
+                    <motion.div
                         className={styles.heroImage}
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
@@ -243,11 +244,11 @@ const LandingPage = () => {
                         }}
                     >
                         <img
-                            src="/images/contract.png"
-                            alt="LawBit Hero"
+                            src="/images/report.png"
+                            alt="Spider Hero"
                             className={styles.heroImg}
                         />
-                    </motion.div> */}
+                    </motion.div>
 
                     <motion.p
                         className={styles.description}
@@ -258,7 +259,7 @@ const LandingPage = () => {
                         Transform pitch deck evaluation with AI-driven insights and comprehensive investment reports
                     </motion.p>
                 </div>
-                <Link to="/auth/signup" className={styles.button}>
+                <Link to="/auth/signin" className={styles.button}>
                     Start Analysis
                 </Link>
             </section>
@@ -485,30 +486,94 @@ const LandingPage = () => {
                 </div>
             </section>
 
-
-            {/* Product Hunt Section */}
-            <section className={styles.productHunt}>
+            {/* FAQ Section */}
+            <section className={styles.faq}>
                 <div className={styles.container}>
-                    <div className={styles.productHuntContent}>
-                        <h2 className={styles.sectionTitle}>
-                            <span>Join the AI Legal Revolution</span>
-                        </h2>
-                        <p className={styles.sectionSubtitle}>
-                            From Hours to Seconds: Analyze Legal Docs with LawBit's Cutting-Edge AI
-                        </p>
-                        <div className={styles.productHuntBadge}>
-                            <a
-                                href="https://www.producthunt.com/products/lawbit/reviews?utm_source=badge-product_review&utm_medium=badge&utm_souce=badge-lawbit"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={styles.badgeLink}
-                            >
-                                <img
-                                    src="https://api.producthunt.com/widgets/embed-image/v1/product_review.svg?product_id=1053856&theme=dark"
-                                    alt="Lawbit - Revolutionize Your Legal Drafting with AI Precision | Product Hunt"
-                                    className={styles.badgeImage}
-                                />
-                            </a>
+                    <motion.h1
+                        className={styles.title}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        style={{
+                            background: 'linear-gradient(90deg, #FFFFFF 0%, #959595 50%, rgba(255, 255, 255, 0.15) 100%)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            fontFamily: 'Fustat, sans-serif',
+                            whiteSpace: 'nowrap',
+                            overflow: 'visible',
+                            textAlign: 'center',
+                            marginBottom: '1rem'
+                        }}
+                    >
+                        Frequently asked questions
+                    </motion.h1>
+                    <motion.p
+                        className={styles.subtitle}
+                        style={{
+                            textAlign: 'center',
+                            color: '#959595',
+                            fontSize: '1.2rem',
+                            marginBottom: '4rem'
+                        }}
+                    >
+                        Have more questions? Our support team is here to help you make informed investment decisions.
+                    </motion.p>
+                    <div className={styles.faqGrid}>
+                        <div className={styles.faqAccordion}>
+                            {[
+                                {
+                                    question: 'How accurate is the AI analysis?',
+                                    answer: 'Our AI analysis powered by Gemini 2.0 achieves over 95% accuracy in extracting key information from pitch decks. The system is continuously trained on thousands of successful pitch decks and investment reports to provide reliable insights.'
+                                },
+                                {
+                                    question: 'What types of pitch decks can be analyzed?',
+                                    answer: 'Our system can analyze pitch decks across various industries and stages, including startup pitch decks, investment presentations, and business proposals. We support multiple file formats including PDF, PowerPoint, and Google Slides.'
+                                },
+                                {
+                                    question: 'How secure is my pitch deck data?',
+                                    answer: 'We employ enterprise-grade encryption and security measures to protect your data. All uploads are encrypted, and we maintain strict access controls and compliance with data protection regulations.'
+                                },
+                                {
+                                    question: 'Can I customize the analysis reports?',
+                                    answer: 'Yes, you can customize analysis reports to focus on specific aspects of the pitch deck, add custom metrics, and generate reports in various formats including PDF, Excel, and interactive dashboards.'
+                                },
+                                {
+                                    question: 'How long does the analysis take?',
+                                    answer: 'Most pitch deck analyses are completed within 2-3 minutes. Complex decks or those requiring detailed market analysis may take up to 5 minutes to process completely.'
+                                },
+                                {
+                                    question: 'What kind of insights does Spider provide?',
+                                    answer: 'Spider provides comprehensive insights including market analysis, competitive landscape, financial projections evaluation, team assessment, and risk analysis. We also offer industry-specific metrics and benchmarking.'
+                                },
+                                {
+                                    question: 'Can I integrate Spider with my existing tools?',
+                                    answer: 'Yes, Spider offers API integration capabilities and can be integrated with popular investment management platforms, CRM systems, and data analytics tools.'
+                                }
+                            ].map((faq, index) => (
+                                <motion.div
+                                    key={index}
+                                    className={styles.faqItem}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                                >
+                                    <button
+                                        className={styles.faqQuestion}
+                                        onClick={() => {
+                                            const element = document.getElementById(`faq-${index}`);
+                                            if (element) {
+                                                element.classList.toggle(styles.active);
+                                            }
+                                        }}
+                                    >
+                                        {faq.question}
+                                        <span className={styles.faqIcon}>+</span>
+                                    </button>
+                                    <div id={`faq-${index}`} className={styles.faqAnswer}>
+                                        <p>{faq.answer}</p>
+                                    </div>
+                                </motion.div>
+                            ))}
                         </div>
                     </div>
                 </div>

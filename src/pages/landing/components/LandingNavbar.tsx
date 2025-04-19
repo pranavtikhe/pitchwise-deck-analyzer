@@ -82,7 +82,7 @@ const LandingNavbar = () => {
                                 <Link to="/auth/signin" className={`${styles.button} ${styles.loginButton}`}>
                                     Log In
                                 </Link>
-                                <Link to="/auth/signup" className={styles.button}>
+                                <Link to="/auth/signin" className={styles.button}>
                                     Try Now
                                 </Link>
                             </>
