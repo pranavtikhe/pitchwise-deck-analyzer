@@ -181,92 +181,14 @@ export interface MistralResponse {
 /**
  * Analyze text using backend service (which will use Mistral API)
  */
-export const analyzeWithBackend = async (text: string): Promise<MistralResponse> => {
+export const analyzeWithBackend = async (text: string): Promise<MistralResponse & { analyzedAt: Date }> => {
   try {
-    const data = await analyzePitchDeck(text);
-    
-    // Ensure all required fields are present
-    const defaultResponse: MistralResponse = {
-      industry_type: data.industry_type || 'Not Specified',
-      pitch_clarity: data.pitch_clarity || 5,
-      investment_score: data.investment_score || 5,
-      market_position: data.market_position || 'Not Specified',
-      company_overview: {
-        company_name: data.company_overview?.company_name || 'Not Specified',
-        industry: data.company_overview?.industry || 'Not Specified',
-        business_model: data.company_overview?.business_model || 'Not Specified',
-        key_offerings: data.company_overview?.key_offerings || 'Not Specified',
-        market_position: data.company_overview?.market_position || 'Not Specified',
-        founded_on: data.company_overview?.founded_on || 'Not Specified',
-      },
-      strengths: data.strengths || ['Not Specified'],
-      weaknesses: data.weaknesses || ['Not Specified'],
-      funding_history: {
-        rounds: data.funding_history?.rounds || [{
-          type: 'Seed',
-          amount: 'Not Specified',
-          key_investors: ['Not Specified']
-        }]
-      },
-      proposed_deal_structure: {
-        investment_amount: data.proposed_deal_structure?.investment_amount || 'Not Specified',
-        valuation_cap: data.proposed_deal_structure?.valuation_cap || 'Not Specified',
-        equity_stake: data.proposed_deal_structure?.equity_stake || 'Not Specified',
-        anti_dilution_protection: data.proposed_deal_structure?.anti_dilution_protection || 'Not Specified',
-        board_seat: data.proposed_deal_structure?.board_seat || 'Not Specified',
-        liquidation_preference: data.proposed_deal_structure?.liquidation_preference || 'Not Specified',
-        vesting_schedule: data.proposed_deal_structure?.vesting_schedule || 'Not Specified',
-        other_terms: data.proposed_deal_structure?.other_terms || 'Not Specified',
-      },
-      key_questions: {
-        market_strategy: data.key_questions?.market_strategy || ['Not Specified'],
-        user_relation: data.key_questions?.user_relation || ['Not Specified'],
-        regulatory_compliance: data.key_questions?.regulatory_compliance || ['Not Specified'],
-      },
-      final_verdict: {
-        product_viability: data.final_verdict?.product_viability || 5,
-        market_potential: data.final_verdict?.market_potential || 5,
-        sustainability: data.final_verdict?.sustainability || 5,
-        innovation: data.final_verdict?.innovation || 5,
-        exit_potential: data.final_verdict?.exit_potential || 5,
-        risk_factor: data.final_verdict?.risk_factor || 5,
-        competitive_edge: data.final_verdict?.competitive_edge || 5,
-      },
-      innovation: data.innovation || 'Not Specified',
-      industry: data.industry || 'Not Specified',
-      problem: data.problem || 'Not Specified',
-      solution: data.solution || 'Not Specified',
-      funding: data.funding || 'Not Specified',
-      market: data.market || 'Not Specified',
-      competitors: data.competitors || ['Not Specified'],
-      expert_opinions: data.expert_opinions || ['Not Specified'],
-      suggested_improvements: data.suggested_improvements || ['Not Specified'],
-      market_comparison: data.market_comparison || 'Not Specified',
-      key_insights: data.key_insights || 'Not Specified',
-      exit_potential: data.exit_potential || 'Not Specified',
-      overall_reputation: data.overall_reputation || 'Not Specified',
-      ratings: {
-        innovation_rating: data.ratings?.innovation_rating || 5,
-        market_potential_rating: data.ratings?.market_potential_rating || 5,
-        competitive_advantage_rating: data.ratings?.competitive_advantage_rating || 5,
-        financial_strength_rating: data.ratings?.financial_strength_rating || 5,
-        team_rating: data.ratings?.team_rating || 5,
-        overall_rating: data.ratings?.overall_rating || 5,
-      },
-      rating_insights: {
-        innovation_insights: data.rating_insights?.innovation_insights || 'Not Specified',
-        market_potential_insights: data.rating_insights?.market_potential_insights || 'Not Specified',
-        competitive_advantage_insights: data.rating_insights?.competitive_advantage_insights || 'Not Specified',
-        financial_strength_insights: data.rating_insights?.financial_strength_insights || 'Not Specified',
-        team_insights: data.rating_insights?.team_insights || 'Not Specified',
-        overall_insights: data.rating_insights?.overall_insights || 'Not Specified',
-      },
-    };
-
-    return defaultResponse;
+    console.log('Starting pitch deck analysis...');
+    const analysis = await analyzePitchDeck(text);
+    return analysis;
   } catch (error) {
     console.error('Error analyzing pitch deck:', error);
-    throw error;
+    throw new Error('Failed to analyze pitch deck. Please try again.');
   }
 };
 

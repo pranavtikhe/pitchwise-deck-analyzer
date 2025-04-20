@@ -1,132 +1,140 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { getSupabaseClient } from '@/lib/supabase';
-import LandingNavbar from './components/LandingNavbar';
-import Button from './components/Button';
-import SubscriptionModal from '@/components/SubscriptionModal';
-import StarField from './components/StarField';
-import TestimonialCarousel from './components/TestimonialCarousel';
-import styles from './styles/LandingPage.module.scss';
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { getSupabaseClient } from "@/lib/supabase";
+import LandingNavbar from "./components/LandingNavbar";
+import Button from "./components/Button";
+import SubscriptionModal from "@/components/SubscriptionModal";
+import StarField from "./components/StarField";
+import TestimonialCarousel from "./components/TestimonialCarousel";
+import styles from "./styles/LandingPage.module.scss";
 
 const features = [
     {
-        icon: '/icons/feature-1.svg',
-        title: 'AI-Powered Investment Analysis',
-        description: 'Leverage Mistral to extract key insights and generate comprehensive investment reports.'
-    },
-    {
-        icon: '/icons/feature-2.svg',
-        title: 'Smart Document Processing',
-        description: 'Process PDFs, images, and text to extract valuable data from pitch decks.'
-    },
-    {
-        icon: '/icons/feature-3.svg',
-        title: ' Market Intelligence',
-        description: 'Get real-time market analysis and competitor benchmarking.'
-    },
-    {
-        icon: '/icons/feature-3.svg',
-        title: ' Team Evaluation',
-        description: 'Comprehensive analysis of founding teams and their track record.'
-    }
+    icon: "/analysis.svg",
+    title: "AI-Powered Investment Analysis",
+    description:
+      "Leverage Mistral to extract key insights and generate comprehensive investment reports.",
+  },
+  {
+    icon: "/process.svg",
+    title: "Smart Document Processing",
+    description:
+      "Process PDFs, images, and text to extract valuable data from pitch decks.",
+  },
+  {
+    icon: "/market.svg",
+    title: " Market Intelligence",
+    description: "Get real-time market analysis and competitor benchmarking.",
+  },
+  {
+    icon: "/team.svg",
+    title: " Team Evaluation",
+    description:
+      "Comprehensive analysis of founding teams and their track record.",
+  },
 ];
 
 const benefits = [
     {
-        title: 'Faster Analysis',
-        description: 'Reduce pitch deck review time by up to 70% with AI-powered insights.'
-    },
-    {
-        title: 'Data-Driven Decisions',
-        description: 'Make informed investment decisions backed by comprehensive market analysis.'
-    },
-    {
-        title: 'Scalable Solution',
-        description: 'Scale your investment analysis process without increasing team size.'
-    },
-    {
-        title: 'Competitive Edge',
-        description: 'Stay ahead with real-time market intelligence and competitor analysis.'
-    }
+    title: "Faster Analysis",
+    description:
+      "Reduce pitch deck review time by up to 70% with AI-powered insights.",
+  },
+  {
+    title: "Data-Driven Decisions",
+    description:
+      "Make informed investment decisions backed by comprehensive market analysis.",
+  },
+  {
+    title: "Scalable Solution",
+    description:
+      "Scale your investment analysis process without increasing team size.",
+  },
+  {
+    title: "Competitive Edge",
+    description:
+      "Stay ahead with real-time market intelligence and competitor analysis.",
+  },
 ];
 
 const testimonials = [
     {
         text: "I've spent half my time on legal paperwork. LawBit has cut that down by 75%. It's a game-changer for my business.",
         author: "Jessica Williams",
-        position: "Operations Manager - TechStart Inc"
+    position: "Operations Manager - TechStart Inc",
     },
     {
         text: "As a startup, it was never like this managing legal documents. LawBit makes it easy to stay compliant and grow with confidence.",
         author: "Michael Chen",
-        position: "Founder - Swift Labs"
+    position: "Founder - Swift Labs",
     },
     {
         text: "The risk analysis feature gives us peace of mind. We catch potential issues before they become problems.",
         author: "Sarah Williams",
-        position: "Legal Manager - InnovateCo"
-    }
+    position: "Legal Manager - InnovateCo",
+  },
 ];
 
 const pricing = [
     {
-        title: 'Basic',
-        price: '$29',
-        period: '/mo',
-        description: 'For individuals and small teams',
+    title: "Basic",
+    price: "$29",
+    period: "/mo",
+    description: "For individuals and small teams",
         features: [
-            '10 Pitch Deck Analysis',
-            'Basic Market Insights',
-            'Email Support',
-            'Export Reports'
-        ],
-        buttonText: 'Get Started'
-    },
-    {
-        title: 'Pro',
-        price: '$79',
-        period: '/mo',
-        description: 'For growing companies',
+      "10 Pitch Deck Analysis",
+      "Basic Market Insights",
+      "Email Support",
+      "Export Reports",
+    ],
+    buttonText: "Get Started",
+  },
+  {
+    title: "Pro",
+    price: "$79",
+    period: "/mo",
+    description: "For growing companies",
         features: [
-            '50 Pitch Deck Analysis',
-            'Advanced Market Insights',
-            'Priority Support',
-            'Team Collaboration'
-        ],
-        buttonText: 'Get Pro'
-    },
-    {
-        title: 'Enterprise',
-        price: '$199',
-        period: '/mo',
-        description: 'For large organizations',
+      "50 Pitch Deck Analysis",
+      "Advanced Market Insights",
+      "Priority Support",
+      "Team Collaboration",
+    ],
+    buttonText: "Get Pro",
+  },
+  {
+    title: "Enterprise",
+    price: "$199",
+    period: "/mo",
+    description: "For large organizations",
         features: [
-            'Unlimited Analysis',
-            'Custom Integrations',
-            'Dedicated Support',
-            'API Access'
-        ],
-        buttonText: 'Contact Sales'
-    }
+      "Unlimited Analysis",
+      "Custom Integrations",
+      "Dedicated Support",
+      "API Access",
+    ],
+    buttonText: "Contact Sales",
+  },
 ];
 
 const steps = [
     {
-        icon: '/icons/upload.svg',
-        title: 'Upload Pitch Deck',
-        description: 'Upload your pitch deck in PDF format for instant analysis.'
-    },
-    {
-        icon: '/icons/process.svg',
-        title: 'AI Processing',
-        description: 'Upload your pitch deck in PDF format for instant analysis.'
-    },
-    {
-        icon: '/icons/report.svg',
-        title: 'Generate Report',
-        description: 'Receive detailed investment analysis with expert ratings and recommendations.'
-    }
+    icon: "/icons/upload.svg",
+    title: "Upload Pitch Deck",
+    description: "Upload your pitch deck in PDF format for instant analysis.",
+  },
+  {
+    icon: "/icons/process.svg",
+    title: "AI Processing",
+    description: "Upload your pitch deck in PDF format for instant analysis.",
+  },
+  {
+    icon: "/icons/report.svg",
+    title: "Generate Report",
+    description:
+      "Receive detailed investment analysis with expert ratings and recommendations.",
+  },
 ];
 
 const LandingPage = () => {
@@ -137,29 +145,33 @@ const LandingPage = () => {
 
     useEffect(() => {
         const checkAuth = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
             setIsLoggedIn(!!user);
         };
         checkAuth();
     }, []);
 
     const handlePricingButtonClick = async (planTitle: string) => {
-        const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
         if (!user) {
-            navigate('/auth/signin');
+      navigate("/auth/signin");
         } else {
             setIsModalOpen(true);
         }
     };
 
     const handleLegalDraftClick = () => {
-        navigate('/contracts');
+    navigate("/contracts");
     };
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
-        navigate('/');
+    navigate("/");
     };
 
     const starfieldVariants = {
@@ -168,9 +180,9 @@ const LandingPage = () => {
             opacity: 1,
             transition: {
                 duration: 1,
-                ease: "easeOut"
-            }
-        }
+        ease: "easeOut",
+      },
+    },
     };
 
     const ellipseVariants = {
@@ -180,9 +192,9 @@ const LandingPage = () => {
             scale: 1,
             transition: {
                 duration: 1.5,
-                ease: "easeOut"
-            }
-        }
+        ease: "easeOut",
+      },
+    },
     };
 
     return (
@@ -205,8 +217,8 @@ const LandingPage = () => {
                     <img
                         src="/images/white-radial.svg"
                         alt="Radial gradient"
-                        width={1000}
-                        height={1000}
+            width={1000}
+            height={1000}
                     />
                 </motion.div>
             </div>
@@ -222,33 +234,34 @@ const LandingPage = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
                         style={{
-                            background: 'linear-gradient(90deg, #FFFFFF 0%, #959595 50%, rgba(255, 255, 255, 0.15) 100%)',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
-                            fontFamily: 'Fustat, sans-serif',
-                            whiteSpace: 'nowrap',
-                            overflow: 'visible'
+              background:
+                "linear-gradient(90deg, #FFFFFF 0%, #959595 50%, rgba(255, 255, 255, 0.15) 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              fontFamily: "Fustat, sans-serif",
+              whiteSpace: "nowrap",
+              overflow: "visible",
                         }}
                     >
                         AI-Powered Investment Analysis
                     </motion.h1>
 
-                    <motion.div
+          <motion.div
                         className={styles.heroImage}
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{
                             duration: 0.8,
                             delay: 0.1,
-                            ease: [0.04, 0.62, 0.23, 0.98]
+              ease: [0.04, 0.62, 0.23, 0.98],
                         }}
                     >
                         <img
-                            src="/images/report.png"
-                            alt="Spider Hero"
+              src="/images/report.png"
+              alt="Spider Hero"
                             className={styles.heroImg}
                         />
-                    </motion.div>
+          </motion.div>
 
                     <motion.p
                         className={styles.description}
@@ -256,7 +269,8 @@ const LandingPage = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.2 }}
                     >
-                        Transform pitch deck evaluation with AI-driven insights and comprehensive investment reports
+            Transform pitch deck evaluation with AI-driven insights and
+            comprehensive investment reports
                     </motion.p>
                 </div>
                 <Link to="/auth/signin" className={styles.button}>
@@ -266,6 +280,7 @@ const LandingPage = () => {
 
             {/* Features Section */}
             <section id="features" className={styles.features}>
+                <div className={styles.container}>
                 <motion.h1
                     className={styles.title}
                     initial={{ opacity: 0, y: 20 }}
@@ -277,12 +292,24 @@ const LandingPage = () => {
                         WebkitTextFillColor: 'transparent',
                         fontFamily: 'Fustat, sans-serif',
                         whiteSpace: 'nowrap',
-                        overflow: 'visible'
+                            overflow: 'visible',
+                            textAlign: 'center',
+                            marginBottom: '2rem'
                     }}
                 >
-                    Transform your investment decisions with cutting-edge AI technology
+                        Transform Your Investment Decisions
                 </motion.h1>
-                <div className={styles.container}>
+                    <motion.p
+                        className={styles.subtitle}
+                        style={{
+                            textAlign: 'center',
+                            color: '#959595',
+                            fontSize: '1.2rem',
+                            marginBottom: '4rem'
+                        }}
+                    >
+                        Experience the future of investment analysis with AI-powered insights
+                    </motion.p>
                     <div className={styles.featureGrid}>
                         {features.map((feature, index) => (
                             <motion.div
@@ -294,15 +321,11 @@ const LandingPage = () => {
                             >
                                 <div className={styles.featureCard}>
                                     <div className={styles.iconWrapper}>
-                                        <div className={styles.iconSquare}>
-                                            <div className={styles.iconCircle}>
                                                 <img
                                                     src={feature.icon}
                                                     alt={feature.title}
                                                     className={styles.icon}
                                                 />
-                                            </div>
-                                        </div>
                                     </div>
                                     <h3>{feature.title}</h3>
                                     <p>{feature.description}</p>
@@ -312,7 +335,6 @@ const LandingPage = () => {
                     </div>
                 </div>
             </section>
-
 
             {/* Steps Section */}
             <section className={styles.steps}>
@@ -333,21 +355,8 @@ const LandingPage = () => {
                             marginBottom: '2rem'
                         }}
                     >
-                        Three Simple Steps to
-                        <br />
-                        Smarter Investment Decisions
+                        Three Simple Steps To Success
                     </motion.h1>
-                    <motion.p
-                        className={styles.subtitle}
-                        style={{
-                            textAlign: 'center',
-                            color: '#959595',
-                            fontSize: '1.2rem',
-                            marginBottom: '4rem'
-                        }}
-                    >
-                        Transform your pitch deck analysis process with AI-powered insights
-                    </motion.p>
                     <div className={styles.stepsGrid}>
                         {steps.map((step, index) => (
                             <motion.div
@@ -368,7 +377,6 @@ const LandingPage = () => {
                 </div>
             </section>
 
-
             {/* Benefits Section */}
             <section id="benefits" className={styles.benefits}>
                 <div className={styles.container}>
@@ -385,7 +393,7 @@ const LandingPage = () => {
                             whiteSpace: 'nowrap',
                             overflow: 'visible',
                             textAlign: 'center',
-                            marginBottom: '1rem'
+                            marginBottom: '2rem'
                         }}
                     >
                         Why Choose Spider?
@@ -403,8 +411,14 @@ const LandingPage = () => {
                     </motion.p>
                     <div className={styles.benefitsGrid}>
                         {benefits.map((benefit, index) => (
+              <div key={benefit.title} className={styles.gradientWrapper}>
+                <img
+                  src="/images/backgroundgradiant.png"
+                  alt="Gradient Background"
+                  className={styles.gradientBackground}
+                />
+                <div className={styles.innerBox}>
                             <motion.div
-                                key={benefit.title}
                                 className={styles.benefitCard}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -413,6 +427,8 @@ const LandingPage = () => {
                                 <h3>{benefit.title}</h3>
                                 <p>{benefit.description}</p>
                             </motion.div>
+                </div>
+              </div>
                         ))}
                     </div>
                 </div>
@@ -439,10 +455,10 @@ const LandingPage = () => {
                             whiteSpace: 'nowrap',
                             overflow: 'visible',
                             textAlign: 'center',
-                            marginBottom: '1rem'
+                            marginBottom: '2rem'
                         }}
                     >
-                        Choose your investment analysis plan
+                        Choose Your Investment Analysis Plan
                     </motion.h1>
                     <motion.p
                         className={styles.subtitle}
@@ -453,12 +469,19 @@ const LandingPage = () => {
                             marginBottom: '4rem'
                         }}
                     >
-                        Select the perfect plan for your investment analysis needs. All plans include our core
-                        AI-powered pitch deck analysis features.                    </motion.p>
+                        Select the perfect plan for your investment analysis needs. All
+                        plans include our core AI-powered pitch deck analysis features.{" "}
+                    </motion.p>
                     <div className={styles.pricingGrid}>
                         {pricing.map((plan, index) => (
+              <div key={plan.title} className={styles.gradientWrapper}>
+                <img
+                  src="/images/backgroundgradiant.png"
+                  alt="Gradient Background"
+                  className={styles.gradientBackground}
+                />
+                <div className={styles.innerBox}>
                             <motion.div
-                                key={plan.title}
                                 className={styles.pricingCard}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
@@ -481,6 +504,8 @@ const LandingPage = () => {
                                     onClick={() => handlePricingButtonClick(plan.title)}
                                 />
                             </motion.div>
+                </div>
+              </div>
                         ))}
                     </div>
                 </div>
@@ -502,10 +527,10 @@ const LandingPage = () => {
                             whiteSpace: 'nowrap',
                             overflow: 'visible',
                             textAlign: 'center',
-                            marginBottom: '1rem'
+                            marginBottom: '2rem'
                         }}
                     >
-                        Frequently asked questions
+                        Frequently Asked Questions
                     </motion.h1>
                     <motion.p
                         className={styles.subtitle}
@@ -516,39 +541,47 @@ const LandingPage = () => {
                             marginBottom: '4rem'
                         }}
                     >
-                        Have more questions? Our support team is here to help you make informed investment decisions.
+                        Have more questions? Our support team is here to help you make
+                        informed investment decisions.
                     </motion.p>
                     <div className={styles.faqGrid}>
                         <div className={styles.faqAccordion}>
                             {[
                                 {
-                                    question: 'How accurate is the AI analysis?',
-                                    answer: 'Our AI analysis powered by Gemini 2.0 achieves over 95% accuracy in extracting key information from pitch decks. The system is continuously trained on thousands of successful pitch decks and investment reports to provide reliable insights.'
+                                    question: "How accurate is the AI analysis?",
+                                    answer:
+                                        "Our AI analysis powered by Gemini 2.0 achieves over 95% accuracy in extracting key information from pitch decks. The system is continuously trained on thousands of successful pitch decks and investment reports to provide reliable insights.",
                                 },
                                 {
-                                    question: 'What types of pitch decks can be analyzed?',
-                                    answer: 'Our system can analyze pitch decks across various industries and stages, including startup pitch decks, investment presentations, and business proposals. We support multiple file formats including PDF, PowerPoint, and Google Slides.'
+                                    question: "What types of pitch decks can be analyzed?",
+                                    answer:
+                                        "Our system can analyze pitch decks across various industries and stages, including startup pitch decks, investment presentations, and business proposals. We support multiple file formats including PDF, PowerPoint, and Google Slides.",
                                 },
                                 {
-                                    question: 'How secure is my pitch deck data?',
-                                    answer: 'We employ enterprise-grade encryption and security measures to protect your data. All uploads are encrypted, and we maintain strict access controls and compliance with data protection regulations.'
+                                    question: "How secure is my pitch deck data?",
+                                    answer:
+                                        "We employ enterprise-grade encryption and security measures to protect your data. All uploads are encrypted, and we maintain strict access controls and compliance with data protection regulations.",
                                 },
                                 {
-                                    question: 'Can I customize the analysis reports?',
-                                    answer: 'Yes, you can customize analysis reports to focus on specific aspects of the pitch deck, add custom metrics, and generate reports in various formats including PDF, Excel, and interactive dashboards.'
+                                    question: "Can I customize the analysis reports?",
+                                    answer:
+                                        "Yes, you can customize analysis reports to focus on specific aspects of the pitch deck, add custom metrics, and generate reports in various formats including PDF, Excel, and interactive dashboards.",
                                 },
                                 {
-                                    question: 'How long does the analysis take?',
-                                    answer: 'Most pitch deck analyses are completed within 2-3 minutes. Complex decks or those requiring detailed market analysis may take up to 5 minutes to process completely.'
+                                    question: "How long does the analysis take?",
+                                    answer:
+                                        "Most pitch deck analyses are completed within 2-3 minutes. Complex decks or those requiring detailed market analysis may take up to 5 minutes to process completely.",
                                 },
                                 {
-                                    question: 'What kind of insights does Spider provide?',
-                                    answer: 'Spider provides comprehensive insights including market analysis, competitive landscape, financial projections evaluation, team assessment, and risk analysis. We also offer industry-specific metrics and benchmarking.'
+                                    question: "What kind of insights does Spider provide?",
+                                    answer:
+                                        "Spider provides comprehensive insights including market analysis, competitive landscape, financial projections evaluation, team assessment, and risk analysis. We also offer industry-specific metrics and benchmarking.",
                                 },
                                 {
-                                    question: 'Can I integrate Spider with my existing tools?',
-                                    answer: 'Yes, Spider offers API integration capabilities and can be integrated with popular investment management platforms, CRM systems, and data analytics tools.'
-                                }
+                                    question: "Can I integrate Spider with my existing tools?",
+                                    answer:
+                                        "Yes, Spider offers API integration capabilities and can be integrated with popular investment management platforms, CRM systems, and data analytics tools.",
+                                },
                             ].map((faq, index) => (
                                 <motion.div
                                     key={index}
@@ -605,7 +638,8 @@ const LandingPage = () => {
 
                             <div className={styles.footerBottom}>
                                 <p>
-                                    Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, A thing by&nbsp;
+                  Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, A
+                  thing by&nbsp;
                                     <img
                                         src="/neuralpath.svg"
                                         alt="Neural Paths"

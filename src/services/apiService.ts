@@ -1,26 +1,59 @@
 import { API_CONFIG } from '../config/api';
 
 export const analyzePitchDeck = async (text: string) => {
-  console.log('Starting pitch deck analysis with Mistral AI...');
+  console.log('Starting pitch deck analysis with Mistral...');
   console.log(`Total characters to analyze: ${text.length}`);
 
   const prompt = `
-    Analyze this pitch deck and provide a comprehensive analysis in the following JSON format. 
-    For each section, if information is not explicitly mentioned, make educated inferences based on:
-    1. The company's industry and stage
-    2. Standard market practices
-    3. Comparable companies in the same sector
-    4. The company's current funding status
-    5. The overall business model and market position
+    As an expert investment analyst and pitch deck evaluator, analyze this pitch deck comprehensively.
+    Consider the following aspects and provide detailed insights:
 
-    Pay special attention to the proposed deal structure. Even if not explicitly mentioned, infer reasonable terms based on:
-    - Typical valuation multiples for the industry
-    - Standard investment terms for the company's stage
-    - Market trends in similar deals
-    - The company's growth potential and risk profile
+    1. Industry Analysis:
+       - Market size and growth potential
+       - Competitive landscape
+       - Industry trends and dynamics
+       - Regulatory environment
 
-    Return ONLY the JSON object without any markdown formatting or additional text.
-    
+    2. Company Overview:
+       - Business model and value proposition
+       - Target market and customer segments
+       - Revenue model and monetization strategy
+       - Team composition and expertise
+       - Technology and IP position
+
+    3. Financial Analysis:
+       - Revenue projections and growth trajectory
+       - Unit economics and margins
+       - Cash flow and burn rate
+       - Funding requirements and use of proceeds
+       - Valuation methodology and assumptions
+
+    4. Market Opportunity:
+       - Total Addressable Market (TAM)
+       - Serviceable Available Market (SAM)
+       - Serviceable Obtainable Market (SOM)
+       - Market penetration strategy
+       - Competitive advantages
+
+    5. Risk Assessment:
+       - Market risks
+       - Technology risks
+       - Regulatory risks
+       - Competition risks
+       - Execution risks
+
+    6. Investment Thesis:
+       - Key investment highlights
+       - Growth potential
+       - Exit opportunities
+       - Return on investment projections
+
+    Return the analysis in the following JSON format. For any missing information, make educated inferences based on:
+    - Industry standards and benchmarks
+    - Comparable companies
+    - Market conditions
+    - Company stage and maturity
+
     Required JSON format:
     {
       "industry_type": "string",
@@ -69,81 +102,90 @@ export const analyzePitchDeck = async (text: string) => {
         "exit_potential": number,
         "risk_factor": number,
         "competitive_edge": number
+      },
+      "expert_opinions": string[],
+      "market_analysis": {
+        "market_size": "string",
+        "growth_rate": "string",
+        "trends": string[],
+        "challenges": string[]
+      },
+      "competitor_analysis": {
+        "direct_competitors": string[],
+        "competitive_advantages": string[],
+        "market_share": "string",
+        "differentiators": string[]
       }
     }
 
     Pitch Deck Text: ${text}`;
 
   try {
-    console.log('Sending request to Mistral AI API...');
-    console.log(`Using model: ${API_CONFIG.MODEL}`);
+    console.log('Sending request to Mistral API...');
     
-    const response = await fetch(API_CONFIG.BASE_URL, {
+    const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${import.meta.env.VITE_MISTRAL_API_KEY}`
       },
       body: JSON.stringify({
-        model: API_CONFIG.MODEL,
+        model: "mistral-tiny",
         messages: [
           {
-            role: 'system',
-            content: 'You are an expert pitch deck analyzer. Provide detailed analysis in JSON format.'
-          },
-          {
-            role: 'user',
+            role: "user",
             content: prompt
           }
         ],
         temperature: 0.7,
-        max_tokens: 4000
+        max_tokens: 4096
       })
     });
 
-    console.log('Received response from Mistral AI API');
-    console.log(`Response status: ${response.status}`);
-
     if (!response.ok) {
-      console.error('Mistral AI API request failed:', response.status, response.statusText);
+      console.error('Mistral API request failed:', response.status, response.statusText);
       throw new Error(`Analysis failed with status ${response.status}`);
     }
 
     const result = await response.json();
-    console.log('Successfully parsed Mistral AI response');
-    console.log(`Response model: ${result.model}`);
-    console.log(`Total tokens used: ${result.usage?.total_tokens || 'N/A'}`);
-
-    const analysisText = result.choices[0].message.content;
-    console.log(`Received analysis text length: ${analysisText.length} characters`);
+    console.log('Successfully received Mistral response');
 
     try {
-      // Clean the response text and parse JSON
+      // Extract and clean the JSON response
+      const analysisText = result.choices[0].message.content;
       let cleanJsonText = analysisText.replace(/```json\s*/g, '').replace(/```\s*$/g, '');
+      
+      // Parse the JSON response
       const parsedData = JSON.parse(cleanJsonText);
       console.log('Successfully parsed analysis JSON');
-      console.log('Analysis completed successfully using Mistral AI');
-      return parsedData;
+      
+      // Validate and enhance the data
+      const enhancedData = {
+        ...parsedData,
+        analyzedAt: new Date(),
+        // Ensure all required fields have valid values
+        industry_type: parsedData.industry_type || 'Technology',
+        pitch_clarity: Math.min(Math.max(parsedData.pitch_clarity || 5, 1), 10),
+        investment_score: Math.min(Math.max(parsedData.investment_score || 5, 1), 10),
+        market_position: parsedData.market_position || 'Emerging',
+        strengths: parsedData.strengths || [],
+        weaknesses: parsedData.weaknesses || [],
+        expert_opinions: parsedData.expert_opinions || [],
+        final_verdict: {
+          product_viability: Math.min(Math.max(parsedData.final_verdict?.product_viability || 5, 1), 10),
+          market_potential: Math.min(Math.max(parsedData.final_verdict?.market_potential || 5, 1), 10),
+          sustainability: Math.min(Math.max(parsedData.final_verdict?.sustainability || 5, 1), 10),
+          innovation: Math.min(Math.max(parsedData.final_verdict?.innovation || 5, 1), 10),
+          exit_potential: Math.min(Math.max(parsedData.final_verdict?.exit_potential || 5, 1), 10),
+          risk_factor: Math.min(Math.max(parsedData.final_verdict?.risk_factor || 5, 1), 10),
+          competitive_edge: Math.min(Math.max(parsedData.final_verdict?.competitive_edge || 5, 1), 10)
+        }
+      };
+
+      console.log('Analysis completed successfully using Mistral');
+      return enhancedData;
     } catch (parseError) {
       console.error('Error parsing Mistral response:', parseError);
-      
-      // Attempt to extract and fix JSON if parsing fails
-      try {
-        const jsonMatch = analysisText.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-          const extractedJson = jsonMatch[0];
-          const fixedJson = extractedJson
-            .replace(/,(\s*[}\]])/g, '$1')
-            .replace(/([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)\s*:/g, '$1"$2":')
-            .replace(/'([^']*)'/g, '"$1"');
-          const parsedData = JSON.parse(fixedJson);
-          console.log('Successfully extracted and fixed JSON');
-          return parsedData;
-        }
-      } catch (extractError) {
-        console.error('Failed to extract JSON:', extractError);
-      }
-      
       throw new Error('Failed to parse analysis response');
     }
   } catch (error) {

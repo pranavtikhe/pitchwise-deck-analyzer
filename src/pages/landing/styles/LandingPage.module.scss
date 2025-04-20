@@ -6,6 +6,49 @@
     color: white;
     overflow-x: hidden;
     position: relative;
+
+    section {
+        padding: 8rem 0;
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 3.5rem;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 4rem;
+            line-height: 1.6;
+        }
+    }
+
+    .hero {
+        padding-top: 12rem;
+        padding-bottom: 8rem;
+        
+        .button {
+            margin: 4rem auto 0;
+            display: block;
+            width: fit-content;
+        }
+    }
+
+    .features, .benefits, .steps, .pricing, .faq {
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    }
 }
 
 .backgroundElements {
@@ -44,9 +87,6 @@
 }
 
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 2rem;
     position: relative;
     z-index: 1;
 }
@@ -178,26 +218,6 @@
     padding: 8rem 0;
     background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.1) 100%);
 
-    .sectionTitle {
-        font-size: 3rem;
-        font-weight: 700;
-        text-align: center;
-        margin-bottom: 1rem;
-
-        span {
-            background: linear-gradient(90deg, #00F5A0 0%, #00D9F5 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-    }
-
-    .sectionSubtitle {
-        font-size: 1.25rem;
-        color: $text-secondary;
-        text-align: center;
-        margin-bottom: 4rem;
-    }
-
     .benefitsGrid {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
@@ -207,35 +227,42 @@
         padding: 0 2rem;
     }
 
-    .benefitCard {
-        background: rgba(20, 20, 20, 0.95);
-        border-radius: 24px;
-        padding: 2.5rem;
+    .gradientWrapper {
         position: relative;
+        width: 100%;
+        border-radius: 24px;
+        overflow: hidden;
+        aspect-ratio: 16/9;
+    }
+
+    .gradientBackground {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .innerBox {
+        position: relative;
+        z-index: 2;
+        height: 100%;
+        padding: 2.5rem;
+    }
+
+    .benefitCard {
+        height: 100%;
+        background: rgba(20, 20, 20, 0.75);
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        transition: transform 0.3s ease;
-
-        &::before {
-            content: '';
-            position: absolute;
-            inset: -1px;
-            border-radius: 24px;
-            padding: 1px;
-            background: linear-gradient(135deg, #6200FF 0%, #00D9F5 100%);
-            -webkit-mask: 
-                linear-gradient(#fff 0 0) content-box, 
-                linear-gradient(#fff 0 0);
-            mask: 
-                linear-gradient(#fff 0 0) content-box, 
-                linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            opacity: 0.5;
-        }
+        transition: all 0.3s ease;
+        padding: 2rem;
+        border-radius: 24px;
 
         &:hover {
             transform: translateY(-5px);
+            background: rgba(20, 20, 20, 0.85);
         }
 
         h3 {
@@ -243,12 +270,23 @@
             font-weight: 600;
             margin-bottom: 1rem;
             color: #FFFFFF;
+            background: linear-gradient(90deg, #FFFFFF 0%, #959595 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         p {
             color: #959595;
             line-height: 1.6;
             font-size: 1.1rem;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .benefits {
+        .benefitsGrid {
+            grid-template-columns: 1fr;
         }
     }
 }
@@ -264,26 +302,6 @@
     padding: 8rem 0;
     background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.1) 100%);
 
-    .container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 0 2rem;
-    }
-
-    .title {
-        font-size: 3.5rem;
-        font-weight: 700;
-        text-align: center;
-        margin-bottom: 1rem;
-    }
-
-    .subtitle {
-        font-size: 1.25rem;
-        color: $text-secondary;
-        text-align: center;
-        margin-bottom: 4rem;
-    }
-
     .pricingGrid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -291,38 +309,44 @@
         margin: 0 auto;
     }
 
-    .pricingCard {
-        background: rgba(20, 20, 20, 0.95);
-        border-radius: 24px;
-        padding: 2.5rem;
-        min-height: 600px;
-        display: flex;
-        flex-direction: column;
+    .gradientWrapper {
         position: relative;
+        width: 100%;
+        border-radius: 24px;
+        overflow: hidden;
+        aspect-ratio: 3/4;
+    }
+
+    .gradientBackground {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .innerBox {
+        position: relative;
+        z-index: 2;
+        height: 100%;
+        padding: 1rem;
+    }
+
+    .pricingCard {
+        height: 100%;
+        background: rgba(20, 20, 20, 0.75);
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        transition: transform 0.3s ease;
-
-        &::before {
-            content: '';
-            position: absolute;
-            inset: -1px;
-            border-radius: 24px;
-            padding: 1px;
-            background: linear-gradient(135deg, #6200FF 0%, #00D9F5 100%);
-            -webkit-mask: 
-                linear-gradient(#fff 0 0) content-box, 
-                linear-gradient(#fff 0 0);
-            mask: 
-                linear-gradient(#fff 0 0) content-box, 
-                linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            opacity: 0.5;
-        }
+        transition: all 0.3s ease;
+        padding: 2.5rem;
+        border-radius: 24px;
+        display: flex;
+        flex-direction: column;
 
         &:hover {
             transform: translateY(-5px);
+            background: rgba(20, 20, 20, 0.85);
         }
 
         h3 {
@@ -569,7 +593,6 @@
     }
 
     .features,
-    .benefits,
     .testimonials,
     .pricing,
     .productHunt {
@@ -744,12 +767,6 @@
     padding: 6rem 0;
     background: rgba(255, 255, 255, 0.02);
     backdrop-filter: blur(10px);
-
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 2rem;
-    }
 
     .faqGrid {
         max-width: 800px;

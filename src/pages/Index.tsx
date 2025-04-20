@@ -111,7 +111,7 @@ const Index = () => {
 
           {insights && !isLoading && (
             <div className="mt-8">
-              <AnalysisReport insights={insights} analyzedAt={new Date()} />
+              <AnalysisReport data={insights} />
             </div>
           )}
         </div>
