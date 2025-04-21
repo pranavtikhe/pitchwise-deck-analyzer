@@ -154,7 +154,13 @@ export interface MistralResponse {
   funding: string;
   market: string;
   competitors: string[];
-  expert_opinions: string[];
+  expert_opinions: {
+    name: string;
+    affiliation: string;
+    summary: string;
+    reference: string;
+    date: string;
+  }[];
   suggested_improvements: string[];
   market_comparison: string;
   key_insights: string;

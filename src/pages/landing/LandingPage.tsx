@@ -11,130 +11,144 @@ import styles from "./styles/LandingPage.module.scss";
 
 const features = [
     {
-    icon: "/analysis.svg",
-    title: "AI-Powered Investment Analysis",
-    description:
-      "Leverage Mistral to extract key insights and generate comprehensive investment reports.",
-  },
-  {
-    icon: "/process.svg",
-    title: "Smart Document Processing",
-    description:
-      "Process PDFs, images, and text to extract valuable data from pitch decks.",
-  },
-  {
-    icon: "/market.svg",
-    title: " Market Intelligence",
-    description: "Get real-time market analysis and competitor benchmarking.",
-  },
-  {
-    icon: "/team.svg",
-    title: " Team Evaluation",
-    description:
-      "Comprehensive analysis of founding teams and their track record.",
-  },
+        icon: "/analysis.svg",
+        title: "AI-Powered Investment Analysis",
+        description:
+            "Leverage Mistral to extract key insights and generate comprehensive investment reports.",
+    },
+    {
+        icon: "/process.svg",
+        title: "Smart Document Processing",
+        description:
+            "Process PDFs, images, and text to extract valuable data from pitch decks.",
+    },
+    {
+        icon: "/market.svg",
+        title: " Market Intelligence",
+        description: "Get real-time market analysis and competitor benchmarking.",
+    },
+    {
+        icon: "/team.svg",
+        title: " Team Evaluation",
+        description:
+            "Comprehensive analysis of founding teams and their track record.",
+    },
 ];
 
 const benefits = [
     {
-    title: "Faster Analysis",
-    description:
-      "Reduce pitch deck review time by up to 70% with AI-powered insights.",
-  },
-  {
-    title: "Data-Driven Decisions",
-    description:
-      "Make informed investment decisions backed by comprehensive market analysis.",
-  },
-  {
-    title: "Scalable Solution",
-    description:
-      "Scale your investment analysis process without increasing team size.",
-  },
-  {
-    title: "Competitive Edge",
-    description:
-      "Stay ahead with real-time market intelligence and competitor analysis.",
-  },
+        title: "Faster Analysis",
+        description:
+            "Reduce pitch deck review time by up to 70% with AI-powered insights.",
+    },
+    {
+        title: "Data-Driven Decisions",
+        description:
+            "Make informed investment decisions backed by comprehensive market analysis.",
+    },
+    {
+        title: "Scalable Solution",
+        description:
+            "Scale your investment analysis process without increasing team size.",
+    },
+    {
+        title: "Competitive Edge",
+        description:
+            "Stay ahead with real-time market intelligence and competitor analysis.",
+    },
 ];
 
 const testimonials = [
     {
         text: "I've spent half my time on legal paperwork. LawBit has cut that down by 75%. It's a game-changer for my business.",
         author: "Jessica Williams",
-    position: "Operations Manager - TechStart Inc",
+        position: "Operations Manager - TechStart Inc",
     },
     {
         text: "As a startup, it was never like this managing legal documents. LawBit makes it easy to stay compliant and grow with confidence.",
         author: "Michael Chen",
-    position: "Founder - Swift Labs",
+        position: "Founder - Swift Labs",
     },
     {
         text: "The risk analysis feature gives us peace of mind. We catch potential issues before they become problems.",
         author: "Sarah Williams",
-    position: "Legal Manager - InnovateCo",
-  },
+        position: "Legal Manager - InnovateCo",
+    },
 ];
 
 const pricing = [
     {
-    title: "Basic",
-    price: "$29",
-    period: "/mo",
-    description: "For individuals and small teams",
+        title: "Starter",
+        price: "$399",
+        period: "per member / year",
+        billing: "billed yearly",
+        description: "Perfect for individual investors:",
         features: [
-      "10 Pitch Deck Analysis",
-      "Basic Market Insights",
-      "Email Support",
-      "Export Reports",
-    ],
-    buttonText: "Get Started",
-  },
-  {
-    title: "Pro",
-    price: "$79",
-    period: "/mo",
-    description: "For growing companies",
+            "Up to 10 pitch deck analyses per month",
+            "Basic AI insights and recommendations",
+            "Standard report format",
+            "Email support",
+            "Basic competitor analysis"
+        ],
+        buttonText: "Start Free Trial",
+        isPopular: false
+    },
+    {
+        title: "Professional",
+        price: "$399",
+        period: "per member / year",
+        billing: "billed yearly",
+        description: "Ideal for investment firms:",
         features: [
-      "50 Pitch Deck Analysis",
-      "Advanced Market Insights",
-      "Priority Support",
-      "Team Collaboration",
-    ],
-    buttonText: "Get Pro",
-  },
-  {
-    title: "Enterprise",
-    price: "$199",
-    period: "/mo",
-    description: "For large organizations",
+            "Unlimited pitch deck analyses",
+            "Advanced AI insights with Gemini 2.0",
+            "Customizable report formats",
+            "Priority support",
+            "Comprehensive competitor analysis",
+            "Deal structuring recommendations",
+            "API access for integrations"
+        ],
+        buttonText: "Get Started",
+        isPopular: true
+    },
+    {
+        title: "Enterprise",
+        price: "$399",
+        period: "per member / year",
+        billing: "billed yearly",
+        description: "For large investment organizations:",
         features: [
-      "Unlimited Analysis",
-      "Custom Integrations",
-      "Dedicated Support",
-      "API Access",
-    ],
-    buttonText: "Contact Sales",
-  },
+            "Everything in Professional",
+            "Custom AI model training",
+            "White-label reports",
+            "Dedicated account manager",
+            "Advanced security features",
+            "Custom integrations",
+            "Team collaboration tools",
+            "SLA guarantees"
+        ],
+        buttonText: "Contact Sales",
+        isPopular: false
+    },
 ];
 
 const steps = [
     {
-    icon: "/icons/upload.svg",
-    title: "Upload Pitch Deck",
-    description: "Upload your pitch deck in PDF format for instant analysis.",
-  },
-  {
-    icon: "/icons/process.svg",
-    title: "AI Processing",
-    description: "Upload your pitch deck in PDF format for instant analysis.",
-  },
-  {
-    icon: "/icons/report.svg",
-    title: "Generate Report",
-    description:
-      "Receive detailed investment analysis with expert ratings and recommendations.",
-  },
+        icon: "/icons/upload.svg",
+        title: "Upload Pitch Deck",
+        description: "Upload your pitch deck in PDF format for instant analysis.",
+    },
+    {
+        icon: "/icons/process.svg",
+        title: "AI Processing",
+        description: "Upload your pitch deck in PDF format for instant analysis.",
+    },
+    {
+        icon: "/icons/report.svg",
+        title: "Generate Report",
+        description:
+            "Receive detailed investment analysis with expert ratings and recommendations.",
+    },
 ];
 
 const LandingPage = () => {
@@ -145,33 +159,33 @@ const LandingPage = () => {
 
     useEffect(() => {
         const checkAuth = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+            const {
+                data: { user },
+            } = await supabase.auth.getUser();
             setIsLoggedIn(!!user);
         };
         checkAuth();
     }, []);
 
     const handlePricingButtonClick = async (planTitle: string) => {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+        const {
+            data: { user },
+        } = await supabase.auth.getUser();
 
         if (!user) {
-      navigate("/auth/signin");
+            navigate("/auth/signin");
         } else {
             setIsModalOpen(true);
         }
     };
 
     const handleLegalDraftClick = () => {
-    navigate("/contracts");
+        navigate("/contracts");
     };
 
     const handleLogout = async () => {
         await supabase.auth.signOut();
-    navigate("/");
+        navigate("/");
     };
 
     const starfieldVariants = {
@@ -180,9 +194,9 @@ const LandingPage = () => {
             opacity: 1,
             transition: {
                 duration: 1,
-        ease: "easeOut",
-      },
-    },
+                ease: "easeOut",
+            },
+        },
     };
 
     const ellipseVariants = {
@@ -192,9 +206,9 @@ const LandingPage = () => {
             scale: 1,
             transition: {
                 duration: 1.5,
-        ease: "easeOut",
-      },
-    },
+                ease: "easeOut",
+            },
+        },
     };
 
     return (
@@ -217,8 +231,8 @@ const LandingPage = () => {
                     <img
                         src="/images/white-radial.svg"
                         alt="Radial gradient"
-            width={1000}
-            height={1000}
+                        width={1000}
+                        height={1000}
                     />
                 </motion.div>
             </div>
@@ -234,34 +248,34 @@ const LandingPage = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
                         style={{
-              background:
-                "linear-gradient(90deg, #FFFFFF 0%, #959595 50%, rgba(255, 255, 255, 0.15) 100%)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              fontFamily: "Fustat, sans-serif",
-              whiteSpace: "nowrap",
-              overflow: "visible",
+                            background:
+                                "linear-gradient(90deg, #FFFFFF 0%, #959595 50%, rgba(255, 255, 255, 0.15) 100%)",
+                            WebkitBackgroundClip: "text",
+                            WebkitTextFillColor: "transparent",
+                            fontFamily: "Fustat, sans-serif",
+                            whiteSpace: "nowrap",
+                            overflow: "visible",
                         }}
                     >
                         AI-Powered Investment Analysis
                     </motion.h1>
 
-          <motion.div
+                    <motion.div
                         className={styles.heroImage}
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         transition={{
                             duration: 0.8,
                             delay: 0.1,
-              ease: [0.04, 0.62, 0.23, 0.98],
+                            ease: [0.04, 0.62, 0.23, 0.98],
                         }}
                     >
                         <img
-              src="/images/report.png"
-              alt="Spider Hero"
+                            src="/images/report.png"
+                            alt="Spider Hero"
                             className={styles.heroImg}
                         />
-          </motion.div>
+                    </motion.div>
 
                     <motion.p
                         className={styles.description}
@@ -269,8 +283,8 @@ const LandingPage = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.2 }}
                     >
-            Transform pitch deck evaluation with AI-driven insights and
-            comprehensive investment reports
+                        Transform pitch deck evaluation with AI-driven insights and
+                        comprehensive investment reports
                     </motion.p>
                 </div>
                 <Link to="/auth/signin" className={styles.button}>
@@ -280,64 +294,6 @@ const LandingPage = () => {
 
             {/* Features Section */}
             <section id="features" className={styles.features}>
-                <div className={styles.container}>
-                <motion.h1
-                    className={styles.title}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    style={{
-                        background: 'linear-gradient(90deg, #FFFFFF 0%, #959595 50%, rgba(255, 255, 255, 0.15) 100%)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                        fontFamily: 'Fustat, sans-serif',
-                        whiteSpace: 'nowrap',
-                            overflow: 'visible',
-                            textAlign: 'center',
-                            marginBottom: '2rem'
-                    }}
-                >
-                        Transform Your Investment Decisions
-                </motion.h1>
-                    <motion.p
-                        className={styles.subtitle}
-                        style={{
-                            textAlign: 'center',
-                            color: '#959595',
-                            fontSize: '1.2rem',
-                            marginBottom: '4rem'
-                        }}
-                    >
-                        Experience the future of investment analysis with AI-powered insights
-                    </motion.p>
-                    <div className={styles.featureGrid}>
-                        {features.map((feature, index) => (
-                            <motion.div
-                                key={feature.title}
-                                className={styles.featureCardWrapper}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: index * 0.1 }}
-                            >
-                                <div className={styles.featureCard}>
-                                    <div className={styles.iconWrapper}>
-                                                <img
-                                                    src={feature.icon}
-                                                    alt={feature.title}
-                                                    className={styles.icon}
-                                                />
-                                    </div>
-                                    <h3>{feature.title}</h3>
-                                    <p>{feature.description}</p>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Steps Section */}
-            <section className={styles.steps}>
                 <div className={styles.container}>
                     <motion.h1
                         className={styles.title}
@@ -355,27 +311,94 @@ const LandingPage = () => {
                             marginBottom: '2rem'
                         }}
                     >
-                        Three Simple Steps To Success
+                        Transform Your Investment Decisions <br /> with Cutting-Edge AI Technology
                     </motion.h1>
-                    <div className={styles.stepsGrid}>
-                        {steps.map((step, index) => (
+
+                    <div className={styles.featureGrid}>
+                        {features.map((feature, index) => (
                             <motion.div
-                                key={step.title}
-                                className={styles.stepCard}
+                                key={feature.title}
+                                className={styles.featureCardWrapper}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: index * 0.1 }}
                             >
-                                <div className={styles.stepIcon}>
-                                    <img src={step.icon} alt={step.title} />
+                                <div className={`${styles.featureCard} p-6 relative bg-[#1C1C1C] rounded-2xl`}>
+                                    <div className={`${styles.iconWrapper} mb-4`}>
+                                        <img
+                                            src={feature.icon}
+                                            alt={feature.title}
+                                            className="w-14 h-14"
+                                        />
+                                    </div>
+                                    <h3 className="text-xl font-semibold text-white mb-2">{feature.title}</h3>
+                                    <p className="text-gray-400 text-sm">{feature.description}</p>
                                 </div>
-                                <h3>{step.title}</h3>
-                                <p>{step.description}</p>
                             </motion.div>
                         ))}
                     </div>
                 </div>
             </section>
+
+            {/* Steps Section */}
+            <section className="py-16 x  text-white">
+                <div className="max-w-7xl mx-auto px-6">
+                    {/* Section Title */}
+                    <motion.h1
+                        className="text-4xl font-bold text-center mb-12"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5 }}
+                        style={{
+                            background: "linear-gradient(90deg, #FFFFFF 0%, #959595 50%, rgba(255, 255, 255, 0.15) 100%)",
+                            WebkitBackgroundClip: "text",
+                            WebkitTextFillColor: "transparent",
+                            fontFamily: "Fustat, sans-serif",
+                            whiteSpace: "nowrap",
+                        }}
+                    >
+                        Three Simple Steps To Success
+                    </motion.h1>
+
+                    {/* Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+                        {steps.map((step, index) => (
+                            <motion.div
+                                key={step.title}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, delay: index * 0.1 }}
+                            >
+                                {/* Gradient Wrapper like in Benefits */} 
+                                <div className={styles.gradientWrapper}> 
+                                    <img
+                                        src="/images/backgroundgradiant.png"
+                                        alt="Gradient Background"
+                                        className={styles.gradientBackground}
+                                    />
+                                    {/* Inner Box like in Benefits */} 
+                                    <div className={styles.innerBox}> 
+                                        {/* Content container - using featureCard style for consistency */} 
+                                        <div className={`${styles.featureCard} p-6 flex flex-col items-center text-center justify-center space-y-4 h-full`}>
+                                            {/* Icon */}
+                                            <div className="w-16 h-16 flex items-center justify-center rounded-xl bg-black/40">
+                                                <img src={step.icon} alt={step.title} className="w-8 h-8" />
+                                            </div>
+ 
+                                            {/* Title */}
+                                            <h3 className="text-2xl font-semibold">{step.title}</h3>
+ 
+                                            {/* Description */}
+                                            <p className="text-gray-400 text-sm">{step.description}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
 
             {/* Benefits Section */}
             <section id="benefits" className={styles.benefits}>
@@ -411,24 +434,24 @@ const LandingPage = () => {
                     </motion.p>
                     <div className={styles.benefitsGrid}>
                         {benefits.map((benefit, index) => (
-              <div key={benefit.title} className={styles.gradientWrapper}>
-                <img
-                  src="/images/backgroundgradiant.png"
-                  alt="Gradient Background"
-                  className={styles.gradientBackground}
-                />
-                <div className={styles.innerBox}>
-                            <motion.div
-                                className={styles.benefitCard}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: index * 0.1 }}
-                            >
-                                <h3>{benefit.title}</h3>
-                                <p>{benefit.description}</p>
-                            </motion.div>
-                </div>
-              </div>
+                            <div key={benefit.title} className={styles.gradientWrapper}>
+                                <img
+                                    src="/images/backgroundgradiant.png"
+                                    alt="Gradient Background"
+                                    className={styles.gradientBackground}
+                                />
+                                <div className={styles.innerBox}>
+                                    <motion.div
+                                        className={styles.benefitCard}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.5, delay: index * 0.1 }}
+                                    >
+                                        <h3>{benefit.title}</h3>
+                                        <p>{benefit.description}</p>
+                                    </motion.div>
+                                </div>
+                            </div>
                         ))}
                     </div>
                 </div>
@@ -439,73 +462,53 @@ const LandingPage = () => {
                 <TestimonialCarousel />
             </section>
 
-            {/* Pricing Section */}
+            {/* Pricing Section - Using Reference Structure */}
             <section id="pricing" className={styles.pricing}>
                 <div className={styles.container}>
-                    <motion.h1
-                        className={styles.title}
+                    <motion.h2 
+                        className={styles.sectionTitle}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
-                        style={{
-                            background: 'linear-gradient(90deg, #FFFFFF 0%, #959595 50%, rgba(255, 255, 255, 0.15) 100%)',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
-                            fontFamily: 'Fustat, sans-serif',
-                            whiteSpace: 'nowrap',
-                            overflow: 'visible',
-                            textAlign: 'center',
-                            marginBottom: '2rem'
-                        }}
                     >
-                        Choose Your Investment Analysis Plan
-                    </motion.h1>
-                    <motion.p
-                        className={styles.subtitle}
-                        style={{
-                            textAlign: 'center',
-                            color: '#959595',
-                            fontSize: '1.2rem',
-                            marginBottom: '4rem'
-                        }}
+                        Transparent Pricing,&nbsp;<span>Built for Businesses</span>
+                    </motion.h2>
+                    <motion.p 
+                        className={styles.sectionSubtitle}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.5, delay: 0.1 }}
                     >
-                        Select the perfect plan for your investment analysis needs. All
-                        plans include our core AI-powered pitch deck analysis features.{" "}
+                        Unlock the features you need with the right plan
                     </motion.p>
                     <div className={styles.pricingGrid}>
                         {pricing.map((plan, index) => (
-              <div key={plan.title} className={styles.gradientWrapper}>
-                <img
-                  src="/images/backgroundgradiant.png"
-                  alt="Gradient Background"
-                  className={styles.gradientBackground}
-                />
-                <div className={styles.innerBox}>
-                            <motion.div
-                                className={styles.pricingCard}
+                            <motion.div 
+                                key={plan.title}
+                                className={`${styles.pricingCard} ${plan.isPopular ? styles.popular : ''}`}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.5, delay: index * 0.1 }}
                             >
+                                {plan.isPopular && <div className={styles.popularBadge}>MOST POPULAR</div>}
                                 <h3>{plan.title}</h3>
                                 <div className={styles.price}>
                                     <span className={styles.amount}>{plan.price}</span>
-                                    <span className={styles.period}>{plan.period}</span>
+                                    {plan.period && <span className={styles.period}>{plan.period}</span>}
+                                    {plan.billing && <span className={styles.period}>{plan.billing}</span>} 
                                 </div>
-                                <p>{plan.description}</p>
+                                <p className={styles.planDescription}>{plan.description}</p>
                                 <ul className={styles.features}>
                                     {plan.features.map((feature) => (
                                         <li key={feature}>{feature}</li>
                                     ))}
                                 </ul>
-                                <Button
+                                <Button 
                                     title={plan.buttonText}
-                                    className={styles.pricingButton}
+                                    className={`${styles.pricingButton} ${plan.isPopular ? styles.primary : styles.secondary}`}
                                     onClick={() => handlePricingButtonClick(plan.title)}
                                 />
                             </motion.div>
-                </div>
-              </div>
                         ))}
                     </div>
                 </div>
@@ -619,31 +622,35 @@ const LandingPage = () => {
                         <div className={styles.footerLeft}>
                             <div className={styles.footerLogo}>
                                 <img
-                                    src="/images/slogo.svg"
+                                    src="/images/footer-logo.png"
                                     alt="Spider"
-                                    className={styles.footerLogoImg}
+                                    width={160}
+                                    height={55}
+                                    style={{ objectFit: 'contain' }}
                                 />
-                                <span>The future of legal ops; AI-powered, business-ready</span>
+                                <span>AI-powered investment intelligence for modern investors.</span>
                             </div>
 
                             <div className={styles.footerLinks}>
                                 <a href="/terms">Terms of use</a>
                                 <span>•</span>
                                 <a href="/privacy">Privacy Policy</a>
-                                <span>•</span>
-                                <a href="/disclaimer">AI Enabled Content Notice</a>
-                                <span>•</span>
-                                <a href="/responsible-ai">Responsible AI</a>
+                                
                             </div>
 
                             <div className={styles.footerBottom}>
                                 <p>
-                  Copyright 2025. All rights reserved. &nbsp;&nbsp; Lawbit AI, A
-                  thing by&nbsp;
+                                    Copyright 2025. All rights reserved. &nbsp;&nbsp; Spider AI, A thing by&nbsp;
                                     <img
                                         src="/neuralpath.svg"
                                         alt="Neural Paths"
-                                        className={styles.neuralPathLogo}
+                                        width={115}
+                                        height={30}
+                                        style={{
+                                            display: 'inline-block',
+                                            verticalAlign: 'middle',
+                                            marginLeft: '8px'
+                                        }}
                                     />
                                 </p>
                             </div>
@@ -653,7 +660,16 @@ const LandingPage = () => {
                             <img
                                 src="/images/footer-illustration.png"
                                 alt="Footer Illustration"
-                                className={styles.footerIllustration}
+                                width={400}
+                                height={200}
+                                style={{
+                                    maxWidth: '100%',
+                                    height: 'auto',
+                                    objectFit: 'contain',
+                                    objectPosition: 'bottom right',
+                                    display: 'block',
+                                    marginBottom: '-5px'
+                                }}
                             />
                         </div>
                     </div>

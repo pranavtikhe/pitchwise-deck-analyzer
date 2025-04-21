@@ -8,11 +8,16 @@ export const analyzePitchDeck = async (text: string) => {
 
 IMPORTANT: You must respond with ONLY a valid JSON object in the exact format specified below. Do not include any explanatory text before or after the JSON.
 
-For the competitor_analysis section, analyze the company's direct competitors based on the pitch deck. If specific competitors are mentioned, use those. If not, research and identify the top 4 most relevant competitors in the same industry. For each competitor, provide:
-- Key Investors
-- Amount Raised
-- Market Position
-- Strengths
+For the expert_opinions section, you MUST provide exactly 3 expert opinions with the following structure:
+{
+  "name": "string",
+  "affiliation": "string",
+  "summary": "string",
+  "reference": "string",
+  "date": "string"
+}
+
+If the pitch deck doesn't contain expert opinions, research and provide relevant expert opinions from industry leaders, analysts, or publications in the same field.
 
 Required JSON format:
 {
@@ -63,7 +68,29 @@ Required JSON format:
     "risk_factor": number,
     "competitive_edge": number
   },
-  "expert_opinions": string[],
+  "expert_opinions": [
+    {
+      "name": "string",
+      "affiliation": "string",
+      "summary": "string",
+      "reference": "string",
+      "date": "string"
+    },
+    {
+      "name": "string",
+      "affiliation": "string",
+      "summary": "string",
+      "reference": "string",
+      "date": "string"
+    },
+    {
+      "name": "string",
+      "affiliation": "string",
+      "summary": "string",
+      "reference": "string",
+      "date": "string"
+    }
+  ],
   "market_analysis": {
     "market_size": "string",
     "growth_rate": "string",

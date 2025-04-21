@@ -323,50 +323,7 @@ type Competitor = {
   keyDifferentiator: string;
 };
 
-const competitors: Competitor[] = [
-  {
-    name: "Sirf",
-    marketShare: "Emerging",
-    keyInvestors: "Contest Fees + Margins",
-    growthRate: "Projected 5x In Y2",
-    keyDifferentiator: "eSports-focused, global-friendly",
-  },
-  {
-    name: "DraftKings",
-    marketShare: "35%+",
-    keyInvestors: "Contest + Betting",
-    growthRate: "Steady",
-    keyDifferentiator: "Established Player",
-  },
-  {
-    name: "FanDuel",
-    marketShare: "30%+",
-    keyInvestors: "Contest + Betting",
-    growthRate: "Steady",
-    keyDifferentiator: "Betting integration",
-  },
-  {
-    name: "Sleeper",
-    marketShare: "<5%",
-    keyInvestors: "Social games",
-    growthRate: "Fast",
-    keyDifferentiator: "Community-first",
-  },
-  {
-    name: "Monkey Knife Fight",
-    marketShare: "~3%",
-    keyInvestors: "Simple contests",
-    growthRate: "Flat",
-    keyDifferentiator: "UX simplicity",
-  },
-  {
-    name: "RealFevr",
-    marketShare: "<1%",
-    keyInvestors: "NFTs, Tokenomics",
-    growthRate: "Niche growth",
-    keyDifferentiator: "Blockchain integration",
-  },
-];
+
 
 const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
   const [showHistory, setShowHistory] = useState(false);
@@ -436,7 +393,8 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
         {/* Company Overview Grid */}
         <div className="mb-12">
           <h3 className="text-white text-lg mb-6">Company Overview</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-6 relative">
+            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gray-700"></div>
             {[
               {
                 label: "Company Name",
@@ -457,7 +415,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
               },
               { label: "Founded", value: data.company_overview.founded_on },
             ].map((item, index) => (
-              <div key={index} className="bg-black/20 rounded-lg p-4">
+              <div key={index} className="border-b border-gray-700 p-4">
                 <div className="flex justify-between">
                   <p className="text-gray-400 mr-2">{item.label}</p>
                   <p className="text-white">{item.value}</p>
@@ -466,6 +424,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
             ))}
           </div>
         </div>
+        
         {/* Strengths and Weaknesses */}
         <div className="mb-12">
           <h3 className="text-white text-lg mb-6">Pros & Cons</h3>
@@ -481,6 +440,16 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                     </div>
                   </div>
                 ))}
+                {/* Add placeholder strengths if needed to match weaknesses */}
+                {data.strengths.length < data.weaknesses.length &&
+                  Array(data.weaknesses.length - data.strengths.length).fill(null).map((_, index) => (
+                    <div key={`placeholder-${index}`} className="bg-black/20 rounded-lg p-3">
+                      <div className="flex gap-3">
+                        <p className="text-gray-300">Additional strength analysis pending</p>
+                      </div>
+                    </div>
+                  ))
+                }
               </div>
             </div>
             <div>
@@ -493,6 +462,16 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                     </div>
                   </div>
                 ))}
+                {/* Add placeholder weaknesses if needed to match strengths */}
+                {data.weaknesses.length < data.strengths.length &&
+                  Array(data.strengths.length - data.weaknesses.length).fill(null).map((_, index) => (
+                    <div key={`placeholder-${index}`} className="bg-black/20 rounded-lg p-3">
+                      <div className="flex gap-3">
+                        <p className="text-gray-300">Additional weakness analysis pending</p>
+                      </div>
+                    </div>
+                  ))
+                }
               </div>
             </div>
           </div>
@@ -500,7 +479,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
           {/* Competitive Competitors */}
           <div className="text-white">
             <h2 className="text-2xl font-bold mb-6">Competitor Comparison</h2>
-            <div className="grid grid-cols-5 gap-0 border-t border-gray-700">
+            <div className="grid grid-cols-5 gap-0  border-gray-700">
               <div className="border-r border-gray-700 p-4 font-bold">
                 Competitors
               </div>
@@ -545,27 +524,26 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
           </div>
 
           {/* table of findings */}
-          <h2 className="text-2xl font-bold mb-6">Table of Findings</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-6  text-white">
-            {competitors.map((comp) => (
+          <h2 className="text-2xl font-bold mb-6 mt-12">Table of Findings</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-6 text-white">
+            {data.competitor_analysis.competitors.map((competitor) => (
               <div
-                key={comp.name}
+                key={competitor.name}
                 className="border border-gray-700 rounded-xl p-4 shadow-md"
               >
-                <h2 className="text-2xl font-bold mb-3">{comp.name}</h2>
+                <h2 className="text-2xl font-bold mb-3">{competitor.name}</h2>
                 <div className="space-y-2 text-sm">
                   <p>
-                    <strong>Market Share:</strong> {comp.marketShare}
+                    <strong>Market Share:</strong> {competitor.market_position}
                   </p>
                   <p>
-                    <strong>Key Investors:</strong> {comp.keyInvestors}
+                    <strong>Key Investors:</strong> {competitor.key_investors}
                   </p>
                   <p>
-                    <strong>Growth Rate:</strong> {comp.growthRate}
+                    <strong>Growth Rate:</strong> {competitor.amount_raised}
                   </p>
                   <p>
-                    <strong>Key Differentiator:</strong>{" "}
-                    {comp.keyDifferentiator}
+                    <strong>Key Differentiator:</strong> {competitor.strengths}
                   </p>
                 </div>
               </div>
@@ -578,81 +556,53 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
               Industry Expert Opinions
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-gray-800 bg-opacity-70 rounded-lg p-4 shadow-lg">
-                <h3 className="text-lg mb-2">Mike Voorhaus</h3>
-                <p className="text-gray-400 mb-1">Affiliation</p>
-                <p className="mb-2">eSports VC, Early DK Investor</p>
-                <p className="text-gray-400 mb-1">Opinion Summary</p>
-                <p className="mb-2">
-                  Believes in platform scalability and market fit for Gen Z
-                </p>
-                <p className="text-gray-400 mb-1">Reference</p>
-                <p className="mb-2">Internal Deck</p>
-                <p className="text-gray-400 mb-1">Date</p>
-                <p>2024</p>
-              </div>
-              <div className="bg-gray-800 bg-opacity-70 rounded-lg p-4 shadow-lg">
-                <h3 className="text-lg mb-2">eSports Insider</h3>
-                <p className="text-gray-400 mb-1">Affiliation</p>
-                <p className="mb-2">Industry Publication</p>
-                <p className="text-gray-400 mb-1">Opinion Summary</p>
-                <p className="mb-2">
-                  Notes increasing demand for fantasy eSports with real-time
-                  engagement
-                </p>
-                <p className="text-gray-400 mb-1">Reference</p>
-                <p className="mb-2">ESI Report</p>
-                <p className="text-gray-400 mb-1">Date</p>
-                <p>2022</p>
-              </div>
-              <div className="bg-gray-800 bg-opacity-70 rounded-lg p-4 shadow-lg">
-                <h3 className="text-lg mb-2">Abios Gaming</h3>
-                <p className="text-gray-400 mb-1">Affiliation</p>
-                <p className="mb-2">eSports Data API Provider</p>
-                <p className="text-gray-400 mb-1">Opinion Summary</p>
-                <p className="mb-2">
-                  Expects high scalability via API integrations and regional
-                  gamification
-                </p>
-                <p className="text-gray-400 mb-1">Reference</p>
-                <p className="mb-2">Abios Report</p>
-                <p className="text-gray-400 mb-1">Date</p>
-                <p>2023</p>
-              </div>
+              {data?.expert_opinions?.map((opinion, index) => (
+                <div key={index} className=" rounded-lg p-4 shadow-lg">
+                  <h3 className="text-lg mb-2">{opinion.name}</h3>
+                  <p className="text-gray-400 mb-1">Affiliation</p>
+                  <p className="mb-2">{opinion.affiliation}</p>
+                  <p className="text-gray-400 mb-1">Opinion Summary</p>
+                  <p className="mb-2">{opinion.summary}</p>
+                  <p className="text-gray-400 mb-1">Reference</p>
+                  <p className="mb-2">{opinion.reference}</p>
+                  <p className="text-gray-400 mb-1">Date</p>
+                  <p>{opinion.date}</p>
+                </div>
+              ))}
             </div>
           </div>
 
           {/* conclusion */}
           <div className="text-white ">
-            <h2 className="text-2xl font-bold mb-6">Expert Conclusion</h2>
+            <h2 className="text-2xl font-bold mb-6 mt-12">Expert Conclusion</h2>
             <div className="space-y-4">
               <div className="flex justify-between border-b border-gray-600 pb-2">
                 <p className="text-gray-400">Product Viability</p>
-                <p>7</p>
+                <p>{data.final_verdict.product_viability}</p>
               </div>
               <div className="flex justify-between border-b border-gray-600 pb-2">
                 <p className="text-gray-400">Market Potential</p>
-                <p>9</p>
+                <p>{data.final_verdict.market_potential}</p>
               </div>
               <div className="flex justify-between border-b border-gray-600 pb-2">
                 <p className="text-gray-400">Sustainability</p>
-                <p>6</p>
+                <p>{data.final_verdict.sustainability}</p>
               </div>
               <div className="flex justify-between border-b border-gray-600 pb-2">
                 <p className="text-gray-400">Innovation</p>
-                <p>8</p>
+                <p>{data.final_verdict.innovation}</p>
               </div>
               <div className="flex justify-between border-b border-gray-600 pb-2">
                 <p className="text-gray-400">Exit Potential</p>
-                <p>7</p>
+                <p>{data.final_verdict.exit_potential}</p>
               </div>
               <div className="flex justify-between border-b border-gray-600 pb-2">
                 <p className="text-gray-400">Risk Factors</p>
-                <p>6</p>
+                <p>{data.final_verdict.risk_factor}</p>
               </div>
               <div className="flex justify-between border-b border-gray-600 pb-2">
                 <p className="text-gray-400">Competitive Advantage</p>
-                <p>7</p>
+                <p>{data.final_verdict.competitive_edge}</p>
               </div>
             </div>
           </div>
@@ -671,40 +621,39 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
             <div className="flex-1 text-white p-6">
               <h2 className="text-3xl font-bold mb-6">Final Verdict</h2>
               <p className="text-gray-300 mb-6">
-                Sirf shows significant potential in an emerging market with a
-                well-planned approach to tap into the untapped eSports daily
-                fantasy industry.
+                {data.company_overview.company_name} shows significant potential in the {data.industry_type} market with a
+                well-planned approach to tap into the market opportunities.
               </p>
-              <div className="grid grid-cols-2 gap-px bg-gray-700">
-                <div className="p-4 bg-teal-900">
-                  <p className="text-3xl font-bold">8</p>
+              <div className="grid grid-cols-2 gap-px ">
+                <div className="p-4 ">
+                  <p className="text-3xl font-bold">{data.final_verdict.product_viability}</p>
                   <p className="text-gray-400">Product Viability</p>
                 </div>
-                <div className="p-4 bg-teal-900">
-                  <p className="text-3xl font-bold">9</p>
+                <div className="p-4 ">
+                  <p className="text-3xl font-bold">{data.final_verdict.market_potential}</p>
                   <p className="text-gray-400">Market Potential</p>
                 </div>
-                <div className="p-4 bg-teal-900">
-                  <p className="text-3xl font-bold">7</p>
+                <div className="p-4 ">
+                  <p className="text-3xl font-bold">{data.final_verdict.sustainability}</p>
                   <p className="text-gray-400">Sustainability</p>
                 </div>
-                <div className="p-4 bg-teal-900">
-                  <p className="text-3xl font-bold">7</p>
+                <div className="p-4 ">
+                  <p className="text-3xl font-bold">{data.final_verdict.exit_potential}</p>
                   <p className="text-gray-400">Exit Potential</p>
                 </div>
-                <div className="p-4 bg-teal-900">
-                  <p className="text-3xl font-bold">6</p>
+                <div className="p-4 ">
+                  <p className="text-3xl font-bold">{data.final_verdict.risk_factor}</p>
                   <p className="text-gray-400">Risk Factors</p>
                 </div>
-                <div className="p-4 bg-teal-900">
-                  <p className="text-3xl font-bold">8</p>
+                <div className="p-4 ">
+                  <p className="text-3xl font-bold">{data.final_verdict.innovation}</p>
                   <p className="text-gray-400">Innovation</p>
                 </div>
-                <div className="p-4 bg-teal-900">
-                  <p className="text-3xl font-bold">7</p>
+                <div className="p-4 ">
+                  <p className="text-3xl font-bold">{data.final_verdict.competitive_edge}</p>
                   <p className="text-gray-400">Competitive Edge</p>
                 </div>
-                <div className="p-4 bg-teal-900"></div>
+
               </div>
             </div>
           </div>
