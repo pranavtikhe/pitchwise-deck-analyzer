@@ -315,6 +315,59 @@ const PitchDeckPDF = ({ data }: AnalysisReportProps) => (
   </Document>
 );
 
+type Competitor = {
+  name: string;
+  marketShare: string;
+  keyInvestors: string;
+  growthRate: string;
+  keyDifferentiator: string;
+};
+
+const competitors: Competitor[] = [
+  {
+    name: "Sirf",
+    marketShare: "Emerging",
+    keyInvestors: "Contest Fees + Margins",
+    growthRate: "Projected 5x In Y2",
+    keyDifferentiator: "eSports-focused, global-friendly",
+  },
+  {
+    name: "DraftKings",
+    marketShare: "35%+",
+    keyInvestors: "Contest + Betting",
+    growthRate: "Steady",
+    keyDifferentiator: "Established Player",
+  },
+  {
+    name: "FanDuel",
+    marketShare: "30%+",
+    keyInvestors: "Contest + Betting",
+    growthRate: "Steady",
+    keyDifferentiator: "Betting integration",
+  },
+  {
+    name: "Sleeper",
+    marketShare: "<5%",
+    keyInvestors: "Social games",
+    growthRate: "Fast",
+    keyDifferentiator: "Community-first",
+  },
+  {
+    name: "Monkey Knife Fight",
+    marketShare: "~3%",
+    keyInvestors: "Simple contests",
+    growthRate: "Flat",
+    keyDifferentiator: "UX simplicity",
+  },
+  {
+    name: "RealFevr",
+    marketShare: "<1%",
+    keyInvestors: "NFTs, Tokenomics",
+    growthRate: "Niche growth",
+    keyDifferentiator: "Blockchain integration",
+  },
+];
+
 const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
   const [showHistory, setShowHistory] = useState(false);
 
@@ -424,7 +477,6 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                 {data.strengths.map((strength, index) => (
                   <div key={index} className="bg-black/20 rounded-lg p-3">
                     <div className="flex gap-3">
-                      <span className="text-green-500">+</span>
                       <p className="text-gray-300">{strength}</p>
                     </div>
                   </div>
@@ -437,7 +489,6 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                 {data.weaknesses.map((weakness, index) => (
                   <div key={index} className="bg-black/20 rounded-lg p-3">
                     <div className="flex gap-3">
-                      <span className="text-red-500">-</span>
                       <p className="text-gray-300">{weakness}</p>
                     </div>
                   </div>
@@ -453,145 +504,72 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
               <div className="border-r border-gray-700 p-4 font-bold">
                 Competitors
               </div>
-              <div className="border-r border-gray-700 p-4">Draft Kings</div>
-              <div className="border-r border-gray-700 p-4">FanDuel</div>
-              <div className="border-r border-gray-700 p-4">Sleeper</div>
-              <div className="border-r border-gray-700 p-4">
-                Monkey Knife Fight
-              </div>
-              <div className="border-r border-gray-700 p-4">RealFevr</div>
+              {data.competitor_analysis.competitors.map((competitor, index) => (
+                <div key={index} className="border-r border-gray-700 p-4">
+                  {competitor.name}
+                </div>
+              ))}
               <div className="border-r border-gray-700 p-4 font-bold">
                 Key Investors
               </div>
-              <div className="border-r border-gray-700 p-4">
-                Early Stage VC, IPO
-              </div>
-              <div className="border-r border-gray-700 p-4">
-                Flutter Entertainment
-              </div>
-              <div className="border-r border-gray-700 p-4">
-                Andreessen Horowitz
-              </div>
-              <div className="border-r border-gray-700 p-4">Bally's Corp</div>
-              <div className="border-r border-gray-700 p-4">
-                Private, Seed/ Series A
-              </div>
+              {data.competitor_analysis.competitors.map((competitor, index) => (
+                <div key={index} className="border-r border-gray-700 p-4">
+                  {competitor.key_investors}
+                </div>
+              ))}
               <div className="border-r border-gray-700 p-4 font-bold">
                 Amount Raised
               </div>
-              <div className="border-r border-gray-700 p-4">$719M+ pre-IPO</div>
-              <div className="border-r border-gray-700 p-4">$500M+</div>
-              <div className="border-r border-gray-700 p-4">~$60M</div>
-              <div className="border-r border-gray-700 p-4">Acquired</div>
-              <div className="border-r border-gray-700 p-4">~$10M</div>
+              {data.competitor_analysis.competitors.map((competitor, index) => (
+                <div key={index} className="border-r border-gray-700 p-4">
+                  {competitor.amount_raised}
+                </div>
+              ))}
               <div className="border-r border-gray-700 p-4 font-bold">
                 Market Position
               </div>
-              <div className="border-r border-gray-700 p-4">
-                Market leader in DFS
-              </div>
-              <div className="border-r border-gray-700 p-4">
-                Top DFS + sportsbook
-              </div>
-              <div className="border-r border-gray-700 p-4">
-                Gen Z-targeted fantasy sports
-              </div>
-              <div className="border-r border-gray-700 p-4">Mid-market DFS</div>
-              <div className="border-r border-gray-700 p-4">
-                NFT x fantasy market
-              </div>
+              {data.competitor_analysis.competitors.map((competitor, index) => (
+                <div key={index} className="border-r border-gray-700 p-4">
+                  {competitor.market_position}
+                </div>
+              ))}
               <div className="border-r border-gray-700 p-4 font-bold">
                 Strengths
               </div>
-              <div className="border-r border-gray-700 p-4">
-                Deep capital, user base, brand
-              </div>
-              <div className="border-r border-gray-700 p-4">
-                Aggressive market reach
-              </div>
-              <div className="border-r border-gray-700 p-4">
-                Community-based social fantasy
-              </div>
-              <div className="border-r border-gray-700 p-4">
-                Simple UX, niche players
-              </div>
-              <div className="border-gray-700 p-4">
-                Blockchain fantasy niche
-              </div>
+              {data.competitor_analysis.competitors.map((competitor, index) => (
+                <div key={index} className="border-r border-gray-700 p-4">
+                  {competitor.strengths}
+                </div>
+              ))}
             </div>
           </div>
 
           {/* table of findings */}
-          <div className="text-white">
-            <h2 className="text-2xl font-bold mb-6">
-              Summary Table of Findings
-            </h2>
-            <div className="grid grid-cols-3 gap-0 border-t border-gray-700">
-              <div className="border-r border-gray-700 p-4">Sirf</div>
-              <div className="border-r border-gray-700 p-4">DraftKings</div>
-              <div className="border-r border-gray-700 p-4">FanDuel</div>
-              <div className="border-r border-gray-700 p-4">Sleeper</div>
-              <div className="border-r border-gray-700 p-4">
-                Monkey Knife Fight
+          <h2 className="text-2xl font-bold mb-6">Table of Findings</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-6  text-white">
+            {competitors.map((comp) => (
+              <div
+                key={comp.name}
+                className="border border-gray-700 rounded-xl p-4 shadow-md"
+              >
+                <h2 className="text-2xl font-bold mb-3">{comp.name}</h2>
+                <div className="space-y-2 text-sm">
+                  <p>
+                    <strong>Market Share:</strong> {comp.marketShare}
+                  </p>
+                  <p>
+                    <strong>Key Investors:</strong> {comp.keyInvestors}
+                  </p>
+                  <p>
+                    <strong>Growth Rate:</strong> {comp.growthRate}
+                  </p>
+                  <p>
+                    <strong>Key Differentiator:</strong>{" "}
+                    {comp.keyDifferentiator}
+                  </p>
+                </div>
               </div>
-              <div className="border-r border-gray-700 p-4">RealFevr</div>
-              <div className="border-r border-gray-700 p-4 font-bold">
-                Market Share
-              </div>
-              <div className="border-r border-gray-700 p-4">Emerging</div>
-              <div className="border-r border-gray-700 p-4">35%+</div>
-              <div className="border-r border-gray-700 p-4">30%+</div>
-              <div className="border-r border-gray-700 p-4">&lt;5%</div>
-              <div className="border-r border-gray-700 p-4">&lt;3%</div>
-              <div className="border-r border-gray-700 p-4">&lt;1%</div>
-              <div className="border-r border-gray-700 p-4 font-bold">
-                Key Investors
-              </div>
-              <div className="border-r border-gray-700 p-4">
-                Contest Fees + Margins
-              </div>
-              <div className="border-r border-gray-700 p-4">
-                Contest + Betting
-              </div>
-              <div className="border-r border-gray-700 p-4">
-                Contest + Betting
-              </div>
-              <div className="border-r border-gray-700 p-4">Social games</div>
-              <div className="border-r border-gray-700 p-4">
-                Simple contests
-              </div>
-              <div className="border-r border-gray-700 p-4">
-                NFTs, Tokenomics
-              </div>
-              <div className="border-r border-gray-700 p-4 font-bold">
-                Growth Rate
-              </div>
-              <div className="border-r border-gray-700 p-4">
-                Projected 5x In Y2
-              </div>
-              <div className="border-r border-gray-700 p-4">Steady</div>
-              <div className="border-r border-gray-700 p-4">Steady</div>
-              <div className="border-r border-gray-700 p-4">Fast</div>
-              <div className="border-r border-gray-700 p-4">Flat</div>
-              <div className="border-r border-gray-700 p-4">Niche growth</div>
-              <div className="border-r border-gray-700 p-4 font-bold">
-                Key Differentiator
-              </div>
-              <div className="border-r border-gray-700 p-4">
-                eSports-focused, global-friendly
-              </div>
-              <div className="border-r border-gray-700 p-4">
-                Established Player
-              </div>
-              <div className="border-r border-gray-700 p-4">
-                Betting integration
-              </div>
-              <div className="border-r border-gray-700 p-4">
-                Community-first
-              </div>
-              <div className="border-r border-gray-700 p-4">UX simplicity</div>
-              <div className="border-gray-700 p-4">Blockchain integration</div>
-            </div>
+            ))}
           </div>
 
           {/* expert opinions */}
@@ -694,8 +672,8 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
               <h2 className="text-3xl font-bold mb-6">Final Verdict</h2>
               <p className="text-gray-300 mb-6">
                 Sirf shows significant potential in an emerging market with a
-                well-planned approach to tap into the untapped eSports daily fantasy
-                industry.
+                well-planned approach to tap into the untapped eSports daily
+                fantasy industry.
               </p>
               <div className="grid grid-cols-2 gap-px bg-gray-700">
                 <div className="p-4 bg-teal-900">

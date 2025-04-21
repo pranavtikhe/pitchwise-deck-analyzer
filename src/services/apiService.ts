@@ -4,121 +4,86 @@ export const analyzePitchDeck = async (text: string) => {
   console.log('Starting pitch deck analysis with Mistral...');
   console.log(`Total characters to analyze: ${text.length}`);
 
-  const prompt = `
-    As an expert investment analyst and pitch deck evaluator, analyze this pitch deck comprehensively.
-    Consider the following aspects and provide detailed insights:
+  const prompt = `You are an expert investment analyst and pitch deck evaluator. Analyze the following pitch deck text and provide a comprehensive analysis.
 
-    1. Industry Analysis:
-       - Market size and growth potential
-       - Competitive landscape
-       - Industry trends and dynamics
-       - Regulatory environment
+IMPORTANT: You must respond with ONLY a valid JSON object in the exact format specified below. Do not include any explanatory text before or after the JSON.
 
-    2. Company Overview:
-       - Business model and value proposition
-       - Target market and customer segments
-       - Revenue model and monetization strategy
-       - Team composition and expertise
-       - Technology and IP position
+For the competitor_analysis section, analyze the company's direct competitors based on the pitch deck. If specific competitors are mentioned, use those. If not, research and identify the top 4 most relevant competitors in the same industry. For each competitor, provide:
+- Key Investors
+- Amount Raised
+- Market Position
+- Strengths
 
-    3. Financial Analysis:
-       - Revenue projections and growth trajectory
-       - Unit economics and margins
-       - Cash flow and burn rate
-       - Funding requirements and use of proceeds
-       - Valuation methodology and assumptions
-
-    4. Market Opportunity:
-       - Total Addressable Market (TAM)
-       - Serviceable Available Market (SAM)
-       - Serviceable Obtainable Market (SOM)
-       - Market penetration strategy
-       - Competitive advantages
-
-    5. Risk Assessment:
-       - Market risks
-       - Technology risks
-       - Regulatory risks
-       - Competition risks
-       - Execution risks
-
-    6. Investment Thesis:
-       - Key investment highlights
-       - Growth potential
-       - Exit opportunities
-       - Return on investment projections
-
-    Return the analysis in the following JSON format. For any missing information, make educated inferences based on:
-    - Industry standards and benchmarks
-    - Comparable companies
-    - Market conditions
-    - Company stage and maturity
-
-    Required JSON format:
-    {
-      "industry_type": "string",
-      "pitch_clarity": number,
-      "investment_score": number,
-      "market_position": "string",
-      "company_overview": {
-        "company_name": "string",
-        "industry": "string",
-        "business_model": "string",
-        "key_offerings": "string",
-        "market_position": "string",
-        "founded_on": "string"
-      },
-      "strengths": string[],
-      "weaknesses": string[],
-      "funding_history": {
-        "rounds": [
-          {
-            "type": "string",
-            "amount": "string",
-            "key_investors": string[]
-          }
-        ]
-      },
-      "proposed_deal_structure": {
-        "investment_amount": "string",
-        "valuation_cap": "string",
-        "equity_stake": "string",
-        "anti_dilution_protection": "string",
-        "board_seat": "string",
-        "liquidation_preference": "string",
-        "vesting_schedule": "string",
-        "other_terms": "string"
-      },
-      "key_questions": {
-        "market_strategy": string[],
-        "user_relation": string[],
-        "regulatory_compliance": string[]
-      },
-      "final_verdict": {
-        "product_viability": number,
-        "market_potential": number,
-        "sustainability": number,
-        "innovation": number,
-        "exit_potential": number,
-        "risk_factor": number,
-        "competitive_edge": number
-      },
-      "expert_opinions": string[],
-      "market_analysis": {
-        "market_size": "string",
-        "growth_rate": "string",
-        "trends": string[],
-        "challenges": string[]
-      },
-      "competitor_analysis": {
-        "direct_competitors": string[],
-        "competitive_advantages": string[],
-        "market_share": "string",
-        "differentiators": string[]
+Required JSON format:
+{
+  "industry_type": "string",
+  "pitch_clarity": number,
+  "investment_score": number,
+  "market_position": "string",
+  "company_overview": {
+    "company_name": "string",
+    "industry": "string",
+    "business_model": "string",
+    "key_offerings": "string",
+    "market_position": "string",
+    "founded_on": "string"
+  },
+  "strengths": string[],
+  "weaknesses": string[],
+  "funding_history": {
+    "rounds": [
+      {
+        "type": "string",
+        "amount": "string",
+        "key_investors": string[]
       }
-    }
+    ]
+  },
+  "proposed_deal_structure": {
+    "investment_amount": "string",
+    "valuation_cap": "string",
+    "equity_stake": "string",
+    "anti_dilution_protection": "string",
+    "board_seat": "string",
+    "liquidation_preference": "string",
+    "vesting_schedule": "string",
+    "other_terms": "string"
+  },
+  "key_questions": {
+    "market_strategy": string[],
+    "user_relation": string[],
+    "regulatory_compliance": string[]
+  },
+  "final_verdict": {
+    "product_viability": number,
+    "market_potential": number,
+    "sustainability": number,
+    "innovation": number,
+    "exit_potential": number,
+    "risk_factor": number,
+    "competitive_edge": number
+  },
+  "expert_opinions": string[],
+  "market_analysis": {
+    "market_size": "string",
+    "growth_rate": "string",
+    "trends": string[],
+    "challenges": string[]
+  },
+  "competitor_analysis": {
+    "competitors": [
+      {
+        "name": "string",
+        "key_investors": "string",
+        "amount_raised": "string",
+        "market_position": "string",
+        "strengths": "string"
+      }
+    ]
+  }
+}
 
-    Pitch Deck Text: ${text}`;
+Pitch Deck Text: ${text}`;
 
   try {
     console.log('Sending request to Mistral API...');
@@ -133,12 +98,17 @@ export const analyzePitchDeck = async (text: string) => {
         model: "mistral-tiny",
         messages: [
           {
+            role: "system",
+            content: "You are an expert investment analyst. Your task is to analyze pitch decks and return the analysis in a specific JSON format. You must respond with ONLY a valid JSON object, no additional text. For competitor analysis, identify the top 4 most relevant competitors and provide detailed information about each."
+          },
+          {
             role: "user",
             content: prompt
           }
         ],
         temperature: 0.7,
-        max_tokens: 4096
+        max_tokens: 4096,
+        response_format: { type: "json_object" }
       })
     });
 
@@ -151,12 +121,11 @@ export const analyzePitchDeck = async (text: string) => {
     console.log('Successfully received Mistral response');
 
     try {
-      // Extract and clean the JSON response
+      // Extract the JSON response
       const analysisText = result.choices[0].message.content;
-      let cleanJsonText = analysisText.replace(/```json\s*/g, '').replace(/```\s*$/g, '');
       
       // Parse the JSON response
-      const parsedData = JSON.parse(cleanJsonText);
+      const parsedData = JSON.parse(analysisText);
       console.log('Successfully parsed analysis JSON');
       
       // Validate and enhance the data
@@ -179,6 +148,15 @@ export const analyzePitchDeck = async (text: string) => {
           exit_potential: Math.min(Math.max(parsedData.final_verdict?.exit_potential || 5, 1), 10),
           risk_factor: Math.min(Math.max(parsedData.final_verdict?.risk_factor || 5, 1), 10),
           competitive_edge: Math.min(Math.max(parsedData.final_verdict?.competitive_edge || 5, 1), 10)
+        },
+        competitor_analysis: {
+          competitors: parsedData.competitor_analysis?.competitors || Array(4).fill({
+            name: "Not Available",
+            key_investors: "Not Available",
+            amount_raised: "Not Available",
+            market_position: "Not Available",
+            strengths: "Not Available"
+          })
         }
       };
 

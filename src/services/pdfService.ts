@@ -176,6 +176,21 @@ export interface MistralResponse {
     team_insights: string;
     overall_insights: string;
   };
+  market_analysis: {
+    market_size: string;
+    growth_rate: string;
+    trends: string[];
+    challenges: string[];
+  };
+  competitor_analysis: {
+    competitors: {
+      name: string;
+      key_investors: string;
+      amount_raised: string;
+      market_position: string;
+      strengths: string;
+    }[];
+  };
 }
 
 /**
