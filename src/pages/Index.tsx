@@ -14,6 +14,7 @@ const Index = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [insights, setInsights] = useState<any>(null);
+  const [progress, setProgress] = useState(0);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -33,17 +34,46 @@ const Index = () => {
 
     setIsLoading(true);
     setInsights(null);
+    setProgress(0);
 
     try {
+      // Document Processing (0-20%)
+      setProgress(5);
       const extractedText = await extractTextFromPdf(file);
+      setProgress(20);
+
+      // Startup Profile (20-40%)
+      setProgress(25);
       const analysisResults = await analyzeWithBackend(extractedText);
+      setProgress(40);
+
+      // Market Analysis (40-60%)
+      setProgress(45);
+      // Wait for market analysis to complete
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setProgress(60);
+
+      // Sentiment Analysis (60-80%)
+      setProgress(65);
+      // Wait for sentiment analysis to complete
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setProgress(80);
+
+      // Report Generation (80-100%)
+      setProgress(85);
       setInsights(analysisResults);
+      setProgress(100);
+      
       toast.success("Analysis complete!");
     } catch (error) {
       console.error("Error processing file:", error);
       toast.error(error instanceof Error ? error.message : "An unknown error occurred");
     } finally {
-      setIsLoading(false);
+      // Keep the progress at 100% briefly before resetting
+      setTimeout(() => {
+        setIsLoading(false);
+        setProgress(0);
+      }, 1000);
     }
   };
 
@@ -107,7 +137,7 @@ const Index = () => {
             </div>
           )}
 
-          {isLoading && <LoadingScreen currentStep={currentStep} />}
+          {isLoading && <LoadingScreen progress={progress} />}
 
           {insights && !isLoading && (
             <div className="mt-8">

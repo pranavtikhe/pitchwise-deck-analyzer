@@ -112,18 +112,111 @@
 }
 
 
-.title {
-  font-size: 36px;
-  font-weight: 600;
-  text-align: center;
-  background: linear-gradient(to right, #FFFFFF 0%, #959595 50%, #FFFFFF 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 48px;
-  font-family: 'Fustat', sans-serif;
+.timelineWrapper {
+  display: flex;
+  align-items: flex-start;
 }
 
+.timeline {
+  position: relative;
+  width: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 2rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1); // transparent grey
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.timelineFill {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 2px;
+  background: linear-gradient(to bottom, #fff, rgba(255, 255, 255, 0));
+  transform: translateX(-50%);
+  z-index: 2;
+  transition: height 1s ease-in-out;
+}
+
+.timelineStep {
+  margin: 40px 0;
+  position: relative;
+  z-index: 3;
+
+  .square {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .circle {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    background: white;
+    border-radius: 50%;
+  }
+}
+
+.timelineStep.active .square {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+.timelineStep.active .circle {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.textSteps {
+  flex: 1;
+}
+
+.stepContent {
+  margin-bottom: 48px;
+}
+
+.stepTitle {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #888;
+}
+
+.stepDesc {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.stepTitleActive {
+  @extend .stepTitle;
+  color: #ffffff;
+}
+
+.stepDescActive {
+  @extend .stepDesc;
+  color: #aaa;
+}
 
 .googleButton {
   display: flex;

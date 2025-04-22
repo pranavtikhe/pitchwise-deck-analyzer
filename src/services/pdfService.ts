@@ -200,16 +200,22 @@ export interface MistralResponse {
 }
 
 /**
- * Analyze text using backend service (which will use Mistral API)
+ * Analyze text using Mistral API
  */
 export const analyzeWithBackend = async (text: string): Promise<MistralResponse & { analyzedAt: Date }> => {
   try {
     console.log('Starting pitch deck analysis...');
     const analysis = await analyzePitchDeck(text);
+    
+    // Add analyzedAt field if not present
+    if (!analysis.analyzedAt) {
+      analysis.analyzedAt = new Date();
+    }
+    
     return analysis;
   } catch (error) {
-    console.error('Error analyzing pitch deck:', error);
-    throw new Error('Failed to analyze pitch deck. Please try again.');
+    console.error('Error analyzing with backend:', error);
+    throw new Error('Analysis failed');
   }
 };
 
