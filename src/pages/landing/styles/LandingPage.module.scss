@@ -882,6 +882,10 @@
 .steps {
     padding: 6rem 0;
     background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.1) 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 
     .stepsGrid {
         display: grid;
@@ -890,14 +894,17 @@
         max-width: 1200px;
         margin: 0 auto;
         padding: 0 2rem;
+        width: 100%;
     }
 
     .gradientWrapper {
         position: relative;
         width: 100%;
+        max-width: 1200px;
         border-radius: 24px;
         overflow: hidden;
         aspect-ratio: 16/9;
+        margin: 0 auto;
 
         &::before {
             content: '';
@@ -924,7 +931,11 @@
         position: relative;
         z-index: 2;
         height: 100%;
-        padding: 1rem;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
 
     .stepCard {
@@ -935,6 +946,9 @@
         transition: all 0.3s ease;
         padding: 2rem;
         border-radius: 24px;
+        width: 100%;
+        max-width: 548px;
+        margin: 0 auto;
 
         &:nth-child(2) {
             margin-top: -2rem;
@@ -979,9 +993,13 @@
     .steps {
         .stepsGrid {
             grid-template-columns: 1fr;
+            padding: 0 1rem;
         }
 
         .stepCard {
+            max-width: 100%;
+            margin: 1rem 0;
+
             &:nth-child(2),
             &:nth-child(3),
             &:nth-child(4) {
