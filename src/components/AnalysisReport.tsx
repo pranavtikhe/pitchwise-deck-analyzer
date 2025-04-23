@@ -425,61 +425,56 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
         <div className="mb-12">
           <h3 className="text-white text-lg mb-6">Pros & Cons</h3>
 
-          <div className="grid grid-cols-2 gap-6 mb-12">
+          <div className="grid grid-cols-2 gap-6 mb-12 relative">
+            {/* Vertical divider */}
+            <div className="absolute top-0 bottom-0 left-1/2 w-px bg-gray-700 -mx-3"></div>
+
             <div>
               <h4 className="text-white mb-4">Strengths (Pros)</h4>
-              <div className="space-y-3">
+              <div className="space-y-6">
                 {data.strengths.map((strength, index) => (
-                  <div key={index} className="bg-black/20 rounded-lg p-3">
-                    <div className="flex gap-3">
-                      <p className="text-gray-300">{strength}</p>
+                  <div key={index} className="flex items-start">
+                    <div className="flex-shrink-0 rounded-full bg-gray-700 w-8 h-8 flex items-center justify-center mr-4">
+                      <span className="text-white text-sm">{index + 1}</span>
                     </div>
+                    <p className="text-gray-300 pt-1">{strength}</p>
                   </div>
                 ))}
                 {/* Add placeholder strengths if needed to match weaknesses */}
                 {data.strengths.length < data.weaknesses.length &&
-                  Array(data.weaknesses.length - data.strengths.length)
-                    .fill(null)
-                    .map((_, index) => (
-                      <div
-                        key={`placeholder-${index}`}
-                        className="bg-black/20 rounded-lg p-3"
-                      >
-                        <div className="flex gap-3">
-                          <p className="text-gray-300">
-                            Additional strength analysis pending
-                          </p>
-                        </div>
+                  Array(data.weaknesses.length - data.strengths.length).fill(null).map((_, index) => (
+                    <div key={`placeholder-${index}`} className="flex items-start">
+                      <div className="flex-shrink-0 rounded-full bg-gray-700 w-8 h-8 flex items-center justify-center mr-4">
+                        <span className="text-white text-sm">{data.strengths.length + index + 1}</span>
                       </div>
-                    ))}
+                      <p className="text-gray-300 pt-1">Additional strength analysis pending</p>
+                    </div>
+                  ))
+                }
               </div>
             </div>
             <div>
               <h4 className="text-white mb-4">Weaknesses (Cons)</h4>
-              <div className="space-y-3">
+              <div className="space-y-6">
                 {data.weaknesses.map((weakness, index) => (
-                  <div key={index} className="bg-black/20 rounded-lg p-3">
-                    <div className="flex gap-3">
-                      <p className="text-gray-300">{weakness}</p>
+                  <div key={index} className="flex items-start">
+                    <div className="flex-shrink-0 rounded-full bg-gray-700 w-8 h-8 flex items-center justify-center mr-4">
+                      <span className="text-white text-sm">{index + 1}</span>
                     </div>
+                    <p className="text-gray-300 pt-1">{weakness}</p>
                   </div>
                 ))}
                 {/* Add placeholder weaknesses if needed to match strengths */}
                 {data.weaknesses.length < data.strengths.length &&
-                  Array(data.strengths.length - data.weaknesses.length)
-                    .fill(null)
-                    .map((_, index) => (
-                      <div
-                        key={`placeholder-${index}`}
-                        className="bg-black/20 rounded-lg p-3"
-                      >
-                        <div className="flex gap-3">
-                          <p className="text-gray-300">
-                            Additional weakness analysis pending
-                          </p>
-                        </div>
+                  Array(data.strengths.length - data.weaknesses.length).fill(null).map((_, index) => (
+                    <div key={`placeholder-${index}`} className="flex items-start">
+                      <div className="flex-shrink-0 rounded-full bg-gray-700 w-8 h-8 flex items-center justify-center mr-4">
+                        <span className="text-white text-sm">{data.weaknesses.length + index + 1}</span>
                       </div>
-                    ))}
+                      <p className="text-gray-300 pt-1">Additional weakness analysis pending</p>
+                    </div>
+                  ))
+                }
               </div>
             </div>
           </div>
@@ -487,45 +482,67 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
           {/* Competitive Competitors */}
           <div className="text-white">
             <h2 className="text-2xl font-bold mb-6">Competitor Comparison</h2>
-            <div className="grid grid-cols-5 gap-0  border-gray-700">
-              <div className="border-r border-gray-700 p-4 font-bold">
-                Competitors
-              </div>
+            <div className="grid grid-cols-1 gap-0 border-b border-gray-700" style={{ gridTemplateColumns: "minmax(150px, 1fr) repeat(auto-fit, minmax(120px, 1fr))" }}>
+              <div className="p-4 font-bold">Competitors</div>
               {data.competitor_analysis.competitors.map((competitor, index) => (
-                <div key={index} className="border-r border-gray-700 p-4">
+                <div key={index} className="p-4 border-r border-gray-700 text-center">
                   {competitor.name}
                 </div>
               ))}
-              <div className="border-r border-gray-700 p-4 font-bold">
-                Key Investors
-              </div>
+            </div>
+            <div className="grid grid-cols-1 gap-0" style={{ gridTemplateColumns: "minmax(150px, 1fr) repeat(auto-fit, minmax(120px, 1fr))" }}>
+              <div className="p-4 font-bold">Key Investors</div>
               {data.competitor_analysis.competitors.map((competitor, index) => (
-                <div key={index} className="border-r border-gray-700 p-4">
+                <div key={index} className="p-4 border-r border-gray-700 text-center">
                   {competitor.key_investors}
                 </div>
               ))}
-              <div className="border-r border-gray-700 p-4 font-bold">
-                Amount Raised
-              </div>
+            </div>
+            <div className="grid grid-cols-1 gap-0" style={{ gridTemplateColumns: "minmax(150px, 1fr) repeat(auto-fit, minmax(120px, 1fr))" }}>
+              <div className="p-4 font-bold">Amount Raised</div>
               {data.competitor_analysis.competitors.map((competitor, index) => (
-                <div key={index} className="border-r border-gray-700 p-4">
+                <div key={index} className="p-4 border-r border-gray-700 text-center">
                   {competitor.amount_raised}
                 </div>
               ))}
-              <div className="border-r border-gray-700 p-4 font-bold">
-                Market Position
-              </div>
+            </div>
+            <div className="grid grid-cols-1 gap-0" style={{ gridTemplateColumns: "minmax(150px, 1fr) repeat(auto-fit, minmax(120px, 1fr))" }}>
+              <div className="p-4 font-bold">Market Position</div>
               {data.competitor_analysis.competitors.map((competitor, index) => (
-                <div key={index} className="border-r border-gray-700 p-4">
+                <div key={index} className="p-4 border-r border-gray-700 text-center">
                   {competitor.market_position}
                 </div>
               ))}
-              <div className="border-r border-gray-700 p-4 font-bold">
-                Strengths
-              </div>
+            </div>
+            <div className="grid grid-cols-1 gap-0" style={{ gridTemplateColumns: "minmax(150px, 1fr) repeat(auto-fit, minmax(120px, 1fr))" }}>
+              <div className="p-4 font-bold">Strengths</div>
               {data.competitor_analysis.competitors.map((competitor, index) => (
-                <div key={index} className="border-r border-gray-700 p-4">
+                <div key={index} className="p-4 border-r border-gray-700 text-center">
                   {competitor.strengths}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* To Date Funds Raised */}
+          <div className="text-white mt-12 mb-12">
+            <h2 className="text-2xl font-bold mb-6">To Date Funds Raised</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {data.funding_history.rounds.map((round, index) => (
+                <div key={index} className="bg-gray-800 bg-opacity-50 rounded-lg p-6 shadow-lg border border-gray-700">
+                  <h3 className="text-xl font-semibold mb-6">{round.type}</h3>
+                  
+                  <div className="space-y-6">
+                    <div className="bg-gray-900 bg-opacity-70 rounded-md p-4">
+                      <p className="text-gray-400 text-sm mb-2">Amount Raised</p>
+                      <p className="text-white text-2xl font-semibold">{round.amount}</p>
+                    </div>
+                    
+                    <div className="bg-gray-900 bg-opacity-70 rounded-md p-4">
+                      <p className="text-gray-400 text-sm mb-2">Key Investors</p>
+                      <p className="text-white">{round.key_investors.join(", ")}</p>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -533,26 +550,30 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
 
           {/* table of findings */}
           <h2 className="text-2xl font-bold mb-6 mt-12">Table of Findings</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 p-6 text-white">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-white">
             {data.competitor_analysis.competitors.map((competitor) => (
               <div
                 key={competitor.name}
-                className="border border-gray-700 rounded-xl p-4 shadow-md"
+                className=" rounded-lg p-6 "
               >
-                <h2 className="text-2xl font-bold mb-3">{competitor.name}</h2>
-                <div className="space-y-2 text-sm">
-                  <p>
-                    <strong>Market Share:</strong> {competitor.market_position}
-                  </p>
-                  <p>
-                    <strong>Key Investors:</strong> {competitor.key_investors}
-                  </p>
-                  <p>
-                    <strong>Growth Rate:</strong> {competitor.amount_raised}
-                  </p>
-                  <p>
-                    <strong>Key Differentiator:</strong> {competitor.strengths}
-                  </p>
+                <h2 className="text-xl font-semibold mb-4">{competitor.name}</h2>
+                <div className="space-y-3">
+                  <div className="border-b border-gray-700 pb-3">
+                    <p className="text-gray-400 text-sm mb-1">Market Share</p>
+                    <p className="text-white">{competitor.market_position}</p>
+                  </div>
+                  <div className="border-b border-gray-700 pb-3">
+                    <p className="text-gray-400 text-sm mb-1">Key Investors</p>
+                    <p className="text-white">{competitor.key_investors}</p>
+                  </div>
+                  <div className="border-b border-gray-700 pb-3">
+                    <p className="text-gray-400 text-sm mb-1">Growth Rate</p>
+                    <p className="text-white">{competitor.amount_raised}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-sm mb-1">Key Differentiator</p>
+                    <p className="text-white">{competitor.strengths}</p>
+                  </div>
                 </div>
               </div>
             ))}
