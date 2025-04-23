@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, ArrowRight, Eye, EyeOff, Phone } from 'lucide-react';
 import { motion } from 'framer-motion';
-import styles from '../../styles/upload.module.scss';
+import uploadStyles from '../../styles/upload.module.scss';
 import { signIn, signUp } from '@/services/authService';
 import { toast } from 'sonner';
+import { StarField } from '@/components/StarField';
+import landingStyles from '../landing/styles/LandingPage.module.scss';
 
 interface FormData {
   fullName: string;
@@ -44,7 +46,7 @@ const PasswordStrength = ({ password }: { password: string }) => {
           <div
             className="h-full transition-all duration-300"
             style={{
-              width: `${(strength / 5) * 100}%`,
+              width: `${Math.max((strength / 5) * 100, 0)}%`,
               backgroundColor: strengthColor
             }}
           />
@@ -171,8 +173,66 @@ const LoginPage = () => {
     }
   };
 
-  return (
-    <div className="min-h-screen bg-[#1C1C1C] flex flex-col items-center justify-center p-6">
+  const starfieldVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            duration: 1,
+            ease: "easeOut",
+        },
+    },
+};
+
+const ellipseVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: {
+        opacity: 1,
+        scale: 1,
+        transition: {
+            duration: 1.5,
+            ease: "easeOut",
+        },
+    },
+};
+
+  return (   
+   <>
+      <div className={landingStyles.backgroundElements}>
+        <motion.div
+          className={landingStyles.starfieldWrapper}
+          variants={starfieldVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <StarField />
+        </motion.div>
+        <motion.div
+          className={landingStyles.ellipse}
+          variants={ellipseVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <img
+            src="/images/white-radial.svg"
+            alt="Radial gradient"
+            width={1000}
+            height={1000}
+          />
+        </motion.div>
+      </div>
+      
+      <h1 className="text-center text-5xl font-bold mb-8" style={{ 
+        background: 'linear-gradient(to right, #FFFFFF 0%, #959595 50%, #FFFFFF 100%)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+        fontWeight: 700,
+        fontSize: '48px'
+      }}>
+        PitchWise
+      </h1>
+      
       <img src="/images/slogo.svg" alt="logo" className="w-[68px] h-[72px] mb-10" />
 
       <div className="flex justify-center mb-6">
@@ -183,10 +243,11 @@ const LoginPage = () => {
           transition={{ duration: 0.3 }}
         >
           <motion.button
-            className={`px-8 py-2 rounded-full text-sm font-medium transition-all duration-200 ${activeTab === 'login'
-              ? 'bg-gradient-to-r from-[#2B8CFF] to-[#7B5AFF] text-white'
-              : 'text-muted-foreground hover:text-white'
-              }`}
+            className={`px-8 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+              activeTab === 'login'
+                ? 'bg-gradient-to-r from-[#2B8CFF] to-[#7B5AFF] text-white'
+                : 'text-muted-foreground hover:text-white'
+            }`}
             onClick={() => {
               setActiveTab('login');
               setFormData({
@@ -204,10 +265,11 @@ const LoginPage = () => {
             Log In
           </motion.button>
           <motion.button
-            className={`px-8 py-2 rounded-full text-sm font-medium transition-all duration-200 ${activeTab === 'signup'
-              ? 'bg-gradient-to-r from-[#2B8CFF] to-[#7B5AFF] text-white'
-              : 'text-muted-foreground hover:text-white'
-              }`}
+            className={`px-8 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+              activeTab === 'signup'
+                ? 'bg-gradient-to-r from-[#2B8CFF] to-[#7B5AFF] text-white'
+                : 'text-muted-foreground hover:text-white'
+            }`}
             onClick={() => {
               setActiveTab('signup');
               setFormData({
@@ -226,15 +288,13 @@ const LoginPage = () => {
           </motion.button>
         </motion.div>
       </div>
-      <div className={`${styles.gradientWrapper} w-[676px] min-h-[580px] max-w-[90vw]`}>
+      <div className={`${uploadStyles.gradientWrapper} w-[676px] min-h-[580px] max-w-[90vw]`}>
         <img
           src="/images/backgroundgradiant.png"
           alt="Gradient Background"
-          className={styles.gradientBackground}
+          className={uploadStyles.gradientBackground}
         />
-        <div className={`${styles.innerBox} w-full h-full p-8 flex flex-col`}>
-
-
+        <div className={`${uploadStyles.innerBox} w-full h-full p-8 flex flex-col`}>
           {error && (
             <motion.div
               className="mb-4 text-destructive text-sm text-center"
@@ -256,7 +316,7 @@ const LoginPage = () => {
             {activeTab === 'login' ? (
               <motion.form
                 onSubmit={handleSubmit}
-                className="space-y-4 w-full max-w-[400px] mx-auto"
+                className="space-y-6 w-full max-w-[548px] mx-auto"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
@@ -269,8 +329,9 @@ const LoginPage = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className={`w-[548px] bg-[#2A2A2A] border ${errors.email ? 'border-destructive' : 'border-[#3A3A3A]'
-                        } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 `}
+                      className={`w-full h-16 bg-[#2A2A2A] border ${
+                        errors.email ? 'border-destructive' : 'border-[#3A3A3A]'
+                      } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
                       placeholder="Enter your email"
                       required
                     />
@@ -281,15 +342,19 @@ const LoginPage = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-white text-left">Password</label>
+                  <div className="flex justify-between items-center">
+                    <label className="block text-sm font-medium text-white text-left">Password</label>
+                    <span className="text-sm text-primary hover:text-primary/80 cursor-pointer">Forgot password?</span>
+                  </div>
                   <div className="relative">
                     <input
                       type={showPassword ? "text" : "password"}
                       name="password"
                       value={formData.password}
                       onChange={handleInputChange}
-                      className={`w-full bg-[#2A2A2A] border ${errors.password ? 'border-destructive' : 'border-[#3A3A3A]'
-                        } rounded-lg py-2 pl-4 pr-10 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
+                      className={`w-full h-16 bg-[#2A2A2A] border ${
+                        errors.password ? 'border-destructive' : 'border-[#3A3A3A]'
+                      } rounded-lg py-2 pl-4 pr-10 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
                       placeholder="Enter your password"
                       required
                     />
@@ -308,7 +373,7 @@ const LoginPage = () => {
 
                 <motion.button
                   type="submit"
-                  className={`${styles.analyzeButton} ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                  className={`${uploadStyles.analyzeButton} ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   disabled={loading}
@@ -320,21 +385,22 @@ const LoginPage = () => {
             ) : (
               <motion.form
                 onSubmit={handleSubmit}
-                className="space-y-4 w-full max-w-[400px] mx-auto"
+                className="space-y-6 w-full max-w-[548px] mx-auto"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
               >
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-white">Full Name</label>
+                  <label className="block text-sm font-medium text-white text-left">Full Name</label>
                   <div className="relative">
                     <input
                       type="text"
                       name="fullName"
                       value={formData.fullName}
                       onChange={handleInputChange}
-                      className={`w-full bg-[#2A2A2A] border ${errors.fullName ? 'border-destructive' : 'border-[#3A3A3A]'
-                        } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
+                      className={`w-full h-16 bg-[#2A2A2A] border ${
+                        errors.fullName ? 'border-destructive' : 'border-[#3A3A3A]'
+                      } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
                       placeholder="Enter your full name"
                       required
                     />
@@ -345,15 +411,16 @@ const LoginPage = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-white">Email</label>
+                  <label className="block text-sm font-medium text-white text-left">Email</label>
                   <div className="relative">
                     <input
                       type="email"
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className={`w-full bg-[#2A2A2A] border ${errors.email ? 'border-destructive' : 'border-[#3A3A3A]'
-                        } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
+                      className={`w-full h-16 bg-[#2A2A2A] border ${
+                        errors.email ? 'border-destructive' : 'border-[#3A3A3A]'
+                      } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
                       placeholder="Enter your email"
                       required
                     />
@@ -364,15 +431,16 @@ const LoginPage = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-white">Password</label>
+                  <label className="block text-sm font-medium text-white text-left">Password</label>
                   <div className="relative">
                     <input
                       type={showPassword ? "text" : "password"}
                       name="password"
                       value={formData.password}
                       onChange={handleInputChange}
-                      className={`w-full bg-[#2A2A2A] border ${errors.password ? 'border-destructive' : 'border-[#3A3A3A]'
-                        } rounded-lg py-2 pl-4 pr-10 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
+                      className={`w-full h-16 bg-[#2A2A2A] border ${
+                        errors.password ? 'border-destructive' : 'border-[#3A3A3A]'
+                      } rounded-lg py-2 pl-4 pr-10 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
                       placeholder="Create a password"
                       required
                     />
@@ -384,22 +452,46 @@ const LoginPage = () => {
                       {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                     </button>
                   </div>
-                  <PasswordStrength password={formData.password} />
+                  {activeTab === 'signup' && <PasswordStrength password={formData.password} />}
                   {errors.password && (
                     <span className="text-destructive text-sm">{errors.password}</span>
+                  )}
+                  
+                  {activeTab === 'signup' && (
+                    <div className="mt-2 text-xs text-muted-foreground text-left">
+                      <p className="mb-1 font-medium">Password requirements:</p>
+                      <ul className="list-disc pl-4 space-y-0.5">
+                        <li className={formData.password.length >= 8 ? "text-green-500" : ""}>
+                          At least 8 characters long
+                        </li>
+                        <li className={/[A-Z]/.test(formData.password) ? "text-green-500" : ""}>
+                          Contains at least one uppercase letter
+                        </li>
+                        <li className={/[a-z]/.test(formData.password) ? "text-green-500" : ""}>
+                          Contains at least one lowercase letter
+                        </li>
+                        <li className={/[0-9]/.test(formData.password) ? "text-green-500" : ""}>
+                          Contains at least one number
+                        </li>
+                        <li className={/[^A-Za-z0-9]/.test(formData.password) ? "text-green-500" : ""}>
+                          Contains at least one special character
+                        </li>
+                      </ul>
+                    </div>
                   )}
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-white">Confirm Password</label>
+                  <label className="block text-sm font-medium text-white text-left">Confirm Password</label>
                   <div className="relative">
                     <input
                       type={showPassword ? "text" : "password"}
                       name="confirmPassword"
                       value={formData.confirmPassword}
                       onChange={handleInputChange}
-                      className={`w-full bg-[#2A2A2A] border ${errors.confirmPassword ? 'border-destructive' : 'border-[#3A3A3A]'
-                        } rounded-lg py-2 pl-4 pr-10 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
+                      className={`w-full h-16 bg-[#2A2A2A] border ${
+                        errors.confirmPassword ? 'border-destructive' : 'border-[#3A3A3A]'
+                      } rounded-lg py-2 pl-4 pr-10 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
                       placeholder="Confirm your password"
                       required
                     />
@@ -417,15 +509,16 @@ const LoginPage = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="block text-sm font-medium text-white">Mobile No.</label>
+                  <label className="block text-sm font-medium text-white text-left">Mobile No.</label>
                   <div className="relative">
                     <input
                       type="tel"
                       name="mobile"
                       value={formData.mobile}
                       onChange={handleInputChange}
-                      className={`w-full bg-[#2A2A2A] border ${errors.mobile ? 'border-destructive' : 'border-[#3A3A3A]'
-                        } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
+                      className={`w-full h-16 bg-[#2A2A2A] border ${
+                        errors.mobile ? 'border-destructive' : 'border-[#3A3A3A]'
+                      } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
                       placeholder="Enter your mobile number"
                     />
                   </div>
@@ -436,7 +529,7 @@ const LoginPage = () => {
 
                 <motion.button
                   type="submit"
-                  className={`${styles.analyzeButton} ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                  className={`${uploadStyles.analyzeButton} ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   disabled={loading}
@@ -459,7 +552,7 @@ const LoginPage = () => {
 
           <motion.button
             type="button"
-            className={styles.googleButton}
+            className={uploadStyles.googleButton}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
@@ -468,7 +561,7 @@ const LoginPage = () => {
           </motion.button>
         </div>
       </div>
-    </div>
+      </>
   );
 };
 

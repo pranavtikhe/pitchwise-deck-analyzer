@@ -884,75 +884,110 @@
     background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.1) 100%);
 
     .stepsGrid {
-        display: flex;
-        justify-content: center;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
         gap: 2rem;
-        margin-top: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
         padding: 0 2rem;
     }
 
-    .stepCard {
-        background: rgba(20, 20, 20, 0.95);
-        border-radius: 24px;
-        padding: 2rem;
-        width: 320px;
+    .gradientWrapper {
         position: relative;
+        width: 100%;
+        border-radius: 24px;
+        overflow: hidden;
+        aspect-ratio: 16/9;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(98, 0, 255, 0.1) 0%, rgba(0, 217, 245, 0.1) 100%);
+            filter: blur(100px);
+        }
+    }
+
+    .gradientBackground {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .innerBox {
+        position: relative;
+        z-index: 2;
+        height: 100%;
+        padding: 1rem;
+    }
+
+    .stepCard {
+        height: 100%;
+        background: rgba(20, 20, 20, 0.75);
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        transition: transform 0.3s ease;
+        transition: all 0.3s ease;
+        padding: 2rem;
+        border-radius: 24px;
 
         &:nth-child(2) {
-            background: linear-gradient(135deg, rgba(98, 0, 255, 0.1) 0%, rgba(0, 217, 245, 0.1) 100%);
-            border: 1px solid rgba(98, 0, 255, 0.2);
+            margin-top: -2rem;
+            margin-left: -1rem;
+        }
 
-            &::before {
-                content: '';
-                position: absolute;
-                inset: -1px;
-                border-radius: 24px;
-                padding: 1px;
-                background: linear-gradient(135deg, #6200FF 0%, #00D9F5 100%);
-                -webkit-mask:
-                    linear-gradient(#fff 0 0) content-box,
-                    linear-gradient(#fff 0 0);
-                mask:
-                    linear-gradient(#fff 0 0) content-box,
-                    linear-gradient(#fff 0 0);
-                -webkit-mask-composite: xor;
-                mask-composite: exclude;
-            }
+        &:nth-child(3) {
+            margin-top: -4rem;
+            margin-left: 1rem;
+        }
+
+        &:nth-child(4) {
+            margin-top: -6rem;
+            margin-left: -1rem;
         }
 
         &:hover {
             transform: translateY(-5px);
+            background: rgba(20, 20, 20, 0.85);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
 
         h3 {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             font-weight: 600;
-            margin: 1.5rem 0 1rem;
+            margin-bottom: 1rem;
             color: #FFFFFF;
+            background: linear-gradient(90deg, #FFFFFF 0%, #959595 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         p {
             color: #959595;
             line-height: 1.6;
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
     }
+}
 
-    .stepIcon {
-        width: 48px;
-        height: 48px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+@media (max-width: 768px) {
+    .steps {
+        .stepsGrid {
+            grid-template-columns: 1fr;
+        }
 
-        img {
-            width: 24px;
-            height: 24px;
+        .stepCard {
+            &:nth-child(2),
+            &:nth-child(3),
+            &:nth-child(4) {
+                margin-top: 1rem;
+                margin-left: 0;
+            }
         }
     }
 }

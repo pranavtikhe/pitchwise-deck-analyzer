@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import FileUpload from "@/components/FileUpload";
 import { extractTextFromPdf, analyzeWithBackend } from "@/services/pdfService";
@@ -7,7 +8,19 @@ import { toast } from "@/components/ui/sonner";
 import { ArrowRight } from "lucide-react";
 import AnalysisReport from "@/components/AnalysisReport";
 import LoadingScreen from "@/components/LoadingScreen";
+import { StarField } from "@/components/StarField";
 import styles from "@/styles/upload.module.scss";
+import landingStyles from "@/pages/landing/styles/LandingPage.module.scss";
+
+const starfieldVariants = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1, transition: { duration: 1 } },
+};
+
+const ellipseVariants = {
+  initial: { opacity: 0, scale: 0.8 },
+  animate: { opacity: 1, scale: 1, transition: { duration: 1 } },
+};
 
 const Index = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -50,24 +63,26 @@ const Index = () => {
       // Market Analysis (40-60%)
       setProgress(45);
       // Wait for market analysis to complete
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       setProgress(60);
 
       // Sentiment Analysis (60-80%)
       setProgress(65);
       // Wait for sentiment analysis to complete
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       setProgress(80);
 
       // Report Generation (80-100%)
       setProgress(85);
       setInsights(analysisResults);
       setProgress(100);
-      
+
       toast.success("Analysis complete!");
     } catch (error) {
       console.error("Error processing file:", error);
-      toast.error(error instanceof Error ? error.message : "An unknown error occurred");
+      toast.error(
+        error instanceof Error ? error.message : "An unknown error occurred"
+      );
     } finally {
       // Keep the progress at 100% briefly before resetting
       setTimeout(() => {
@@ -78,11 +93,11 @@ const Index = () => {
   };
 
   const steps = [
-    'Document Processing',
-    'Startup Profile',
-    'Market Analysis',
-    'Sentiment Analysis',
-    'Report Generation'
+    "Document Processing",
+    "Startup Profile",
+    "Market Analysis",
+    "Sentiment Analysis",
+    "Report Generation",
   ];
 
   // Start loading and progress simulation
@@ -91,7 +106,7 @@ const Index = () => {
     setCurrentStep(0);
 
     const interval = setInterval(() => {
-      setCurrentStep(prev => {
+      setCurrentStep((prev) => {
         if (prev < steps.length - 1) {
           return prev + 1;
         } else {
@@ -103,56 +118,130 @@ const Index = () => {
     }, 2000); // Adjust timing as needed
   };
 
+  const starfieldVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 1,
+        ease: "easeOut",
+      },
+    },
+  };
+
+  const ellipseVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 1.5,
+        ease: "easeOut",
+      },
+    },
+  };
+
   return (
-    <div className="min-h-screen bg-[#1C1C1C] flex flex-col">
+    <>
       <Navbar />
-      
-      <main className="flex-1 container py-16">
-        <h1 className={styles.title}>Start Analysis</h1>
 
-        <div className={styles.uploadContainer}>
-          {!insights && !isLoading && (
-            <div className={styles.gradientWrapper}>
-              <img
-                src="/images/backgroundgradiant.png"
-                alt="Gradient Background"
-                className={styles.gradientBackground}
-              />
-              <div className={styles.innerBox}>
-                <h2 className="text-xl font-medium text-white mb-2">Upload Your Pitch Deck</h2>
+      <div className={landingStyles.backgroundElements}>
+        <motion.div
+          className={landingStyles.starfieldWrapper}
+          variants={starfieldVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <StarField />
+        </motion.div>
+        <motion.div
+          className={landingStyles.ellipse}
+          variants={ellipseVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <img
+            src="/images/white-radial.svg"
+            alt="Radial gradient"
+            width={1000}
+            height={1000}
+          />
+        </motion.div>
+      </div>
 
-                <div className={styles.uploadArea} onClick={handleUploadClick} role="button" tabIndex={0}>
-                  <FileUpload ref={fileInputRef} onFileSelected={handleFileSelected} isLoading={isLoading} />
-                </div>
+      <h1
+        className="text-center text-5xl font-bold mb-8"
+        style={{
+          background:
+            "linear-gradient(to right, #FFFFFF 0%, #959595 50%, #FFFFFF 100%)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
+          fontWeight: 700,
+          fontFamily: "fustat",
+          fontSize: "48px",
+        }}
+      >
+        {isLoading
+          ? "Analyzing"
+          : insights && !isLoading
+          ? "Analysis Report"
+          : "Start Analysis"}
+      </h1>
 
-                <button
-                  onClick={handleAnalyze}
-                  className={styles.analyzeButton}
-                  disabled={!file || isLoading}
-                >
-                  Analyze your document now
-                  <ArrowRight className="w-5 h-5" />
-                </button>
+      <div className={styles.uploadContainer}>
+        {!insights && !isLoading && (
+          <div className={styles.gradientWrapper}>
+            <img
+              src="/images/backgroundgradiant.png"
+              alt="Gradient Background"
+              className={styles.gradientBackground}
+            />
+            <div className={styles.innerBox}>
+              <h2 className="text-xl font-medium text-white mb-2">
+                Upload Your Pitch Deck
+              </h2>
+
+              <div
+                className={styles.uploadArea}
+                onClick={handleUploadClick}
+                role="button"
+                tabIndex={0}
+              >
+                <FileUpload
+                  ref={fileInputRef}
+                  onFileSelected={handleFileSelected}
+                  isLoading={isLoading}
+                />
               </div>
-            </div>
-          )}
 
-          {isLoading && <LoadingScreen progress={progress} />}
-
-          {insights && !isLoading && (
-            <div className="mt-8">
-              <AnalysisReport data={insights} />
+              <button
+                onClick={handleAnalyze}
+                className={styles.analyzeButton}
+                disabled={!file || isLoading}
+              >
+                Analyze your document now
+                <ArrowRight className="w-5 h-5" />
+              </button>
             </div>
-          )}
-        </div>
-      </main>
+          </div>
+        )}
+
+        {isLoading && <LoadingScreen progress={progress} />}
+
+        {insights && !isLoading && (
+          <div className="mt-8">
+            <AnalysisReport data={insights} />
+          </div>
+        )}
+      </div>
 
       <footer className="py-6 border-t border-gray-800">
         <div className="container text-center text-sm text-gray-500">
           <p>© 2025 PitchDeck Analyzer. All rights reserved.</p>
         </div>
       </footer>
-    </div>
+    </>
   );
 };
 

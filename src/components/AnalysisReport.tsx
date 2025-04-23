@@ -323,8 +323,6 @@ type Competitor = {
   keyDifferentiator: string;
 };
 
-
-
 const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
   const [showHistory, setShowHistory] = useState(false);
 
@@ -377,8 +375,6 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
         className={styles.gradientBackground}
       />
       <div className={styles.innerBox}>
-        <h1 className={`${styles.title} text-center mb-8`}>Analysis Report</h1>
-
         {/* Type and Date */}
         <div className="mb-8">
           <h2 className="text-xl font-medium text-white mb-2">
@@ -424,7 +420,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
             ))}
           </div>
         </div>
-        
+
         {/* Strengths and Weaknesses */}
         <div className="mb-12">
           <h3 className="text-white text-lg mb-6">Pros & Cons</h3>
@@ -442,14 +438,20 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                 ))}
                 {/* Add placeholder strengths if needed to match weaknesses */}
                 {data.strengths.length < data.weaknesses.length &&
-                  Array(data.weaknesses.length - data.strengths.length).fill(null).map((_, index) => (
-                    <div key={`placeholder-${index}`} className="bg-black/20 rounded-lg p-3">
-                      <div className="flex gap-3">
-                        <p className="text-gray-300">Additional strength analysis pending</p>
+                  Array(data.weaknesses.length - data.strengths.length)
+                    .fill(null)
+                    .map((_, index) => (
+                      <div
+                        key={`placeholder-${index}`}
+                        className="bg-black/20 rounded-lg p-3"
+                      >
+                        <div className="flex gap-3">
+                          <p className="text-gray-300">
+                            Additional strength analysis pending
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  ))
-                }
+                    ))}
               </div>
             </div>
             <div>
@@ -464,14 +466,20 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                 ))}
                 {/* Add placeholder weaknesses if needed to match strengths */}
                 {data.weaknesses.length < data.strengths.length &&
-                  Array(data.strengths.length - data.weaknesses.length).fill(null).map((_, index) => (
-                    <div key={`placeholder-${index}`} className="bg-black/20 rounded-lg p-3">
-                      <div className="flex gap-3">
-                        <p className="text-gray-300">Additional weakness analysis pending</p>
+                  Array(data.strengths.length - data.weaknesses.length)
+                    .fill(null)
+                    .map((_, index) => (
+                      <div
+                        key={`placeholder-${index}`}
+                        className="bg-black/20 rounded-lg p-3"
+                      >
+                        <div className="flex gap-3">
+                          <p className="text-gray-300">
+                            Additional weakness analysis pending
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  ))
-                }
+                    ))}
               </div>
             </div>
           </div>
@@ -621,39 +629,53 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
             <div className="flex-1 text-white p-6">
               <h2 className="text-3xl font-bold mb-6">Final Verdict</h2>
               <p className="text-gray-300 mb-6">
-                {data.company_overview.company_name} shows significant potential in the {data.industry_type} market with a
-                well-planned approach to tap into the market opportunities.
+                {data.company_overview.company_name} shows significant potential
+                in the {data.industry_type} market with a well-planned approach
+                to tap into the market opportunities.
               </p>
               <div className="grid grid-cols-2 gap-px ">
                 <div className="p-4 ">
-                  <p className="text-3xl font-bold">{data.final_verdict.product_viability}</p>
+                  <p className="text-3xl font-bold">
+                    {data.final_verdict.product_viability}
+                  </p>
                   <p className="text-gray-400">Product Viability</p>
                 </div>
                 <div className="p-4 ">
-                  <p className="text-3xl font-bold">{data.final_verdict.market_potential}</p>
+                  <p className="text-3xl font-bold">
+                    {data.final_verdict.market_potential}
+                  </p>
                   <p className="text-gray-400">Market Potential</p>
                 </div>
                 <div className="p-4 ">
-                  <p className="text-3xl font-bold">{data.final_verdict.sustainability}</p>
+                  <p className="text-3xl font-bold">
+                    {data.final_verdict.sustainability}
+                  </p>
                   <p className="text-gray-400">Sustainability</p>
                 </div>
                 <div className="p-4 ">
-                  <p className="text-3xl font-bold">{data.final_verdict.exit_potential}</p>
+                  <p className="text-3xl font-bold">
+                    {data.final_verdict.exit_potential}
+                  </p>
                   <p className="text-gray-400">Exit Potential</p>
                 </div>
                 <div className="p-4 ">
-                  <p className="text-3xl font-bold">{data.final_verdict.risk_factor}</p>
+                  <p className="text-3xl font-bold">
+                    {data.final_verdict.risk_factor}
+                  </p>
                   <p className="text-gray-400">Risk Factors</p>
                 </div>
                 <div className="p-4 ">
-                  <p className="text-3xl font-bold">{data.final_verdict.innovation}</p>
+                  <p className="text-3xl font-bold">
+                    {data.final_verdict.innovation}
+                  </p>
                   <p className="text-gray-400">Innovation</p>
                 </div>
                 <div className="p-4 ">
-                  <p className="text-3xl font-bold">{data.final_verdict.competitive_edge}</p>
+                  <p className="text-3xl font-bold">
+                    {data.final_verdict.competitive_edge}
+                  </p>
                   <p className="text-gray-400">Competitive Edge</p>
                 </div>
-
               </div>
             </div>
           </div>

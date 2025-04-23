@@ -10,7 +10,12 @@ const steps = [
   { title: 'Report Generation', description: 'Creating comprehensive investment analysis.' }
 ];
 
-const LoadingScreen = ({ progress = 0 }) => {
+interface LoadingScreenProps {
+  progress?: number;
+  text?: string;
+}
+
+const LoadingScreen = ({ progress = 0, text = 'Generating' }: LoadingScreenProps) => {
   const [animatedProgress, setAnimatedProgress] = useState(0);
 
   useEffect(() => {
@@ -50,7 +55,7 @@ const LoadingScreen = ({ progress = 0 }) => {
       <img src="/images/backgroundgradiant.png" alt="Gradient Background" className={styles.gradientBackground} />
 
       <div className={styles.innerBox}>
-        <h2 className="text-2xl font-medium text-white mb-10">Generating<span className="animate-pulse">...</span></h2>
+        <h2 className="text-2xl font-medium text-white mb-10">{text}<span className="animate-pulse">...</span></h2>
 
         <div className={styles.timelineWrapper}>
           <div className={styles.timeline}>
