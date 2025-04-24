@@ -7,6 +7,10 @@ import { signIn, signUp } from "@/services/authService";
 import { toast } from "sonner";
 import { StarField } from "@/components/StarField";
 import landingStyles from "../landing/styles/LandingPage.module.scss";
+import { getSupabaseClient } from '@/lib/supabase';
+
+// Initialize Supabase client
+const supabase = getSupabaseClient();
 
 interface FormData {
   fullName: string;
@@ -216,26 +220,21 @@ const LoginPage = () => {
     <>
       <div className={landingStyles.backgroundElements}>
         <motion.div
-          className={landingStyles.starfieldWrapper}
+          className={landingStyles.starfieldWrapperlog}
           variants={starfieldVariants}
           initial="hidden"
           animate="visible"
         >
           <StarField />
         </motion.div>
-        <motion.div
-          className={landingStyles.ellipse}
-          variants={ellipseVariants}
-          initial="hidden"
-          animate="visible"
-        >
+       <div className={landingStyles.ellipselog}>
           <img
             src="/images/white-radial.svg"
             alt="Radial gradient"
             width={1000}
             height={1000}
           />
-        </motion.div>
+        </div>
       </div>
 
       <div className="flex justify-center pt-20">
@@ -299,7 +298,7 @@ const LoginPage = () => {
           </motion.button>
         </motion.div>
       </div>
-      <div className="flex items-center justify-center min-h-screen px-4">
+      <div className="flex items-center justify-center  px-4">
         <div
           className={`${uploadStyles.gradientWrapper} w-[676px] min-h-[580px] max-w-[90vw]`}
         >
@@ -667,6 +666,14 @@ const LoginPage = () => {
               className={uploadStyles.googleButton}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
+              onClick={async () => {
+                try {
+                  const { error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
+                  if (error) throw error;
+                } catch (error) {
+                  console.error('Google sign-in error:', error.message);
+                }
+              }}
             >
               <img
                 src="/google-white-icon.svg"

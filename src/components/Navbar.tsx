@@ -16,6 +16,7 @@ const Navbar = () => {
     const isHistoryPage = location.pathname === '/history';
     const isTermsPage = location.pathname === '/terms';
     const isPrivacyPage = location.pathname === '/privacy';
+    const isSpiderPage = location.pathname === '/spider';
     const supabase = getSupabaseClient();
 
     useEffect(() => {
@@ -47,7 +48,7 @@ const Navbar = () => {
 
     const handleBack = () => {
         if (isHistoryPage) {
-            navigate('/');
+            navigate('/spider');
         } else if (isTermsPage || isPrivacyPage) {
             navigate('/');
         }
@@ -82,7 +83,7 @@ const Navbar = () => {
                 ) : (
                     <div className={styles.placeholder} />
                 )}
-                <div className={styles.logoLink} onClick={() => navigate('/')}>
+                <div className={styles.logoLink} onClick={() => navigate('/spider')}>
                     <img
                         src="/images/slogo.svg"
                         alt="spider"

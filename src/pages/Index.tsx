@@ -178,8 +178,9 @@ const Index = () => {
           WebkitTextFillColor: "transparent",
           backgroundClip: "text",
           fontWeight: 700,
-          fontFamily: "fustat",
+          fontFamily: "Fustat, sans-serif",
           fontSize: "48px",
+          marginTop: "100px",
         }}
       >
         {isLoading

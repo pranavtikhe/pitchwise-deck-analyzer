@@ -17,7 +17,6 @@ import {
   StyleSheet,
 } from "@react-pdf/renderer";
 import { saveToHistory } from "@/services/historyService";
-import History from "./History";
 import {
   Radar,
   RadarChart as RechartsRadarChart,
