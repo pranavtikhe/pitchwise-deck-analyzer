@@ -167,6 +167,7 @@ Pitch Deck Text: ${text}`;
         strengths: parsedData.strengths || [],
         weaknesses: parsedData.weaknesses || [],
         expert_opinions: parsedData.expert_opinions || [],
+        funding_history: parsedData.funding_history?.rounds?.length > 0 ? parsedData.funding_history : { rounds: [] },
         final_verdict: {
           product_viability: Math.min(Math.max(parsedData.final_verdict?.product_viability || 5, 1), 10),
           market_potential: Math.min(Math.max(parsedData.final_verdict?.market_potential || 5, 1), 10),

@@ -20,7 +20,7 @@ interface RadarChartProps {
     risk_factors: number;
     financial_health: number;
     customer_traction: number;
-    competitive_advantage: number;
+    competitive_edge: number;
     team_strength: number;
     analysis?: {
       product_viability: string;
@@ -31,7 +31,7 @@ interface RadarChartProps {
       exit_potential: string;
       risk_factors: string;
       customer_traction: string;
-      competitive_advantage: string;
+      competitive_edge: string;
       team_strength: string;
     };
   };
@@ -142,9 +142,9 @@ const RadarChart: React.FC<RadarChartProps> = ({ data }) => {
       analysis: data.analysis?.customer_traction || 'Analysis pending'
     },
     { 
-      subject: 'Competitive Advantage', 
-      value: normalizeValue(data.competitive_advantage),
-      analysis: data.analysis?.competitive_advantage || 'Analysis pending'
+      subject: 'Competitive Edge', 
+      value: normalizeValue(data.competitive_edge),
+      analysis: data.analysis?.competitive_edge || 'Analysis pending'
     },
     { 
       subject: 'Team Strength', 
@@ -185,7 +185,7 @@ const RadarChart: React.FC<RadarChartProps> = ({ data }) => {
         margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
       >
         <PolarGrid 
-          stroke="rgba(255, 255, 255, 0.1)" 
+          // stroke="rgba(255, 255, 255, 0.1)" 
           strokeDasharray="3 3"
         />
         <PolarAngleAxis

@@ -1,86 +1,77 @@
+/* index.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Fustat';
+  src: url('/fonts/Fustat-Regular.woff2') format('woff2'),
+       url('/fonts/Fustat-Regular.ttf') format('truetype'); /* Add other formats if you have them */
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap; /* Optional: helps with font loading */
+}
+
 @layer base {
   :root {
-    --background: 220 10% 15%; /* Darker charcoal grey background */
-    --foreground: 0 0% 100%; /* Bright white text for maximum contrast */
-
-    --card: 220 10% 20%; /* Slightly lighter than background for better visibility */
-    --card-foreground: 0 0% 100%; /* Bright white text */
-
-    --popover: 220 10% 20%; /* Same as card */
-    --popover-foreground: 0 0% 100%; /* Bright white text */
-
-    --primary: 0 0% 100%; /* Pure white */
-    --primary-foreground: 220 10% 15%; /* Dark charcoal text on white buttons */
-
-    --secondary: 220 10% 25%; /* Lighter grey for better contrast */
-    --secondary-foreground: 0 0% 100%; /* Bright white text */
-
-    --muted: 220 10% 35%; /* Even lighter grey for better visibility */
-    --muted-foreground: 0 0% 90%; /* Very light grey text, almost white */
-
-    --accent: 220 10% 30%; /* Distinct from background */
-    --accent-foreground: 0 0% 100%; /* Bright white text */
-
+    --background: 220 10% 15%;
+    --foreground: 0 0% 100%;
+    --card: 220 10% 20%;
+    --card-foreground: 0 0% 100%;
+    --popover: 220 10% 20%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 220 10% 15%;
+    --secondary: 220 10% 25%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 220 10% 35%;
+    --muted-foreground: 0 0% 90%;
+    --accent: 220 10% 30%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%; /* Bright white text */
-
-    --border: 220 10% 35%; /* Lighter border for better visibility */
-    --input: 220 10% 35%; /* Lighter input for better visibility */
-    --ring: 0 0% 100%; /* White ring */
-
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 10% 35%;
+    --input: 220 10% 35%;
+    --ring: 0 0% 100%;
     --radius: 0.5rem;
-
-    --sidebar-background: 220 10% 20%; /* Same as card */
-    --sidebar-foreground: 0 0% 100%; /* Bright white text */
-    --sidebar-primary: 0 0% 100%; /* Pure white */
-    --sidebar-primary-foreground: 220 10% 15%; /* Dark charcoal text */
-    --sidebar-accent: 220 10% 30%; /* Distinct from background */
-    --sidebar-accent-foreground: 0 0% 100%; /* Bright white text */
-    --sidebar-border: 220 10% 35%; /* Lighter border for better visibility */
-    --sidebar-ring: 0 0% 100%; /* White ring */
+    --sidebar-background: 220 10% 20%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 220 10% 15%;
+    --sidebar-accent: 220 10% 30%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 220 10% 35%;
+    --sidebar-ring: 0 0% 100%;
   }
 
   .dark {
-    --background: 220 10% 15%; /* Darker charcoal grey background */
-    --foreground: 0 0% 100%; /* Bright white text for maximum contrast */
-
-    --card: 220 10% 20%; /* Slightly lighter than background for better visibility */
-    --card-foreground: 0 0% 100%; /* Bright white text */
-
-    --popover: 220 10% 20%; /* Same as card */
-    --popover-foreground: 0 0% 100%; /* Bright white text */
-
-    --primary: 0 0% 100%; /* Pure white */
-    --primary-foreground: 220 10% 15%; /* Dark charcoal text on white buttons */
-
-    --secondary: 220 10% 25%; /* Lighter grey for better contrast */
-    --secondary-foreground: 0 0% 100%; /* Bright white text */
-
-    --muted: 220 10% 35%; /* Even lighter grey for better visibility */
-    --muted-foreground: 0 0% 90%; /* Very light grey text, almost white */
-
-    --accent: 220 10% 30%; /* Distinct from background */
-    --accent-foreground: 0 0% 100%; /* Bright white text */
-
+    --background: 220 10% 15%;
+    --foreground: 0 0% 100%;
+    --card: 220 10% 20%;
+    --card-foreground: 0 0% 100%;
+    --popover: 220 10% 20%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 220 10% 15%;
+    --secondary: 220 10% 25%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 220 10% 35%;
+    --muted-foreground: 0 0% 90%;
+    --accent: 220 10% 30%;
+    --accent-foreground: 0 0% 100%;
     --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 100%; /* Bright white text */
-
-    --border: 220 10% 35%; /* Lighter border for better visibility */
-    --input: 220 10% 35%; /* Lighter input for better visibility */
-    --ring: 0 0% 100%; /* White ring */
-    
-    --sidebar-background: 220 10% 20%; /* Same as card */
-    --sidebar-foreground: 0 0% 100%; /* Bright white text */
-    --sidebar-primary: 0 0% 100%; /* Pure white */
-    --sidebar-primary-foreground: 220 10% 15%; /* Dark charcoal text */
-    --sidebar-accent: 220 10% 30%; /* Distinct from background */
-    --sidebar-accent-foreground: 0 0% 100%; /* Bright white text */
-    --sidebar-border: 220 10% 35%; /* Lighter border for better visibility */
-    --sidebar-ring: 0 0% 100%; /* White ring */
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 10% 35%;
+    --input: 220 10% 35%;
+    --ring: 0 0% 100%;
+    --sidebar-background: 220 10% 20%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 220 10% 15%;
+    --sidebar-accent: 220 10% 30%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 220 10% 35%;
+    --sidebar-ring: 0 0% 100%;
   }
 }
 
