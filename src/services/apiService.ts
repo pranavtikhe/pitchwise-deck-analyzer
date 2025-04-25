@@ -1,201 +1,389 @@
-import { API_CONFIG } from '../config/api';
+import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from '@google/generative-ai'
+import { MistralResponse } from './pdfService'
 
-export const analyzePitchDeck = async (text: string) => {
-  console.log('Starting pitch deck analysis with Mistral...');
-  console.log(`Total characters to analyze: ${text.length}`);
+// Initialize Google Generative AI with the API key
+const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY || '')
 
-  const prompt = `You are an expert investment analyst and pitch deck evaluator. Analyze the following pitch deck text and provide a comprehensive analysis.
-
-IMPORTANT: You must respond with ONLY a valid JSON object in the exact format specified below. Do not include any explanatory text before or after the JSON.
-
-For the expert_opinions section, you MUST provide exactly 3 expert opinions with the following structure:
-{
-  "name": "string",
-  "affiliation": "string",
-  "summary": "string",
-  "reference": "string",
-  "date": "string"
-}
-
-If the pitch deck doesn't contain expert opinions, research and provide relevant expert opinions from industry leaders, analysts, or publications in the same field.
-
-Required JSON format:
-{
-  "industry_type": "string",
-  "pitch_clarity": number,
-  "investment_score": number,
-  "market_position": "string",
-  "company_overview": {
-    "company_name": "string",
-    "industry": "string",
-    "business_model": "string",
-    "key_offerings": "string",
-    "market_position": "string",
-    "founded_on": "string"
+// Initialize Deep Research 2.5 model
+const deepResearchModel = genAI.getGenerativeModel({ 
+  model: "gemini-1.5-pro",
+  generationConfig: {
+    temperature: 0.2,
+    topK: 40,
+    topP: 0.95,
+    maxOutputTokens: 8192,
   },
-  "strengths": string[],
-  "weaknesses": string[],
+  safetySettings: [
+    {
+      category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+      threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE
+    },
+    {
+      category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+      threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE
+    },
+    {
+      category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+      threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE
+    },
+    {
+      category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+      threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE
+    }
+  ]
+})
+
+/**
+ * Analyze pitch deck text using Google's Gemini API
+ */
+export const analyzePitchDeck = async (text: string): Promise<MistralResponse & { analyzedAt: Date }> => {
+  try {
+    // Get the generative model with the specified model name
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" })
+
+    // Create the prompt for analysis
+    const prompt = `Analyze the following pitch deck text and provide a detailed structured analysis.
+    Focus on extracting information about the company, its business model, market position, key strengths and weaknesses, 
+    funding history, and provide an investment recommendation. 
+    
+    If information is not explicitly available in the text, make reasonable assumptions based on industry standards 
+    but highlight when you're making an assumption.
+    
+    Here's the pitch deck text:
+    ${text}
+    
+    Please provide your analysis in the following JSON format (include all these fields even if you need to use placeholder values):
+    
+    {
+      "industry_type": "",
+      "pitch_clarity": 7,
+      "investment_score": 7,
+      "market_position": "",
+  "company_overview": {
+        "company_name": "",
+        "industry": "",
+        "business_model": "",
+        "key_offerings": "",
+        "market_position": "",
+        "founded_on": ""
+      },
+      "strengths": ["", "", ""],
+      "weaknesses": ["", "", ""],
   "funding_history": {
     "rounds": [
       {
-        "type": "string",
-        "amount": "string",
-        "key_investors": string[]
+            "type": "Seed",
+            "amount": "$X million",
+            "key_investors": ["Investor1", "Investor2"]
       }
     ]
   },
   "proposed_deal_structure": {
-    "investment_amount": "string",
-    "valuation_cap": "string",
-    "equity_stake": "string",
-    "anti_dilution_protection": "string",
-    "board_seat": "string",
-    "liquidation_preference": "string",
-    "vesting_schedule": "string",
-    "other_terms": "string"
+        "investment_amount": "",
+        "valuation_cap": "",
+        "equity_stake": "",
+        "anti_dilution_protection": "",
+        "board_seat": "",
+        "liquidation_preference": "",
+        "vesting_schedule": "",
+        "other_terms": ""
   },
   "key_questions": {
-    "market_strategy": string[],
-    "user_relation": string[],
-    "regulatory_compliance": string[]
+        "market_strategy": [""],
+        "user_relation": [""],
+        "regulatory_compliance": [""]
   },
   "final_verdict": {
-    "product_viability": number,
-    "market_potential": number,
-    "sustainability": number,
-    "innovation": number,
-    "exit_potential": number,
-    "risk_factor": number,
-    "competitive_edge": number
-  },
+        "product_viability": 7,
+        "market_potential": 7,
+        "sustainability": 7,
+        "innovation": 7,
+        "exit_potential": 7,
+        "risk_factor": 5,
+        "competitive_edge": 7
+      },
+      "innovation": "",
+      "industry": "",
+      "problem": "",
+      "solution": "",
+      "funding": "",
+      "market": "",
+      "competitors": ["", ""],
   "expert_opinions": [
     {
-      "name": "string",
-      "affiliation": "string",
-      "summary": "string",
-      "reference": "string",
-      "date": "string"
-    },
-    {
-      "name": "string",
-      "affiliation": "string",
-      "summary": "string",
-      "reference": "string",
-      "date": "string"
-    },
-    {
-      "name": "string",
-      "affiliation": "string",
-      "summary": "string",
-      "reference": "string",
-      "date": "string"
-    }
-  ],
+          "name": "Expert Name",
+          "affiliation": "Expert Affiliation",
+          "summary": "Expert Opinion",
+          "reference": "Source",
+          "date": "YYYY-MM-DD"
+        }
+      ],
+      "suggested_improvements": ["", ""],
+      "market_comparison": "",
+      "key_insights": "",
+      "exit_potential": "",
+      "overall_reputation": "",
+      "ratings": {
+        "innovation_rating": 8,
+        "market_potential_rating": 8,
+        "competitive_advantage_rating": 7,
+        "financial_strength_rating": 6,
+        "team_rating": 8,
+        "overall_rating": 7
+      },
+      "rating_insights": {
+        "innovation_insights": "",
+        "market_potential_insights": "",
+        "competitive_advantage_insights": "",
+        "financial_strength_insights": "",
+        "team_insights": "",
+        "overall_insights": ""
+      },
   "market_analysis": {
-    "market_size": "string",
-    "growth_rate": "string",
-    "trends": string[],
-    "challenges": string[]
+        "market_size": "",
+        "growth_rate": "",
+        "trends": [""],
+        "challenges": [""]
   },
   "competitor_analysis": {
     "competitors": [
       {
-        "name": "string",
-        "key_investors": "string",
-        "amount_raised": "string",
-        "market_position": "string",
-        "strengths": "string"
+            "name": "",
+            "key_investors": "",
+            "amount_raised": "",
+            "market_position": "",
+            "strengths": ""
+          }
+        ]
       }
-    ]
+    }
+    
+    Provide ONLY the JSON output without any text before or after. Ensure all numeric scores are between 1-10.`
+
+    // Generate content with Gemini
+    const result = await model.generateContent(prompt)
+    const response = await result.response
+    const analysisText = response.text()
+    
+    // Clean the response text to handle markdown formatting
+    let cleanJsonText = analysisText
+    cleanJsonText = cleanJsonText.replace(/```json\s*/g, '')
+    cleanJsonText = cleanJsonText.replace(/```\s*$/g, '')
+    
+    try {
+      // Parse the JSON response
+      const analysis = JSON.parse(cleanJsonText) as MistralResponse
+      
+      // Add analyzedAt field
+      return {
+        ...analysis,
+        analyzedAt: new Date()
+      }
+    } catch (jsonError) {
+      console.error('Error parsing Gemini response as JSON:', jsonError)
+      throw new Error('Failed to parse analysis result')
+    }
+  } catch (error) {
+    console.error('Error analyzing with Gemini:', error)
+    throw new Error('Analysis failed')
   }
 }
 
-Pitch Deck Text: ${text}`;
-
+/**
+ * Analyze pitch deck text using Deep Research 2.5 model
+ */
+export const analyzeWithDeepResearch = async (text: string): Promise<MistralResponse & { analyzedAt: Date }> => {
   try {
-    console.log('Sending request to Mistral API...');
+    // Create a more detailed prompt for deep research analysis
+    const prompt = `You are Deep Research 2.5, an advanced AI model specialized in comprehensive pitch deck analysis.
+    Perform a deep research analysis on the following pitch deck text with enhanced focus on:
     
-    const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${import.meta.env.VITE_MISTRAL_API_KEY}`
+    1. Market Analysis & Validation
+    - Total Addressable Market (TAM) calculation
+    - Serviceable Available Market (SAM) assessment
+    - Market growth trends and projections
+    - Customer segmentation and validation
+    - Market entry barriers and challenges
+    
+    2. Competitive Landscape
+    - Direct and indirect competitors analysis
+    - Competitive advantage assessment
+    - Market share analysis
+    - SWOT analysis of key competitors
+    - Differentiation strategy evaluation
+    
+    3. Financial Analysis
+    - Revenue model validation
+    - Cost structure analysis
+    - Unit economics assessment
+    - Financial projections review
+    - Burn rate and runway analysis
+    
+    4. Team & Execution
+    - Founder/team background analysis
+    - Key personnel expertise assessment
+    - Advisory board evaluation
+    - Execution capability analysis
+    - Hiring and scaling plans
+    
+    5. Technology & Innovation
+    - Technology stack assessment
+    - IP portfolio analysis
+    - Technical scalability evaluation
+    - Innovation differentiation
+    - R&D pipeline analysis
+    
+    6. Risk Assessment
+    - Market risks
+    - Technology risks
+    - Regulatory risks
+    - Competitive risks
+    - Operational risks
+    - Mitigation strategies
+    
+    7. Investment Opportunity
+    - Valuation analysis
+    - Investment thesis validation
+    - Exit strategy assessment
+    - Return on investment projections
+    - Investment terms analysis
+    
+    Here's the pitch deck text:
+    ${text}
+    
+    Please provide your analysis in the following JSON format (include all these fields even if you need to use placeholder values):
+    
+    {
+      "industry_type": "",
+      "pitch_clarity": 7,
+      "investment_score": 7,
+      "market_position": "",
+      "company_overview": {
+        "company_name": "",
+        "industry": "",
+        "business_model": "",
+        "key_offerings": "",
+        "market_position": "",
+        "founded_on": ""
       },
-      body: JSON.stringify({
-        model: "mistral-tiny",
-        messages: [
+      "strengths": ["", "", ""],
+      "weaknesses": ["", "", ""],
+      "funding_history": {
+        "rounds": [
           {
-            role: "system",
-            content: "You are an expert investment analyst. Your task is to analyze pitch decks and return the analysis in a specific JSON format. You must respond with ONLY a valid JSON object, no additional text. For competitor analysis, identify the top 4 most relevant competitors and provide detailed information about each."
-          },
-          {
-            role: "user",
-            content: prompt
+            "type": "Seed",
+            "amount": "$X million",
+            "key_investors": ["Investor1", "Investor2"]
           }
-        ],
-        temperature: 0.7,
-        max_tokens: 4096,
-        response_format: { type: "json_object" }
-      })
-    });
-
-    if (!response.ok) {
-      console.error('Mistral API request failed:', response.status, response.statusText);
-      throw new Error(`Analysis failed with status ${response.status}`);
-    }
-
-    const result = await response.json();
-    console.log('Successfully received Mistral response');
-
-    try {
-      // Extract the JSON response
-      const analysisText = result.choices[0].message.content;
-      
-      // Parse the JSON response
-      const parsedData = JSON.parse(analysisText);
-      console.log('Successfully parsed analysis JSON');
-      
-      // Validate and enhance the data
-      const enhancedData = {
-        ...parsedData,
-        analyzedAt: new Date(),
-        // Ensure all required fields have valid values
-        industry_type: parsedData.industry_type || 'Technology',
-        pitch_clarity: Math.min(Math.max(parsedData.pitch_clarity || 5, 1), 10),
-        investment_score: Math.min(Math.max(parsedData.investment_score || 5, 1), 10),
-        market_position: parsedData.market_position || 'Emerging',
-        strengths: parsedData.strengths || [],
-        weaknesses: parsedData.weaknesses || [],
-        expert_opinions: parsedData.expert_opinions || [],
-        funding_history: parsedData.funding_history?.rounds?.length > 0 ? parsedData.funding_history : { rounds: [] },
-        final_verdict: {
-          product_viability: Math.min(Math.max(parsedData.final_verdict?.product_viability || 5, 1), 10),
-          market_potential: Math.min(Math.max(parsedData.final_verdict?.market_potential || 5, 1), 10),
-          sustainability: Math.min(Math.max(parsedData.final_verdict?.sustainability || 5, 1), 10),
-          innovation: Math.min(Math.max(parsedData.final_verdict?.innovation || 5, 1), 10),
-          exit_potential: Math.min(Math.max(parsedData.final_verdict?.exit_potential || 5, 1), 10),
-          risk_factor: Math.min(Math.max(parsedData.final_verdict?.risk_factor || 5, 1), 10),
-          competitive_edge: Math.min(Math.max(parsedData.final_verdict?.competitive_edge || 5, 1), 10)
-        },
-        competitor_analysis: {
-          competitors: parsedData.competitor_analysis?.competitors || Array(4).fill({
-            name: "Not Available",
-            key_investors: "Not Available",
-            amount_raised: "Not Available",
-            market_position: "Not Available",
-            strengths: "Not Available"
-          })
+        ]
+      },
+      "proposed_deal_structure": {
+        "investment_amount": "",
+        "valuation_cap": "",
+        "equity_stake": "",
+        "anti_dilution_protection": "",
+        "board_seat": "",
+        "liquidation_preference": "",
+        "vesting_schedule": "",
+        "other_terms": ""
+      },
+      "key_questions": {
+        "market_strategy": [""],
+        "user_relation": [""],
+        "regulatory_compliance": [""]
+      },
+      "final_verdict": {
+        "product_viability": 7,
+        "market_potential": 7,
+        "sustainability": 7,
+        "innovation": 7,
+        "exit_potential": 7,
+        "risk_factor": 5,
+        "competitive_edge": 7
+      },
+      "innovation": "",
+      "industry": "",
+      "problem": "",
+      "solution": "",
+      "funding": "",
+      "market": "",
+      "competitors": ["", ""],
+      "expert_opinions": [
+        {
+          "name": "Expert Name",
+          "affiliation": "Expert Affiliation",
+          "summary": "Expert Opinion",
+          "reference": "Source",
+          "date": "YYYY-MM-DD"
         }
-      };
+      ],
+      "suggested_improvements": ["", ""],
+      "market_comparison": "",
+      "key_insights": "",
+      "exit_potential": "",
+      "overall_reputation": "",
+      "ratings": {
+        "innovation_rating": 8,
+        "market_potential_rating": 8,
+        "competitive_advantage_rating": 7,
+        "financial_strength_rating": 6,
+        "team_rating": 8,
+        "overall_rating": 7
+      },
+      "rating_insights": {
+        "innovation_insights": "",
+        "market_potential_insights": "",
+        "competitive_advantage_insights": "",
+        "financial_strength_insights": "",
+        "team_insights": "",
+        "overall_insights": ""
+      },
+      "market_analysis": {
+        "market_size": "",
+        "growth_rate": "",
+        "trends": [""],
+        "challenges": [""]
+      },
+      "competitor_analysis": {
+        "competitors": [
+          {
+            "name": "",
+            "key_investors": "",
+            "amount_raised": "",
+            "market_position": "",
+            "strengths": ""
+          }
+        ]
+      }
+    }
+    
+    Provide ONLY the JSON output without any text before or after. Ensure all numeric scores are between 1-10.`
 
-      console.log('Analysis completed successfully using Mistral');
-      return enhancedData;
-    } catch (parseError) {
-      console.error('Error parsing Mistral response:', parseError);
-      throw new Error('Failed to parse analysis response');
+    // Generate content with Deep Research model
+    const result = await deepResearchModel.generateContent(prompt)
+    const response = await result.response
+    const analysisText = response.text()
+    
+    // Clean the response text to handle markdown formatting
+    let cleanJsonText = analysisText
+    cleanJsonText = cleanJsonText.replace(/```json\s*/g, '')
+    cleanJsonText = cleanJsonText.replace(/```\s*$/g, '')
+    
+    try {
+      // Parse the JSON response
+      const analysis = JSON.parse(cleanJsonText) as MistralResponse
+      
+      // Add analyzedAt field
+      return {
+        ...analysis,
+        analyzedAt: new Date()
+      }
+    } catch (jsonError) {
+      console.error('Error parsing Deep Research response as JSON:', jsonError)
+      throw new Error('Failed to parse analysis result')
     }
   } catch (error) {
-    console.error('Error analyzing pitch deck:', error);
-    throw error;
+    console.error('Error analyzing with Deep Research:', error)
+    throw new Error('Analysis failed')
   }
-}; 
+} 
