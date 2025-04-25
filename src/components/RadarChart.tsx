@@ -93,6 +93,64 @@ const ScoreIndicator = (props: any) => {
   return null;
 };
 
+// Custom tick renderer with text wrapping
+const CustomTick = (props: any) => {
+  const { x, y, cx, cy, payload } = props;
+  
+  // Calculate distance from center to position text properly
+  const distance = Math.sqrt(Math.pow(x - cx, 2) + Math.pow(y - cy, 2));
+  // Direction from center
+  const dx = (x - cx) / distance;
+  const dy = (y - cy) / distance;
+  
+  // Determine if we need to split the text
+  const text = payload.value;
+  let textLines: string[] = [];
+  
+  if (text.length > 10) {
+    // Split long labels into multiple lines
+    const words = text.split(' ');
+    let currentLine = words[0];
+    
+    for (let i = 1; i < words.length; i++) {
+      if (currentLine.length + words[i].length < 12) {
+        currentLine += ` ${words[i]}`;
+      } else {
+        textLines.push(currentLine);
+        currentLine = words[i];
+      }
+    }
+    
+    if (currentLine) {
+      textLines.push(currentLine);
+    }
+  } else {
+    textLines = [text];
+  }
+  
+  // Add more space for labels
+  const offsetX = dx * 10; 
+  const offsetY = dy * 10;
+  
+  return (
+    <g>
+      {textLines.map((line, index) => (
+        <text
+          key={index}
+          x={x + offsetX}
+          y={y + offsetY + (index * 12)}
+          textAnchor={x > cx ? 'start' : x < cx ? 'end' : 'middle'}
+          dominantBaseline={y > cy ? 'hanging' : y < cy ? 'auto' : 'middle'}
+          fill="#9CA3AF"
+          fontSize={12}
+        >
+          {line}
+        </text>
+      ))}
+    </g>
+  );
+};
+
 const RadarChart: React.FC<RadarChartProps> = ({ data }) => {
   // Ensure all values are numbers and within range
   const normalizeValue = (value: number) => {
@@ -178,19 +236,18 @@ const RadarChart: React.FC<RadarChartProps> = ({ data }) => {
   };
 
   return (
-    <ResponsiveContainer width="100%" height={400}>
+    <ResponsiveContainer width="100%" height={450}>
       <RechartsRadarChart
         data={chartData}
-        outerRadius={150}
-        margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+        outerRadius={130}
+        margin={{ top: 40, right: 50, bottom: 40, left: 50 }}
       >
         <PolarGrid 
-          // stroke="rgba(255, 255, 255, 0.1)" 
           strokeDasharray="3 3"
         />
         <PolarAngleAxis
           dataKey="subject"
-          tick={{ fill: '#9CA3AF', fontSize: 12 }}
+          tick={<CustomTick />}
         />
         <PolarRadiusAxis 
           angle={30} 

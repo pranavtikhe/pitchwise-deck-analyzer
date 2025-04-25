@@ -93,7 +93,7 @@ const LandingNavbar = () => {
             {isLoggedIn ? (
               <>
                 <Link to="/spider" className={styles.button}>
-                  Analazye Document
+                  Analyze Document
                 </Link>
                 <button
                   onClick={handleLogout}

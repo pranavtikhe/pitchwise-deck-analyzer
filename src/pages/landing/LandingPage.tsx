@@ -266,7 +266,7 @@ const LandingPage = () => {
             }}
           >
             <img
-              src="/images/report.png"
+              src="/images/heroimg.png"
               alt="Spider Hero"
               className={styles.heroImg}
             />
