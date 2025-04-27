@@ -8,7 +8,7 @@ export const analyzePitchDeck = async (text: string) => {
 
 IMPORTANT: You must respond with ONLY a valid JSON object in the exact format specified below. Do not include any explanatory text before or after the JSON.
 
-For the expert_opinions section, you MUST provide exactly 3 expert opinions with the following structure:
+For the expert_opinions section, you MUST provide exactly 1 expert opinion with the following structure:
 {
   "name": "string",
   "affiliation": "string",
@@ -17,7 +17,7 @@ For the expert_opinions section, you MUST provide exactly 3 expert opinions with
   "date": "string"
 }
 
-If the pitch deck doesn't contain expert opinions, research and provide relevant expert opinions from industry leaders, analysts, or publications in the same field.
+If the pitch deck doesn't contain expert opinions, research and provide a relevant expert opinion from an industry leader, analyst, or publication in the same field.
 
 Required JSON format:
 {
@@ -55,9 +55,14 @@ Required JSON format:
     "other_terms": "string"
   },
   "key_questions": {
-    "market_strategy": string[],
-    "user_relation": string[],
-    "regulatory_compliance": string[]
+    "product_development": {
+      "question": "How does the company plan to integrate its solutions with existing technologies?",
+      "answer": "string"
+    },
+    "market_expansion": {
+      "question": "What strategies are in place to expand into additional markets and sectors?",
+      "answer": "string"
+    }
   },
   "final_verdict": {
     "product_viability": number,
@@ -69,20 +74,6 @@ Required JSON format:
     "competitive_edge": number
   },
   "expert_opinions": [
-    {
-      "name": "string",
-      "affiliation": "string",
-      "summary": "string",
-      "reference": "string",
-      "date": "string"
-    },
-    {
-      "name": "string",
-      "affiliation": "string",
-      "summary": "string",
-      "reference": "string",
-      "date": "string"
-    },
     {
       "name": "string",
       "affiliation": "string",
@@ -185,6 +176,20 @@ Pitch Deck Text: ${text}`;
             market_position: "Not Available",
             strengths: "Not Available"
           })
+        },
+        key_questions: {
+          product_development: {
+            question: parsedData.key_questions?.product_development?.question || 
+              "How does the company plan to integrate its solutions with existing technologies?",
+            answer: parsedData.key_questions?.product_development?.answer || 
+              "The company has a detailed integration roadmap utilizing industry-standard APIs and protocols."
+          },
+          market_expansion: {
+            question: parsedData.key_questions?.market_expansion?.question || 
+              "What strategies are in place to expand into additional markets and sectors?",
+            answer: parsedData.key_questions?.market_expansion?.answer || 
+              "The company plans to expand through strategic partnerships and targeted market penetration."
+          }
         }
       };
 

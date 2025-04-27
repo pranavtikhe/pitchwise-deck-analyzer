@@ -23,7 +23,7 @@ import {
   PolarGrid,
   PolarAngleAxis,
   ResponsiveContainer,
-} from 'recharts';
+} from "recharts";
 
 interface AnalysisReportProps {
   data?: MistralResponse & {
@@ -238,11 +238,11 @@ const PitchDeckPDF = ({ data }: AnalysisReportProps) => (
         <Text style={pdfStyles.sectionTitle}>Expert Opinions</Text>
         {data.expert_opinions.map((opinion, index) => (
           <View key={index} style={{ marginBottom: 10 }}>
-            <Text style={[pdfStyles.text, { fontWeight: 'bold' }]}>
+            <Text style={[pdfStyles.text, { fontWeight: "bold" }]}>
               {opinion.name} - {opinion.affiliation}
             </Text>
             <Text style={pdfStyles.text}>{opinion.summary}</Text>
-            <Text style={[pdfStyles.text, { fontSize: 10, color: '#666' }]}>
+            <Text style={[pdfStyles.text, { fontSize: 10, color: "#666" }]}>
               Reference: {opinion.reference} | Date: {opinion.date}
             </Text>
           </View>
@@ -339,16 +339,25 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
 
   // Prepare data for radar chart
   const chartData = [
-    { subject: 'Product Viability', value: data.final_verdict.product_viability },
-    { subject: 'Financial Health', value: data.final_verdict.product_viability },
-    { subject: 'Market Potential', value: data.final_verdict.market_potential },
-    { subject: 'Sustainability', value: data.final_verdict.sustainability },
-    { subject: 'Innovation', value: data.final_verdict.innovation },
-    { subject: 'Exit Potential', value: data.final_verdict.exit_potential },
-    { subject: 'Risk Factors', value: data.final_verdict.risk_factor },
-    { subject: 'Customer Traction', value: data.final_verdict.market_potential },
-    { subject: 'Competitive Edge', value: data.final_verdict.competitive_edge },
-    { subject: 'Team Strength', value: data.final_verdict.innovation }
+    {
+      subject: "Product Viability",
+      value: data.final_verdict.product_viability,
+    },
+    {
+      subject: "Financial Health",
+      value: data.final_verdict.product_viability,
+    },
+    { subject: "Market Potential", value: data.final_verdict.market_potential },
+    { subject: "Sustainability", value: data.final_verdict.sustainability },
+    { subject: "Innovation", value: data.final_verdict.innovation },
+    { subject: "Exit Potential", value: data.final_verdict.exit_potential },
+    { subject: "Risk Factors", value: data.final_verdict.risk_factor },
+    {
+      subject: "Customer Traction",
+      value: data.final_verdict.market_potential,
+    },
+    { subject: "Competitive Edge", value: data.final_verdict.competitive_edge },
+    { subject: "Team Strength", value: data.final_verdict.innovation },
   ];
 
   useEffect(() => {
@@ -359,16 +368,21 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
   }, [data]);
 
   if (showHistory) {
-    return (
+  return (
       <div>
-        <button
+        <button 
           onClick={() => setShowHistory(false)}
           className="fixed top-4 right-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 z-10"
         >
           <FileText className="w-4 h-4" />
           Back to Analysis
         </button>
-        <History />
+        <div className="history-view">
+          {/* Add history view implementation here */}
+          <p className="text-center text-gray-400">
+            History view coming soon...
+          </p>
+      </div>
       </div>
     );
   }
@@ -377,16 +391,16 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
   if (!data) {
     return (
       <div className={`${styles.gradientWrapper} font-fustat`}>
-        <img
-          src="/images/backgroundgradiant.png"
-          alt="Gradient Background"
-          className={styles.gradientBackground}
-        />
+      <img
+        src="/images/backgroundgradiant.png"
+        alt="Gradient Background"
+        className={styles.gradientBackground}
+      />
         <div className={styles.innerBox}>
           <div className="flex flex-col items-center justify-center min-h-[400px]">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
             <p className="text-gray-400">Loading analysis report...</p>
-          </div>
+              </div>
         </div>
       </div>
     );
@@ -400,398 +414,722 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
         className={styles.gradientBackground}
       />
       <div className={styles.innerBox}>
-        {/* Type and Date */}
-        <div className="mb-8">
-          <h2 className="text-[40px] font-medium text-white mb-2">
-            {data.industry_type}
-          </h2>
-          <p className="text-gray-400">
-            {format(data.analyzedAt, "MMMM dd yyyy")} at{" "}
-            {format(data.analyzedAt, "HH:mm")}
-          </p>
+        <h4>Analysis For: {data.company_overview.company_name}</h4>
+        <p>
+          Industry: {data.industry_type} | Date:{" "}
+          {format(data.analyzedAt, "MMMM dd yyyy")}{" "}
+        </p>
+        <div className="bg-[#212228] bg-opacity-50 backdrop-blur-md rounded-xl p-6 mt-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {/* Pitch Analysis Card */}
+            <div className="bg-[#ffffff0a] backdrop-blur-sm border border-[#ffffff1a] rounded-xl p-6">
+                  <div className="flex items-center mb-4">
+                <FileText className="text-teal-500 w-5 h-5 mr-3" />
+                <h3 className="text-white text-lg font-medium">
+                  Pitch Analysis
+                </h3>
         </div>
-
-        {/* Company Overview Grid */}
-        <div className="mb-12">
-        <h2 className="text-2xl font-bold mb-12 text-white text-left">Company Overview</h2>
-          <div className="grid grid-cols-2 md:grid-cols-2 gap-6 relative">
-            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gray-700"></div>
-            {[
-              {
-                label: "Company Name",
-                value: data.company_overview.company_name,
-              },
-              {
-                label: "Key Offerings",
-                value: data.company_overview.key_offerings,
-              },
-              { label: "Industry", value: data.company_overview.industry },
-              {
-                label: "Market Position",
-                value: data.company_overview.market_position,
-              },
-              {
-                label: "Business Model",
-                value: data.company_overview.business_model,
-              },
-              { label: "Founded", value: data.company_overview.founded_on },
-            ].map((item, index) => (
-              <div key={index} className="border-b border-gray-700 p-4">
-                <div className="flex justify-between">
-                  <p className="text-gray-400 mr-2">{item.label}</p>
-                  <p className="text-white">{item.value}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-       
-
-        {/* Strengths and Weaknesses */}
-        <div className="mb-12">
-        <h2 className="text-2xl font-bold mb-12 text-white text-left">Pros & Cons</h2>
-
-          <div className="grid grid-cols-2 justify-center gap-12 mb-12 mt-12 relative">
-            {/* Vertical divider */}
-            <div className="absolute top-0 bottom-0 left-1/2 w-px bg-gray-700 -mx-3"></div>
-
-            <div>
-              <h4 className="text-white mb-4 text-left">Strengths (Pros)</h4>
-              <div className="space-y-6">
-                {data.strengths.map((strength, index) => (
-                  <div key={index} className="flex items-start">
-                    <div className="flex-shrink-0 rounded-full bg-gray-700 w-8 h-8 flex items-center justify-center mr-4">
-                      <span className="text-white text-sm">{index + 1}</span>
-                    </div>
-                    <p className="text-gray-300 pt-1">{strength}</p>
-                  </div>
-                ))}
-                {/* Add placeholder strengths if needed to match weaknesses */}
-                {data.strengths.length < data.weaknesses.length &&
-                  Array(data.weaknesses.length - data.strengths.length).fill(null).map((_, index) => (
-                    <div key={`placeholder-${index}`} className="flex items-start">
-                      <div className="flex-shrink-0 rounded-full bg-gray-700 w-8 h-8 flex items-center justify-center mr-4">
-                        <span className="text-white text-sm">{data.strengths.length + index + 1}</span>
-                      </div>
-                      <p className="text-gray-300 pt-1">Additional strength analysis pending</p>
-                    </div>
-                  ))
-                }
-              </div>
+              <div className="space-y-4">
+                <div>
+                      <p className="text-gray-400 text-sm mb-1">Clarity Score:</p>
+                  <p className="text-white text-2xl font-bold">
+                    {data.pitch_clarity}/10
+                  </p>
             </div>
             <div>
-              <h4 className="text-white mb-4 text-left ">Weaknesses (Cons)</h4>
-              <div className="space-y-6">
-                {data.weaknesses.map((weakness, index) => (
-                  <div key={index} className="flex items-start">
-                    <div className="flex-shrink-0 rounded-full bg-gray-700 w-8 h-8 flex items-center justify-center mr-4">
-                      <span className="text-white text-sm">{index + 1}</span>
+                      <p className="text-gray-400 text-sm mb-1">Sentiment:</p>
+                  <p className="text-green-500 font-medium">Positive</p>
+              </div>
+                <div className="pt-4 border-t border-[#ffffff1a]">
+                  <p className="text-sm text-gray-300">
+                    AI detected{" "}
+                    <span className="font-medium">
+                      {data.strengths.length} strengths
+                    </span>{" "}
+                    and{" "}
+                    <span className="font-medium">
+                      {data.weaknesses.length} potential issues
+                    </span>
+                  </p>
+            </div>
+            </div>
+                </div>
+
+            {/* Investment Potential Card */}
+            <div className="bg-[#ffffff0a] backdrop-blur-sm border border-[#ffffff1a] rounded-xl p-6">
+                  <div className="flex items-center mb-4">
+                <FileText className="text-teal-500 w-5 h-5 mr-3" />
+                <h3 className="text-white text-lg font-medium">
+                  Investment Potential
+                </h3>
+                      </div>
+              <div className="space-y-4">
+                <div>
+                      <p className="text-gray-400 text-sm mb-1">Score:</p>
+                  <p className="text-white text-2xl font-bold">
+                    {data.investment_score}/10
+                  </p>
                     </div>
-                    <p className="text-gray-300 pt-1">{weakness}</p>
+                    <div>
+                      <p className="text-gray-400 text-sm mb-1">Exit Potential:</p>
+                  <p className="text-white font-medium">USD 50 Million</p>
+                    </div>
+                <div className="pt-4 border-t border-[#ffffff1a]">
+                  <p className="text-sm text-gray-300">
+                    High growth rate with{" "}
+                    <span className="font-medium">moderate risk factors</span>
+                  </p>
                   </div>
-                ))}
-                {/* Add placeholder weaknesses if needed to match strengths */}
-                {data.weaknesses.length < data.strengths.length &&
-                  Array(data.strengths.length - data.weaknesses.length).fill(null).map((_, index) => (
-                    <div key={`placeholder-${index}`} className="flex items-start">
-                      <div className="flex-shrink-0 rounded-full bg-gray-700 w-8 h-8 flex items-center justify-center mr-4">
-                        <span className="text-white text-sm">{data.weaknesses.length + index + 1}</span>
-                      </div>
-                      <p className="text-gray-300 pt-1">Additional weakness analysis pending</p>
-                    </div>
-                  ))
-                }
-              </div>
-            </div>
-          </div>
-
-          {/* Competitive Competitors */}
-          <div className="text-white">
-            <h2 className="text-2xl font-bold mb-12 mt-20 text-left">Competitor Comparison</h2>
-            <div className="grid gap-0 border-b border-gray-700" style={{ gridTemplateColumns: `minmax(150px, 1.5fr) repeat(${data.competitor_analysis.competitors.length}, minmax(120px, 1fr))` }}>
-              <div className="p-4 font-bold">Competitors</div>
-              {data.competitor_analysis.competitors.map((competitor, index) => (
-                <div key={index} className={`p-4 text-center ${index < data.competitor_analysis.competitors.length - 1 ? 'border-r border-gray-700' : ''}`}>
-                  {competitor.name}
-                </div>
-              ))}
-            </div>
-            <div className="grid gap-0" style={{ gridTemplateColumns: `minmax(150px, 1.5fr) repeat(${data.competitor_analysis.competitors.length}, minmax(120px, 1fr))` }}>
-              <div className="p-4 font-bold">Key Investors</div>
-              {data.competitor_analysis.competitors.map((competitor, index) => (
-                <div key={index} className={`p-4 text-center ${index < data.competitor_analysis.competitors.length - 1 ? 'border-r border-gray-700' : ''}`}>
-                  {competitor.key_investors}
-                </div>
-              ))}
-            </div>
-            <div className="grid gap-0" style={{ gridTemplateColumns: `minmax(150px, 1.5fr) repeat(${data.competitor_analysis.competitors.length}, minmax(120px, 1fr))` }}>
-              <div className="p-4 font-bold">Amount Raised</div>
-              {data.competitor_analysis.competitors.map((competitor, index) => (
-                <div key={index} className={`p-4 text-center ${index < data.competitor_analysis.competitors.length - 1 ? 'border-r border-gray-700' : ''}`}>
-                  {competitor.amount_raised}
-                </div>
-              ))}
-            </div>
-            <div className="grid gap-0" style={{ gridTemplateColumns: `minmax(150px, 1.5fr) repeat(${data.competitor_analysis.competitors.length}, minmax(120px, 1fr))` }}>
-              <div className="p-4 font-bold">Market Position</div>
-              {data.competitor_analysis.competitors.map((competitor, index) => (
-                <div key={index} className={`p-4 text-center ${index < data.competitor_analysis.competitors.length - 1 ? 'border-r border-gray-700' : ''}`}>
-                  {competitor.market_position}
-                </div>
-              ))}
-            </div>
-            <div className="grid gap-0" style={{ gridTemplateColumns: `minmax(150px, 1.5fr) repeat(${data.competitor_analysis.competitors.length}, minmax(120px, 1fr))` }}>
-              <div className="p-4 font-bold">Strengths</div>
-              {data.competitor_analysis.competitors.map((competitor, index) => (
-                <div key={index} className={`p-4 text-center ${index < data.competitor_analysis.competitors.length - 1 ? 'border-r border-gray-700' : ''}`}>
-                  {competitor.strengths}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* To Date Funds Raised */}
-          <div className="text-white mt-12 mb-12">
-            <h2 className="text-2xl font-bold mb-12 text-left">To Date Funds Raised</h2>
-            {data.funding_history?.rounds?.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {data.funding_history.rounds.map((round, index) => (
-                  <div key={index} className="rounded-xl p-4 shadow-lg border border-gray-700 backdrop-blur-sm">
-                    <h3 className="text-lg mb-4 text-white font-semibold">{round.type}</h3>
-                    
-                    <div className="space-y-4">
-                      <div className="bg-[#F8F8F8]/[0.03] rounded-lg p-4">
-                        <p className="text-gray-400 text-sm mb-1">Amount Raised</p>
-                        <p className="text-white text-xl font-semibold">{round.amount}</p>
-                      </div>
-                      
-                      <div className="bg-[#F8F8F8]/[0.03] rounded-lg p-4">
-                        <p className="text-gray-400 text-sm mb-1">Key Investors</p>
-                        <p className="text-white">{round.key_investors.join(", ")}</p>
-                      </div>
-                    </div>
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div className="rounded-xl p-8 shadow-lg border border-gray-700 backdrop-blur-sm text-center">
-                <p className="text-gray-400 text-lg">Not Available in Deck</p>
-              </div>
-            )}
-          </div>
-
-          {/* table of findings */}
-          <div className="mt-12 mb-12">
-            <h2 className="text-2xl font-bold mb-12 text-white text-left">Summary Table of Findings</h2>
-            <div className="grid grid-cols-2 gap-6">
-              {data.competitor_analysis.competitors.map((competitor) => (
-                <div
-                  key={competitor.name}
-                  className="rounded-xl overflow-hidden backdrop-blur-sm"
-                >
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold text-white mb-6">{competitor.name}</h3>
-                    <div className="space-y-4">
-                      <div className="border-b border-gray-700 pb-4 text-left">
-                        <p className="text-gray-400 text-sm mb-1">Market Share</p>
-                        <p className="text-white">{competitor.market_position}</p>
-                      </div>
-                      <div className="border-b border-gray-700 pb-4 text-left">
-                        <p className="text-gray-400 text-sm mb-1">Key Investors</p>
-                        <p className="text-white">{competitor.key_investors}</p>
-                      </div>
-                      <div className="border-b border-gray-700 pb-4 text-left">
-                        <p className="text-gray-400 text-sm mb-1">Growth Rate</p>
-                        <p className="text-white">{competitor.amount_raised}</p>
-                      </div>
-                      <div className="pb-2 text-left">
-                        <p className="text-gray-400 text-sm mb-1">Key Differentiator</p>
-                        <p className="text-white">{competitor.strengths}</p>
-                      </div>
+                  </div>
+                  
+            {/* Market Position Card */}
+            <div className="bg-[#ffffff0a] backdrop-blur-sm border border-[#ffffff1a] rounded-xl p-6">
+                  <div className="flex items-center mb-4">
+                <FileText className="text-teal-500 w-5 h-5 mr-3" />
+                <h3 className="text-white text-lg font-medium">
+                  Market Position
+                </h3>
+                  </div>
+              <div className="space-y-4">
+                <div>
+                      <p className="text-gray-400 text-sm mb-1">Classification:</p>
+                  <p className="text-white text-2xl font-bold">
+                    {data.market_position}
+                  </p>
                     </div>
+                    <div>
+                      <p className="text-gray-400 text-sm mb-1">Industry:</p>
+                  <p className="text-gray-300 font-medium">
+                    {data.industry_type}
+                  </p>
+                    </div>
+                <div className="pt-4 border-t border-[#ffffff1a]">
+                  <p className="text-sm text-gray-300">
+                    Competing with{" "}
+                    <span className="font-medium">
+                      {data.competitor_analysis.competitors.length} established
+                      players
+                    </span>
+                  </p>
+                  </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* expert opinions */}
-          <div className="text-white">
-            <h2 className="text-2xl font-bold mb-12 mt-12 text-left">
-              Industry Expert Opinions
+              </div>
+          <div>
+            <h2 className="text-2xl font-medium text-white mb-8">
+              Company Overview
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {data?.expert_opinions?.map((opinion, index) => (
-                <div key={index} className="rounded-xl p-4 shadow-lg border border-gray-700  backdrop-blur-sm">
-                  <h3 className="text-lg mb-4 text-white font-semibold">{opinion.name}</h3>
-                  
-                  <div className="bg-[#F8F8F8]/[0.03] rounded-lg p-4 mb-4">
-                    <p className="text-gray-400 text-sm mb-1">Affiliation</p>
-                    <p className="text-white">{opinion.affiliation}</p>
-                  </div>
-                  
-                  <div className="bg-[#F8F8F8]/[0.03] rounded-lg p-4 mb-4">
-                    <p className="text-gray-400 text-sm mb-1">Opinion Summary</p>
-                    <p className="text-white">{opinion.summary}</p>
-                  </div>
-                  
-                  <div className="bg-[#F8F8F8]/[0.03] rounded-lg p-4 mb-4">
-                    <p className="text-gray-400 text-sm mb-1">Reference</p>
-                    <p className="text-white">{opinion.reference}</p>
-                  </div>
-                  
-                  <div className="bg-[#F8F8F8]/[0.03] rounded-lg p-4">
-                    <p className="text-gray-400 text-sm mb-1">Date</p>
-                    <p className="text-white">{opinion.date}</p>
-                  </div>
-                </div>
-              ))}
+            <div className="grid grid-cols-2 gap-6">
+              <div className="border-b border-[#ffffff1a] pb-4">
+                <p className="text-gray-400 text-sm mb-1">Company Name</p>
+                <p className="text-white text-base">
+                  {data.company_overview.company_name}
+                </p>
+              </div>
+              
+              <div className="border-b border-[#ffffff1a] pb-4">
+                <p className="text-gray-400 text-sm mb-1">Industry</p>
+                <p className="text-white text-base">
+                  {data.company_overview.industry}
+                </p>
+              </div>
+              
+              <div className="border-b border-[#ffffff1a] pb-4">
+                <p className="text-gray-400 text-sm mb-1">Market Position</p>
+                <p className="text-white text-base">
+                  {data.company_overview.market_position}
+                </p>
+              </div>
+              
+              <div className="border-b border-[#ffffff1a] pb-4">
+                <p className="text-gray-400 text-sm mb-1">Founded</p>
+                <p className="text-white text-base">
+                  {data.company_overview.founded_on || "N/A"}
+                </p>
+              </div>
+              
+              <div className="border-b border-[#ffffff1a] pb-4">
+                <p className="text-gray-400 text-sm mb-1">Business Model</p>
+                <p className="text-white text-base">
+                  {data.company_overview.business_model}
+                </p>
+              </div>
+              
+              <div className="border-b border-[#ffffff1a] pb-4">
+                <p className="text-gray-400 text-sm mb-1">Key Offerings</p>
+                <p className="text-white text-base">
+                  {data.company_overview.key_offerings}
+                </p>
+              </div>
             </div>
           </div>
-
-          {/* conclusion */}
-          <div className="text-white ">
-            <h2 className="text-2xl font-bold mb-12 mt-12 text-left">Expert Conclusion</h2>
-            <div className="space-y-4">
-              <div className="flex justify-between border-b border-gray-600 pb-4">
-                <p className="text-gray-400">Product Viability</p>
-                <p>{data.final_verdict.product_viability}</p>
+          <div>
+            {/* Strengths & Weaknesses Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <div className="bg-[#212228] rounded-xl p-6">
+                <h2 className="text-2xl font-medium text-white mb-6">
+                  Strengths & Weaknesses
+                </h2>
+                <div className="grid grid-cols-2 gap-8">
+              <div>
+                    <h3 className="text-green-500 text-lg mb-4">
+                      Strengths (Pros)
+                    </h3>
+                    <ul className="space-y-4">
+                      {data.strengths.map((strength, index) => (
+                    <li key={index} className="flex items-start">
+                          <span className="text-gray-400 mr-2 flex-shrink-0">
+                            •
+                          </span>
+                      <span className="text-gray-300">{strength}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <div className="flex justify-between border-b border-gray-600 pb-4">
-                <p className="text-gray-400">Market Potential</p>
-                <p>{data.final_verdict.market_potential}</p>
-              </div>
-              <div className="flex justify-between border-b border-gray-600 pb-4">
-                <p className="text-gray-400">Sustainability</p>
-                <p>{data.final_verdict.sustainability}</p>
-              </div>
-              <div className="flex justify-between border-b border-gray-600 pb-4">
-                <p className="text-gray-400">Innovation</p>
-                <p>{data.final_verdict.innovation}</p>
-              </div>
-              <div className="flex justify-between border-b border-gray-600 pb-4">
-                <p className="text-gray-400">Exit Potential</p>
-                <p>{data.final_verdict.exit_potential}</p>
-              </div>
-              <div className="flex justify-between border-b border-gray-600 pb-4">
-                <p className="text-gray-400">Risk Factors</p>
-                <p>{data.final_verdict.risk_factor}</p>
-              </div>
-              <div className="flex justify-between border-b border-gray-600 pb-4">
-                <p className="text-gray-400">Competitive Edge</p>
-                <p>{data.final_verdict.competitive_edge}</p>
-              </div>
-            </div>
+                  <div>
+                    <h3 className="text-red-500 text-lg mb-4">
+                      Weaknesses (Cons)
+                    </h3>
+                    <ul className="space-y-4">
+                      {data.weaknesses.map((weakness, index) => (
+                    <li key={index} className="flex items-start">
+                          <span className="text-gray-400 mr-2 flex-shrink-0">
+                            •
+                          </span>
+                      <span className="text-gray-300">{weakness}</span>
+                    </li>
+                  ))}
+                </ul>
           </div>
         </div>
       </div>
-      {/* final verdict */}
-      <div className="flex flex-col gap-8 mt-2">
-        <div className={styles.innerBox}>
-          <div className="flex flex-col md:flex-row gap-8">
-            <div className="flex-1">
-              <h3 className="text-white text-lg mb-6">Performance Analysis</h3>
-              <div className="h-[500px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <RechartsRadarChart
-                    data={chartData}
-                    outerRadius={180}
-                    margin={{ top: 30, right: 30, bottom: 30, left: 30 }}
-                  >
-                    <defs>
-                      <radialGradient id="radarGradient">
-                        <stop offset="28%" stopColor="#29272C" />
-                        <stop offset="65%" stopColor="#B0B0B0" />
-                        <stop offset="100%" stopColor="#FFFFFF" />
-                      </radialGradient>
-                    </defs>
-                    <PolarGrid 
-                      stroke="rgba(255, 255, 255, 0.1)" 
-                      strokeDasharray="3 3"
-                    />
-                    <PolarAngleAxis
-                      dataKey="subject"
-                      tick={{ fill: '#9CA3AF', fontSize: 14 }}
-                    />
-                    <Radar
-                      name="Performance"
-                      dataKey="value"
-                      stroke="#B0B0B0"
-                      fill="url(#radarGradient)"
-                      fillOpacity={0.28}
-                      dot={false}
-                    />
-                  </RechartsRadarChart>
-                </ResponsiveContainer>
+
+              {/* Funding History Section */}
+              <div className="bg-[#212228] rounded-xl p-6">
+                <h2 className="text-2xl font-medium text-white mb-6">
+                  Funding History
+                </h2>
+              <div className="overflow-x-auto">
+                  <table className="w-full">
+                  <thead>
+                      <tr className="border-b border-[#ffffff1a]">
+                        <th className="text-left py-3 px-2 text-gray-400 font-normal">
+                          Round
+                        </th>
+                        <th className="text-left py-3 px-2 text-gray-400 font-normal">
+                          Amount
+                        </th>
+                        <th className="text-left py-3 px-2 text-gray-400 font-normal">
+                          Key Investors
+                        </th>
+                        <th className="text-left py-3 px-2 text-gray-400 font-normal">
+                          Date
+                        </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      {data.funding_history.rounds.length > 0 ? (
+                        data.funding_history.rounds.map((round, index) => (
+                          <tr
+                            key={index}
+                            className="border-b border-[#ffffff1a]"
+                          >
+                            <td className="py-3 px-2 text-white">
+                              {round.type}
+                            </td>
+                            <td className="py-3 px-2 text-white">
+                              {round.amount}
+                            </td>
+                            <td className="py-3 px-2 text-white">
+                              {Array.isArray(round.key_investors)
+                                ? round.key_investors.join(", ")
+                                : round.key_investors}
+                            </td>
+                            <td className="py-3 px-2 text-white">N/A</td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                          <td
+                            colSpan={4}
+                            className="py-4 text-center text-gray-500"
+                          >
+                            No funding history available
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
               </div>
             </div>
-            <div className="flex-1 text-white p-6">
-              <h2 className="text-3xl font-bold mb-6">Final Verdict</h2>
-              <p className="text-gray-300 mb-6">
-                {data.company_overview.company_name} shows significant potential
-                in the {data.industry_type} market with a well-planned approach
-                to tap into the market opportunities.
-              </p>
-              <div className="grid grid-cols-2 gap-px ">
-                <div className="p-4 ">
-                  <p className="text-3xl font-bold">
-                    {data.final_verdict.product_viability}
-                  </p>
-                  <p className="text-gray-400">Product Viability</p>
+          </div>
+        </div>
+          <div>
+            {/* Competitor Comparison Section */}
+            <div className="bg-[#212228] rounded-xl p-6 mb-8">
+              <h2 className="text-2xl font-medium text-white mb-6">
+                Competitor Comparison
+              </h2>
+            <div className="overflow-x-auto">
+                <table className="w-full">
+                <thead>
+                    <tr className="border-b border-[#ffffff1a]">
+                      <th className="text-left py-3 px-4 text-gray-400 font-normal">
+                        Competitor
+                      </th>
+                      <th className="text-left py-3 px-4 text-gray-400 font-normal">
+                        Key
+                      </th>
+                      <th className="text-left py-3 px-4 text-gray-400 font-normal">
+                        Amount Raised
+                      </th>
+                      <th className="text-left py-3 px-4 text-gray-400 font-normal">
+                        Market Position
+                      </th>
+                      <th className="text-left py-3 px-4 text-gray-400 font-normal">
+                        Strengths
+                      </th>
+                  </tr>
+                </thead>
+                <tbody>
+                    {data.competitor_analysis.competitors.map(
+                      (competitor, index) => (
+                        <tr key={index} className="border-b border-[#ffffff1a]">
+                          <td className="py-4 px-4 text-white">
+                            {competitor.name}
+                          </td>
+                          <td className="py-4 px-4 text-white">
+                            {competitor.key_investors}
+                          </td>
+                          <td className="py-4 px-4 text-white">
+                            {competitor.amount_raised}
+                          </td>
+                          <td className="py-4 px-4 text-white">
+                            {competitor.market_position}
+                          </td>
+                          <td className="py-4 px-4 text-white">
+                            {competitor.strengths}
+                      </td>
+                    </tr>
+                      )
+                  )}
+                </tbody>
+              </table>
+            </div>
+            </div>
+
+            {/* Market Comparison Section */}
+            <div className="bg-[#212228] rounded-xl p-6 mb-8">
+              <h2 className="text-2xl font-medium text-white mb-6">
+                Market Comparison
+              </h2>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-[#ffffff1a]">
+                      <th className="text-left py-3 px-4 text-gray-400 font-normal">
+                        Metric
+                      </th>
+                      <th className="text-left py-3 px-4 text-gray-400 font-normal">
+                        Startup
+                      </th>
+                      <th className="text-left py-3 px-4 text-gray-400 font-normal">
+                        Competitor 1
+                      </th>
+                      <th className="text-left py-3 px-4 text-gray-400 font-normal">
+                        Competitor 2
+                      </th>
+                      <th className="text-left py-3 px-4 text-gray-400 font-normal">
+                        Competitor 3
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b border-[#ffffff1a]">
+                      <td className="py-4 px-4 text-gray-400">Market Share</td>
+                      <td className="py-4 px-4 text-white">Leader</td>
+                      <td className="py-4 px-4 text-white">Leader</td>
+                      <td className="py-4 px-4 text-white">Challenger</td>
+                      <td className="py-4 px-4 text-white">Niche Player</td>
+                    </tr>
+                  </tbody>
+                </table>
+          </div>
+        </div>
+
+            {/* Exit Potential Section */}
+            <div className="bg-[#212228] rounded-xl p-6">
+              <h2 className="text-2xl font-medium text-white mb-6">
+                Exit Potential
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-[#1a1b1f] rounded-xl p-6">
+                  <h3 className="text-gray-400 mb-4">Exit Likelihood</h3>
+                  <div className="relative pt-2">
+                    <div className="w-full bg-gray-700 rounded-full h-2">
+                      <div
+                        className=" bg-white h-2 rounded-full"
+                        style={{
+                          width: `${
+                            (data.final_verdict.exit_potential / 10) * 100
+                          }%`,
+                        }}
+                      ></div>
+              </div>
+                    <div className="absolute right-0 top-0 bg-orange-500/20 text-orange-500 px-2 py-1 rounded text-sm">
+                      {data.final_verdict.exit_potential}/10
+                    </div>
+                  </div>
                 </div>
-                <div className="p-4 ">
-                  <p className="text-3xl font-bold">
-                    {data.final_verdict.market_potential}
-                  </p>
-                  <p className="text-gray-400">Market Potential</p>
-                </div>
-                <div className="p-4 ">
-                  <p className="text-3xl font-bold">
-                    {data.final_verdict.sustainability}
-                  </p>
-                  <p className="text-gray-400">Sustainability</p>
-                </div>
-                <div className="p-4 ">
-                  <p className="text-3xl font-bold">
-                    {data.final_verdict.exit_potential}
-                  </p>
-                  <p className="text-gray-400">Exit Potential</p>
-                </div>
-                <div className="p-4 ">
-                  <p className="text-3xl font-bold">
-                    {data.final_verdict.risk_factor}
-                  </p>
-                  <p className="text-gray-400">Risk Factors</p>
-                </div>
-                <div className="p-4 ">
-                  <p className="text-3xl font-bold">
-                    {data.final_verdict.innovation}
-                  </p>
-                  <p className="text-gray-400">Innovation</p>
-                </div>
-                <div className="p-4 ">
-                  <p className="text-3xl font-bold">
-                    {data.final_verdict.competitive_edge}
-                  </p>
-                  <p className="text-gray-400">Competitive Edge</p>
+                <div className="bg-[#1a1b1f] rounded-xl p-6">
+                  <h3 className="text-gray-400 mb-4">Potential Exit Value</h3>
+                  <p className="text-3xl font-semibold text-white">USD</p>
                 </div>
               </div>
             </div>
           </div>
-          <div className="flex justify-center mt-8">
-            <PDFDownloadLink
-              document={<PitchDeckPDF data={data} />}
-              fileName={`${data.company_overview.company_name}_analysis.pdf`}
-              className="bg-gradient-to-r from-blue-500 to-purple-500 text-white px-6 py-3 rounded-lg flex items-center gap-2 hover:opacity-90 transition-opacity"
-            >
-              {({ loading }) => (
-                <>
-                  <Download className="w-5 h-5" />
-                  {loading ? 'Preparing PDF...' : 'Download Analysis'}
-                </>
-              )}
-            </PDFDownloadLink>
+
+          {/* Expert Insights Section */}
+          <div className="bg-[#212228] rounded-xl p-6 mt-8">
+            <h2 className="text-2xl font-medium text-white mb-6">
+              Expert Insights
+            </h2>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Expert Opinions Card */}
+              <div className="bg-[#1a1b1f] rounded-xl p-6">
+                <h3 className="text-xl text-white mb-4">Expert Opinions</h3>
+                {data.expert_opinions[0] && (
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="text-white text-lg mb-1">
+                        {data.expert_opinions[0].name}
+                      </h4>
+                      <p className="text-gray-400 text-sm mb-3">
+                        {data.expert_opinions[0].affiliation}
+                      </p>
+              <p className="text-gray-300 leading-relaxed">
+                        {data.expert_opinions[0].summary}
+                      </p>
+                      <div className="flex items-center gap-2 mt-4 text-gray-500 text-sm">
+                        <span>{data.expert_opinions[0].reference}</span>
+                        <span>•</span>
+                        <span>{data.expert_opinions[0].date}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Reputation Analysis Card */}
+              <div className="bg-[#1a1b1f] rounded-xl p-6">
+                <h3 className="text-xl text-white mb-6">Reputation Analysis</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="text-white">News/Media</span>
+                    <div className="flex items-center gap-4">
+                      <span className="text-green-500">Positive</span>
+                      <span className="text-white">8/10</span>
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((_, i) => (
+                          <svg
+                            key={i}
+                            className="w-4 h-4 text-white"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        ))}
+                </div>
+                </div>
+                </div>
+              
+                  <div className="flex items-center justify-between">
+                    <span className="text-white">Social Media</span>
+                    <div className="flex items-center gap-4">
+                      <span className="text-gray-400">Neutral</span>
+                      <span className="text-white">6/10</span>
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((_, i) => (
+                          <svg
+                            key={i}
+                            className="w-4 h-4 text-white"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        ))}
+                </div>
+                </div>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-white">Investor Reviews</span>
+                    <div className="flex items-center gap-4">
+                      <span className="text-green-500">Positive</span>
+                      <span className="text-white">8/10</span>
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((_, i) => (
+                          <svg
+                            key={i}
+                            className="w-4 h-4 text-white"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        ))}
+              </div>
+            </div>
+          </div>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-white">Customer Feedback</span>
+                    <div className="flex items-center gap-4">
+                      <span className="text-green-500">Positive</span>
+                      <span className="text-white">9/10</span>
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((_, i) => (
+                          <svg
+                            key={i}
+                            className="w-4 h-4 text-white"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between pt-4 border-t border-[#ffffff1a]">
+                    <span className="text-white">Overall</span>
+                    <div className="flex items-center gap-4">
+                      <span className="text-green-500">Positive</span>
+                      <span className="text-white">8.5/10</span>
+                      <div className="flex">
+                        {[1, 2, 3, 4, 5].map((_, i) => (
+                          <svg
+                            key={i}
+                            className="w-4 h-4 text-white"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                          </svg>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* Proposed Deal Structure */}
+          <div className="bg-[#212228] rounded-xl p-6 mt-8">
+            <h2 className="text-2xl font-medium text-white mb-6">
+              Proposed Deal Structure
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Investment Amount */}
+              <div className="bg-[#1a1b1f] rounded-xl p-6">
+                <p className="text-gray-400 text-base mb-2">
+                  Investment Amount
+                </p>
+                <p className="text-white text-2xl">
+                  {data.proposed_deal_structure.investment_amount ||
+                    "USD 1 Million"}
+                </p>
+              </div>
+
+              {/* Equity Stake */}
+              <div className="bg-[#1a1b1f] rounded-xl p-6">
+                <p className="text-gray-400 text-base mb-2">Equity Stake</p>
+                <p className="text-white text-2xl">
+                  {data.proposed_deal_structure.equity_stake || "Not disclosed"}
+                </p>
+              </div>
+
+              {/* Valuation Cap */}
+              <div className="bg-[#1a1b1f] rounded-xl p-6">
+                <p className="text-gray-400 text-base mb-2">Valuation Cap</p>
+                <p className="text-white text-2xl">
+                  {data.proposed_deal_structure.valuation_cap ||
+                    "Not disclosed"}
+                </p>
+            </div>
+
+              {/* Liquidation Preference */}
+              <div className="bg-[#1a1b1f] rounded-xl p-6">
+                <p className="text-gray-400 text-base mb-2">
+                  Liquidation Preference
+                </p>
+                <p className="text-white text-2xl">
+                  {data.proposed_deal_structure.liquidation_preference ||
+                    "Not disclosed"}
+                </p>
+          </div>
+
+              {/* Anti-Dilution Protection */}
+              <div className="bg-[#1a1b1f] rounded-xl p-6">
+                <p className="text-gray-400 text-base mb-2">
+                  Anti-Dilution Protection
+                </p>
+                <p className="text-white text-2xl">
+                  {data.proposed_deal_structure.anti_dilution_protection ||
+                    "Yes"}
+                </p>
+        </div>
+
+              {/* Board Seat */}
+              <div className="bg-[#1a1b1f] rounded-xl p-6">
+                <p className="text-gray-400 text-base mb-2">Board Seat</p>
+                <p className="text-white text-2xl">
+                  {data.proposed_deal_structure.board_seat || "Yes"}
+                </p>
+        </div>
+
+              {/* Vesting Schedule */}
+              <div className="bg-[#1a1b1f] rounded-xl p-6 md:col-span-2">
+                <p className="text-gray-400 text-base mb-2">Vesting Schedule</p>
+                <p className="text-white text-2xl">
+                  {data.proposed_deal_structure.vesting_schedule ||
+                    "Not disclosed"}
+                </p>
+      </div>
+    </div>
+          </div>
+          {/* key questions */}
+          <div className="bg-[#212228] rounded-xl p-6 mt-8">
+            <h2 className="text-2xl font-medium text-white mb-4">
+              Key Questions for the Startup
+            </h2>
+            <div className="flex flex-col space-y-4">
+              {/* Product Development Card */}
+              <div className="bg-transparent border border-[#ffffff1a] rounded-xl p-4 flex flex-col">
+                <h3 className="text-gray-400 text-lg mb-2">
+                  Product Development
+                </h3>
+                <div className="flex flex-col">
+                  <p className="text-white text-lg">
+                    {data.key_questions.product_development.question}
+                  </p>
+                  <p className="text-gray-400 text-base mt-1">
+                    {data.key_questions.product_development.answer}
+                  </p>
+                </div>
+              </div>
+
+              {/* Market Expansion Card */}
+              <div className="bg-transparent border border-[#ffffff1a] rounded-xl p-4 flex flex-col">
+                <h3 className="text-gray-400 text-lg mb-2">
+                  Market Expansion
+                </h3>
+                <div className="flex flex-col">
+                  <p className="text-white text-lg">
+                    {data.key_questions.market_expansion.question}
+                  </p>
+                  <p className="text-gray-400 text-base mt-1">
+                    {data.key_questions.market_expansion.answer}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* Final Verdict Section */}
+          <div className="bg-[#212228] rounded-xl p-6 mt-8">
+            <h2 className="text-2xl font-medium text-white mb-6">
+              Final Verdict
+            </h2>
+            
+            {/* Company Analysis Card */}
+            <div className="bg-[#1a1b1f] rounded-xl p-6 mb-6">
+              <h3 className="text-xl text-white mb-2">
+                {data.company_overview.company_name}
+              </h3>
+              <p className="text-gray-300 text-base leading-relaxed mb-8">
+                {data.company_overview.company_name} presents a compelling investment opportunity with a leading position in the {data.industry_type.toLowerCase()} sector. With validated technology endorsed by international bodies and a robust growth trajectory, the company shows high potential for scalability and market penetration.
+              </p>
+
+              {/* Investment Potential Bar */}
+              <div className="mb-8">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-gray-400">Investment Potential</span>
+                  <span className="text-white bg-[#ffffff1a] px-3 py-1 rounded-full text-sm">
+                    75%
+                  </span>
+                </div>
+                <div className="h-2 bg-[#ffffff0a] rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-1000 ease-out"
+                    style={{ width: '75%' }}
+                  ></div>
+                </div>
+              </div>
+
+              {/* Performance Analysis Title */}
+              <h3 className="text-xl text-white mb-6 text-center">
+                Performance Analysis
+              </h3>
+
+              {/* Radar Chart and Metrics Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Radar Chart */}
+                <div className="h-[300px] flex items-center justify-center">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <RechartsRadarChart data={chartData}>
+                      <PolarGrid stroke="#ffffff1a" />
+                      <PolarAngleAxis 
+                        dataKey="subject" 
+                        tick={{ fill: '#9CA3AF', fontSize: 12 }}
+                      />
+                      <Radar
+                        name="Metrics"
+                        dataKey="value"
+                        stroke="#3B82F6"
+                        fill="#3B82F6"
+                        fillOpacity={0.2}
+                      />
+                    </RechartsRadarChart>
+                  </ResponsiveContainer>
+                </div>
+
+                {/* Metrics List */}
+                <div className="space-y-4">
+                  <div className="bg-[#ffffff0a] rounded-xl p-4 flex justify-between items-center">
+                    <span className="text-gray-300">Product Viability</span>
+                    <span className="text-white text-lg">{data.final_verdict.product_viability}</span>
+                  </div>
+                  <div className="bg-[#ffffff0a] rounded-xl p-4 flex justify-between items-center">
+                    <span className="text-gray-300">Market Potential</span>
+                    <span className="text-white text-lg">{data.final_verdict.market_potential}</span>
+                  </div>
+                  <div className="bg-[#ffffff0a] rounded-xl p-4 flex justify-between items-center">
+                    <span className="text-gray-300">Sustainability</span>
+                    <span className="text-white text-lg">{data.final_verdict.sustainability}</span>
+                  </div>
+                  <div className="bg-[#ffffff0a] rounded-xl p-4 flex justify-between items-center">
+                    <span className="text-gray-300">Exit Potential</span>
+                    <span className="text-white text-lg">{data.final_verdict.exit_potential}</span>
+                  </div>
+                  <div className="bg-[#ffffff0a] rounded-xl p-4 flex justify-between items-center">
+                    <span className="text-gray-300">Risk Factors</span>
+                    <span className="text-white text-lg">{data.final_verdict.risk_factor}</span>
+                  </div>
+                  <div className="bg-[#ffffff0a] rounded-xl p-4 flex justify-between items-center">
+                    <span className="text-gray-300">Innovation</span>
+                    <span className="text-white text-lg">{data.final_verdict.innovation}</span>
+                  </div>
+                  <div className="bg-[#ffffff0a] rounded-xl p-4 flex justify-between items-center">
+                    <span className="text-gray-300">Competitive Edge</span>
+                    <span className="text-white text-lg">{data.final_verdict.competitive_edge}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -133,9 +133,14 @@ export interface MistralResponse {
     other_terms: string;
   };
   key_questions: {
-    market_strategy: string[];
-    user_relation: string[];
-    regulatory_compliance: string[];
+    product_development: {
+      question: string;
+      answer: string;
+    };
+    market_expansion: {
+      question: string;
+      answer: string;
+    };
   };
   final_verdict: {
     product_viability: number;
