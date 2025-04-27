@@ -20,7 +20,7 @@ For the expert_opinions section, you MUST provide exactly 1 expert opinion with 
 If the pitch deck doesn't contain expert opinions, research and provide a relevant expert opinion from an industry leader, analyst, or publication in the same field.
 
 Required JSON format:
-{
+    {
   "industry_type": "string",
   "pitch_clarity": number,
   "investment_score": number,
@@ -32,7 +32,7 @@ Required JSON format:
     "key_offerings": "string",
     "market_position": "string",
     "founded_on": "string"
-  },
+      },
   "strengths": string[],
   "weaknesses": string[],
   "funding_history": {
@@ -72,7 +72,7 @@ Required JSON format:
     "exit_potential": number,
     "risk_factor": number,
     "competitive_edge": number
-  },
+      },
   "expert_opinions": [
     {
       "name": "string",
@@ -96,11 +96,11 @@ Required JSON format:
         "amount_raised": "string",
         "market_position": "string",
         "strengths": "string"
+          }
+        ]
       }
-    ]
-  }
-}
-
+    }
+    
 Pitch Deck Text: ${text}`;
 
   try {

@@ -202,6 +202,33 @@ export interface MistralResponse {
       strengths: string;
     }[];
   };
+  reputation_analysis: {
+    news_media: {
+      rating: number;
+      sentiment: 'Positive' | 'Neutral' | 'Negative';
+      score: number;
+    };
+    social_media: {
+      rating: number;
+      sentiment: 'Positive' | 'Neutral' | 'Negative';
+      score: number;
+    };
+    investor_reviews: {
+      rating: number;
+      sentiment: 'Positive' | 'Neutral' | 'Negative';
+      score: number;
+    };
+    customer_feedback: {
+      rating: number;
+      sentiment: 'Positive' | 'Neutral' | 'Negative';
+      score: number;
+    };
+    overall: {
+      rating: number;
+      sentiment: 'Positive' | 'Neutral' | 'Negative';
+      score: number;
+    };
+  };
 }
 
 /**

@@ -9,8 +9,9 @@ import { ArrowRight } from "lucide-react";
 import AnalysisReport from "@/components/AnalysisReport";
 import LoadingScreen from "@/components/LoadingScreen";
 import { StarField } from "@/components/StarField";
+import Footer from "@/components/Footer";
 import styles from "@/styles/upload.module.scss";
-import landingStyles from "@/pages/landing/styles/LandingPage.module.scss";
+
 
 const starfieldVariants = {
   initial: { opacity: 0 },
@@ -118,45 +119,24 @@ const Index = () => {
     }, 2000); // Adjust timing as needed
   };
 
-  const starfieldVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        duration: 1,
-        ease: "easeOut",
-      },
-    },
-  };
 
-  const ellipseVariants = {
-    hidden: { opacity: 0, scale: 0.8 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 1.5,
-        ease: "easeOut",
-      },
-    },
-  };
+
+  
 
   return (
-    <>
+    <div className="flex flex-col min-h-screen overflow-hidden">
       <Navbar />
 
-      <div className={landingStyles.backgroundElements}>
+      <div className={styles.backgroundElements} style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: -1 }}>
         <motion.div
-          className={landingStyles.starfieldWrapper}
-          variants={starfieldVariants}
+          className={styles.starfieldWrapper}
           initial="hidden"
           animate="visible"
         >
           <StarField />
         </motion.div>
         <motion.div
-          className={landingStyles.ellipse}
-          variants={ellipseVariants}
+          className={styles.ellipse}
           initial="hidden"
           animate="visible"
         >
@@ -169,80 +149,78 @@ const Index = () => {
         </motion.div>
       </div>
 
-      <h1
-        className="text-center text-5xl font-bold mb-8"
-        style={{
-          background:
-            "linear-gradient(to right, #FFFFFF 0%, #959595 50%, #FFFFFF 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          backgroundClip: "text",
-          fontWeight: 700,
-          fontFamily: "Fustat, sans-serif",
-          fontSize: "48px",
-          marginTop: "100px",
-        }}
-      >
-        {isLoading
-          ? "Analyzing"
-          : insights && !isLoading
-          ? "Analysis Report"
-          : "Start Analysis"}
-      </h1>
+      <div className="flex-grow">
+        <h1
+          className="text-center text-5xl font-bold mb-8"
+          style={{
+            background:
+              "linear-gradient(to right, #FFFFFF 0%, #959595 50%, #FFFFFF 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+            fontWeight: 700,
+            fontFamily: "Fustat, sans-serif",
+            fontSize: "48px",
+            marginTop: "100px",
+          }}
+        >
+          {isLoading
+            ? "Analyzing"
+            : insights && !isLoading
+            ? "Analysis Report"
+            : "Start Analysis"}
+        </h1>
 
-      <div className={styles.uploadContainer}>
-        {!insights && !isLoading && (
-          <div className={styles.gradientWrapper}>
-            <img
-              src="/images/backgroundgradiant.png"
-              alt="Gradient Background"
-              className={styles.gradientBackground}
-            />
-            <div className={styles.innerBox}>
-              <h2 className="text-xl font-medium text-white mb-2">
-                Upload Your Pitch Deck
-              </h2>
+        <div className={styles.uploadContainer}>
+          {!insights && !isLoading && (
+            <div className={styles.gradientWrapper}>
+              <img
+                src="/images/backgroundgradiant.png"
+                alt="Gradient Background"
+                className={styles.gradientBackground}
+              />
+              <div className={styles.innerBox}>
+                <h2 className="text-xl font-medium text-white mb-2">
+                  Upload Your Pitch Deck
+                </h2>
 
-              <div
-                className={styles.uploadArea}
-                onClick={handleUploadClick}
-                role="button"
-                tabIndex={0}
-              >
-                <FileUpload
-                  ref={fileInputRef}
-                  onFileSelected={handleFileSelected}
-                  isLoading={isLoading}
-                />
+                <div
+                  className={styles.uploadArea}
+                  onClick={handleUploadClick}
+                  role="button"
+                  tabIndex={0}
+                >
+                  <FileUpload
+                    ref={fileInputRef}
+                    onFileSelected={handleFileSelected}
+                    isLoading={isLoading}
+                  />
+                </div>
+
+                <button
+                  onClick={handleAnalyze}
+                  className={styles.analyzeButton}
+                  disabled={!file || isLoading}
+                >
+                  Analyze your document now
+                  <ArrowRight className="w-5 h-5" />
+                </button>
               </div>
-
-              <button
-                onClick={handleAnalyze}
-                className={styles.analyzeButton}
-                disabled={!file || isLoading}
-              >
-                Analyze your document now
-                <ArrowRight className="w-5 h-5" />
-              </button>
             </div>
-          </div>
-        )}
+          )}
 
-        {isLoading && <LoadingScreen progress={progress} />}
+          {isLoading && <LoadingScreen progress={progress} />}
 
-        {insights && !isLoading && (
-          <div className="mt-8">
-            <AnalysisReport data={insights} />
-          </div>
-        )}
+          {insights && !isLoading && (
+            <div className="mt-8">
+              <AnalysisReport data={insights} />
+            </div>
+          )}
+        </div>
       </div>
 
-      <footer className="py-6 border-t border-gray-800">
-        <div className="container text-center text-sm text-gray-500">
-          <p>© 2025 PitchDeck Analyzer. All rights reserved.</p>
-        </div>
-      </footer>
-    </>
+      <Footer />
+    </div>
   );
 };
 

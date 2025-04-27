@@ -368,9 +368,9 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
   }, [data]);
 
   if (showHistory) {
-  return (
+    return (
       <div>
-        <button 
+        <button
           onClick={() => setShowHistory(false)}
           className="fixed top-4 right-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 z-10"
         >
@@ -382,7 +382,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
           <p className="text-center text-gray-400">
             History view coming soon...
           </p>
-      </div>
+        </div>
       </div>
     );
   }
@@ -391,16 +391,16 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
   if (!data) {
     return (
       <div className={`${styles.gradientWrapper} font-fustat`}>
-      <img
-        src="/images/backgroundgradiant.png"
-        alt="Gradient Background"
-        className={styles.gradientBackground}
-      />
+        <img
+          src="/images/backgroundgradiant.png"
+          alt="Gradient Background"
+          className={styles.gradientBackground}
+        />
         <div className={styles.innerBox}>
           <div className="flex flex-col items-center justify-center min-h-[400px]">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
             <p className="text-gray-400">Loading analysis report...</p>
-              </div>
+          </div>
         </div>
       </div>
     );
@@ -423,23 +423,23 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {/* Pitch Analysis Card */}
             <div className="bg-[#ffffff0a] backdrop-blur-sm border border-[#ffffff1a] rounded-xl p-6">
-                  <div className="flex items-center mb-4">
+              <div className="flex items-center mb-4">
                 <FileText className="text-teal-500 w-5 h-5 mr-3" />
                 <h3 className="text-white text-lg font-medium">
                   Pitch Analysis
                 </h3>
-        </div>
+              </div>
               <div className="space-y-4">
                 <div>
-                      <p className="text-gray-400 text-sm mb-1">Clarity Score:</p>
+                  <p className="text-gray-400 text-sm mb-1">Clarity Score:</p>
                   <p className="text-white text-2xl font-bold">
                     {data.pitch_clarity}/10
                   </p>
-            </div>
-            <div>
-                      <p className="text-gray-400 text-sm mb-1">Sentiment:</p>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Sentiment:</p>
                   <p className="text-green-500 font-medium">Positive</p>
-              </div>
+                </div>
                 <div className="pt-4 border-t border-[#ffffff1a]">
                   <p className="text-sm text-gray-300">
                     AI detected{" "}
@@ -451,59 +451,59 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                       {data.weaknesses.length} potential issues
                     </span>
                   </p>
-            </div>
-            </div>
                 </div>
+              </div>
+            </div>
 
             {/* Investment Potential Card */}
             <div className="bg-[#ffffff0a] backdrop-blur-sm border border-[#ffffff1a] rounded-xl p-6">
-                  <div className="flex items-center mb-4">
+              <div className="flex items-center mb-4">
                 <FileText className="text-teal-500 w-5 h-5 mr-3" />
                 <h3 className="text-white text-lg font-medium">
                   Investment Potential
                 </h3>
-                      </div>
+              </div>
               <div className="space-y-4">
                 <div>
-                      <p className="text-gray-400 text-sm mb-1">Score:</p>
+                  <p className="text-gray-400 text-sm mb-1">Score:</p>
                   <p className="text-white text-2xl font-bold">
                     {data.investment_score}/10
                   </p>
-                    </div>
-                    <div>
-                      <p className="text-gray-400 text-sm mb-1">Exit Potential:</p>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Exit Potential:</p>
                   <p className="text-white font-medium">USD 50 Million</p>
-                    </div>
+                </div>
                 <div className="pt-4 border-t border-[#ffffff1a]">
                   <p className="text-sm text-gray-300">
                     High growth rate with{" "}
                     <span className="font-medium">moderate risk factors</span>
                   </p>
-                  </div>
-                  </div>
-                  </div>
-                  
+                </div>
+              </div>
+            </div>
+
             {/* Market Position Card */}
             <div className="bg-[#ffffff0a] backdrop-blur-sm border border-[#ffffff1a] rounded-xl p-6">
-                  <div className="flex items-center mb-4">
+              <div className="flex items-center mb-4">
                 <FileText className="text-teal-500 w-5 h-5 mr-3" />
                 <h3 className="text-white text-lg font-medium">
                   Market Position
                 </h3>
-                  </div>
+              </div>
               <div className="space-y-4">
                 <div>
-                      <p className="text-gray-400 text-sm mb-1">Classification:</p>
+                  <p className="text-gray-400 text-sm mb-1">Classification:</p>
                   <p className="text-white text-2xl font-bold">
                     {data.market_position}
                   </p>
-                    </div>
-                    <div>
-                      <p className="text-gray-400 text-sm mb-1">Industry:</p>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Industry:</p>
                   <p className="text-gray-300 font-medium">
                     {data.industry_type}
                   </p>
-                    </div>
+                </div>
                 <div className="pt-4 border-t border-[#ffffff1a]">
                   <p className="text-sm text-gray-300">
                     Competing with{" "}
@@ -512,10 +512,10 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                       players
                     </span>
                   </p>
-                  </div>
-                  </div>
                 </div>
               </div>
+            </div>
+          </div>
           <div>
             <h2 className="text-2xl font-medium text-white mb-8">
               Company Overview
@@ -527,35 +527,35 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                   {data.company_overview.company_name}
                 </p>
               </div>
-              
+
               <div className="border-b border-[#ffffff1a] pb-4">
                 <p className="text-gray-400 text-sm mb-1">Industry</p>
                 <p className="text-white text-base">
                   {data.company_overview.industry}
                 </p>
               </div>
-              
+
               <div className="border-b border-[#ffffff1a] pb-4">
                 <p className="text-gray-400 text-sm mb-1">Market Position</p>
                 <p className="text-white text-base">
                   {data.company_overview.market_position}
                 </p>
               </div>
-              
+
               <div className="border-b border-[#ffffff1a] pb-4">
                 <p className="text-gray-400 text-sm mb-1">Founded</p>
                 <p className="text-white text-base">
                   {data.company_overview.founded_on || "N/A"}
                 </p>
               </div>
-              
+
               <div className="border-b border-[#ffffff1a] pb-4">
                 <p className="text-gray-400 text-sm mb-1">Business Model</p>
                 <p className="text-white text-base">
                   {data.company_overview.business_model}
                 </p>
               </div>
-              
+
               <div className="border-b border-[#ffffff1a] pb-4">
                 <p className="text-gray-400 text-sm mb-1">Key Offerings</p>
                 <p className="text-white text-base">
@@ -566,53 +566,53 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
           </div>
           <div>
             {/* Strengths & Weaknesses Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
               <div className="bg-[#212228] rounded-xl p-6">
                 <h2 className="text-2xl font-medium text-white mb-6">
                   Strengths & Weaknesses
                 </h2>
                 <div className="grid grid-cols-2 gap-8">
-              <div>
+                  <div>
                     <h3 className="text-green-500 text-lg mb-4">
                       Strengths (Pros)
                     </h3>
                     <ul className="space-y-4">
                       {data.strengths.map((strength, index) => (
-                    <li key={index} className="flex items-start">
+                        <li key={index} className="flex items-start">
                           <span className="text-gray-400 mr-2 flex-shrink-0">
                             •
                           </span>
-                      <span className="text-gray-300">{strength}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                          <span className="text-gray-300">{strength}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                   <div>
                     <h3 className="text-red-500 text-lg mb-4">
                       Weaknesses (Cons)
                     </h3>
                     <ul className="space-y-4">
                       {data.weaknesses.map((weakness, index) => (
-                    <li key={index} className="flex items-start">
+                        <li key={index} className="flex items-start">
                           <span className="text-gray-400 mr-2 flex-shrink-0">
                             •
                           </span>
-                      <span className="text-gray-300">{weakness}</span>
-                    </li>
-                  ))}
-                </ul>
-          </div>
-        </div>
-      </div>
+                          <span className="text-gray-300">{weakness}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
 
               {/* Funding History Section */}
               <div className="bg-[#212228] rounded-xl p-6">
                 <h2 className="text-2xl font-medium text-white mb-6">
                   Funding History
                 </h2>
-              <div className="overflow-x-auto">
+                <div className="overflow-x-auto">
                   <table className="w-full">
-                  <thead>
+                    <thead>
                       <tr className="border-b border-[#ffffff1a]">
                         <th className="text-left py-3 px-2 text-gray-400 font-normal">
                           Round
@@ -626,9 +626,9 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                         <th className="text-left py-3 px-2 text-gray-400 font-normal">
                           Date
                         </th>
-                    </tr>
-                  </thead>
-                  <tbody>
+                      </tr>
+                    </thead>
+                    <tbody>
                       {data.funding_history.rounds.length > 0 ? (
                         data.funding_history.rounds.map((round, index) => (
                           <tr
@@ -647,33 +647,33 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                                 : round.key_investors}
                             </td>
                             <td className="py-3 px-2 text-white">N/A</td>
-                        </tr>
-                      ))
-                    ) : (
-                      <tr>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
                           <td
                             colSpan={4}
                             className="py-4 text-center text-gray-500"
                           >
                             No funding history available
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
-        </div>
           <div>
             {/* Competitor Comparison Section */}
             <div className="bg-[#212228] rounded-xl p-6 mb-8">
               <h2 className="text-2xl font-medium text-white mb-6">
                 Competitor Comparison
               </h2>
-            <div className="overflow-x-auto">
+              <div className="overflow-x-auto">
                 <table className="w-full">
-                <thead>
+                  <thead>
                     <tr className="border-b border-[#ffffff1a]">
                       <th className="text-left py-3 px-4 text-gray-400 font-normal">
                         Competitor
@@ -690,9 +690,9 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                       <th className="text-left py-3 px-4 text-gray-400 font-normal">
                         Strengths
                       </th>
-                  </tr>
-                </thead>
-                <tbody>
+                    </tr>
+                  </thead>
+                  <tbody>
                     {data.competitor_analysis.competitors.map(
                       (competitor, index) => (
                         <tr key={index} className="border-b border-[#ffffff1a]">
@@ -710,13 +710,13 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                           </td>
                           <td className="py-4 px-4 text-white">
                             {competitor.strengths}
-                      </td>
-                    </tr>
+                          </td>
+                        </tr>
                       )
-                  )}
-                </tbody>
-              </table>
-            </div>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
 
             {/* Market Comparison Section */}
@@ -755,8 +755,8 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                     </tr>
                   </tbody>
                 </table>
-          </div>
-        </div>
+              </div>
+            </div>
 
             {/* Exit Potential Section */}
             <div className="bg-[#212228] rounded-xl p-6">
@@ -776,7 +776,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                           }%`,
                         }}
                       ></div>
-              </div>
+                    </div>
                     <div className="absolute right-0 top-0 bg-orange-500/20 text-orange-500 px-2 py-1 rounded text-sm">
                       {data.final_verdict.exit_potential}/10
                     </div>
@@ -800,23 +800,19 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
               <div className="bg-[#1a1b1f] rounded-xl p-6">
                 <h3 className="text-xl text-white mb-4">Expert Opinions</h3>
                 {data.expert_opinions[0] && (
-                  <div className="space-y-4">
-                    <div>
-                      <h4 className="text-white text-lg mb-1">
-                        {data.expert_opinions[0].name}
-                      </h4>
-                      <p className="text-gray-400 text-sm mb-3">
-                        {data.expert_opinions[0].affiliation}
-                      </p>
-              <p className="text-gray-300 leading-relaxed">
-                        {data.expert_opinions[0].summary}
-                      </p>
-                      <div className="flex items-center gap-2 mt-4 text-gray-500 text-sm">
-                        <span>{data.expert_opinions[0].reference}</span>
-                        <span>•</span>
-                        <span>{data.expert_opinions[0].date}</span>
-                      </div>
-                    </div>
+                  <div>
+                    <h4 className="text-white text-lg">
+                      {data.expert_opinions[0].name}
+                    </h4>
+                    <p className="text-gray-400 mb-4">
+                      {data.expert_opinions[0].affiliation}
+                    </p>
+                    <p className="text-gray-300 leading-relaxed mb-4">
+                      {data.expert_opinions[0].summary}
+                    </p>
+                    <p className="text-gray-500 text-sm">
+                      {data.expert_opinions[0].reference}
+                    </p>
                   </div>
                 )}
               </div>
@@ -828,73 +824,152 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                   <div className="flex items-center justify-between">
                     <span className="text-white">News/Media</span>
                     <div className="flex items-center gap-4">
-                      <span className="text-green-500">Positive</span>
-                      <span className="text-white">8/10</span>
+                      <span
+                        className={`${
+                          data.reputation_analysis?.news_media.sentiment ===
+                          "Positive"
+                            ? "text-green-500"
+                            : data.reputation_analysis?.news_media.sentiment ===
+                              "Neutral"
+                            ? "text-yellow-500"
+                            : "text-red-500"
+                        }`}
+                      >
+                        {data.reputation_analysis?.news_media.sentiment}
+                      </span>
+                      <span className="text-white">
+                        {data.reputation_analysis?.news_media.score}/10
+                      </span>
                       <div className="flex">
-                        {[1, 2, 3, 4, 5].map((_, i) => (
+                        {[...Array(5)].map((_, i) => (
                           <svg
                             key={i}
-                            className="w-4 h-4 text-white"
+                            className={`w-4 h-4 ${
+                              i <
+                              (data.reputation_analysis?.news_media.rating || 0)
+                                ? "text-white"
+                                : "text-gray-600"
+                            }`}
                             fill="currentColor"
                             viewBox="0 0 20 20"
                           >
                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                           </svg>
                         ))}
-                </div>
-                </div>
-                </div>
-              
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="flex items-center justify-between">
                     <span className="text-white">Social Media</span>
                     <div className="flex items-center gap-4">
-                      <span className="text-gray-400">Neutral</span>
-                      <span className="text-white">6/10</span>
+                      <span
+                        className={`${
+                          data.reputation_analysis?.social_media.sentiment ===
+                          "Positive"
+                            ? "text-green-500"
+                            : data.reputation_analysis?.social_media
+                                .sentiment === "Neutral"
+                            ? "text-yellow-500"
+                            : "text-red-500"
+                        }`}
+                      >
+                        {data.reputation_analysis?.social_media.sentiment}
+                      </span>
+                      <span className="text-white">
+                        {data.reputation_analysis?.social_media.score}/10
+                      </span>
                       <div className="flex">
-                        {[1, 2, 3, 4, 5].map((_, i) => (
+                        {[...Array(5)].map((_, i) => (
                           <svg
                             key={i}
-                            className="w-4 h-4 text-white"
+                            className={`w-4 h-4 ${
+                              i <
+                              (data.reputation_analysis?.social_media.rating ||
+                                0)
+                                ? "text-white"
+                                : "text-gray-600"
+                            }`}
                             fill="currentColor"
                             viewBox="0 0 20 20"
                           >
                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                           </svg>
                         ))}
-                </div>
-                </div>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between">
                     <span className="text-white">Investor Reviews</span>
                     <div className="flex items-center gap-4">
-                      <span className="text-green-500">Positive</span>
-                      <span className="text-white">8/10</span>
+                      <span
+                        className={`${
+                          data.reputation_analysis?.investor_reviews
+                            .sentiment === "Positive"
+                            ? "text-green-500"
+                            : data.reputation_analysis?.investor_reviews
+                                .sentiment === "Neutral"
+                            ? "text-yellow-500"
+                            : "text-red-500"
+                        }`}
+                      >
+                        {data.reputation_analysis?.investor_reviews.sentiment}
+                      </span>
+                      <span className="text-white">
+                        {data.reputation_analysis?.investor_reviews.score}/10
+                      </span>
                       <div className="flex">
-                        {[1, 2, 3, 4, 5].map((_, i) => (
+                        {[...Array(5)].map((_, i) => (
                           <svg
                             key={i}
-                            className="w-4 h-4 text-white"
+                            className={`w-4 h-4 ${
+                              i <
+                              (data.reputation_analysis?.investor_reviews
+                                .rating || 0)
+                                ? "text-white"
+                                : "text-gray-600"
+                            }`}
                             fill="currentColor"
                             viewBox="0 0 20 20"
                           >
                             <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                           </svg>
                         ))}
-              </div>
-            </div>
-          </div>
+                      </div>
+                    </div>
+                  </div>
 
                   <div className="flex items-center justify-between">
                     <span className="text-white">Customer Feedback</span>
                     <div className="flex items-center gap-4">
-                      <span className="text-green-500">Positive</span>
-                      <span className="text-white">9/10</span>
+                      <span
+                        className={`${
+                          data.reputation_analysis?.customer_feedback
+                            .sentiment === "Positive"
+                            ? "text-green-500"
+                            : data.reputation_analysis?.customer_feedback
+                                .sentiment === "Neutral"
+                            ? "text-yellow-500"
+                            : "text-red-500"
+                        }`}
+                      >
+                        {data.reputation_analysis?.customer_feedback.sentiment}
+                      </span>
+                      <span className="text-white">
+                        {data.reputation_analysis?.customer_feedback.score}/10
+                      </span>
                       <div className="flex">
-                        {[1, 2, 3, 4, 5].map((_, i) => (
+                        {[...Array(5)].map((_, i) => (
                           <svg
                             key={i}
-                            className="w-4 h-4 text-white"
+                            className={`w-4 h-4 ${
+                              i <
+                              (data.reputation_analysis?.customer_feedback
+                                .rating || 0)
+                                ? "text-white"
+                                : "text-gray-600"
+                            }`}
                             fill="currentColor"
                             viewBox="0 0 20 20"
                           >
@@ -908,13 +983,32 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                   <div className="flex items-center justify-between pt-4 border-t border-[#ffffff1a]">
                     <span className="text-white">Overall</span>
                     <div className="flex items-center gap-4">
-                      <span className="text-green-500">Positive</span>
-                      <span className="text-white">8.5/10</span>
+                      <span
+                        className={`${
+                          data.reputation_analysis?.overall.sentiment ===
+                          "Positive"
+                            ? "text-green-500"
+                            : data.reputation_analysis?.overall.sentiment ===
+                              "Neutral"
+                            ? "text-yellow-500"
+                            : "text-red-500"
+                        }`}
+                      >
+                        {data.reputation_analysis?.overall.sentiment}
+                      </span>
+                      <span className="text-white">
+                        {data.reputation_analysis?.overall.score}/10
+                      </span>
                       <div className="flex">
-                        {[1, 2, 3, 4, 5].map((_, i) => (
+                        {[...Array(5)].map((_, i) => (
                           <svg
                             key={i}
-                            className="w-4 h-4 text-white"
+                            className={`w-4 h-4 ${
+                              i <
+                              (data.reputation_analysis?.overall.rating || 0)
+                                ? "text-white"
+                                : "text-gray-600"
+                            }`}
                             fill="currentColor"
                             viewBox="0 0 20 20"
                           >
@@ -928,6 +1022,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
               </div>
             </div>
           </div>
+
           {/* Proposed Deal Structure */}
           <div className="bg-[#212228] rounded-xl p-6 mt-8">
             <h2 className="text-2xl font-medium text-white mb-6">
@@ -960,7 +1055,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                   {data.proposed_deal_structure.valuation_cap ||
                     "Not disclosed"}
                 </p>
-            </div>
+              </div>
 
               {/* Liquidation Preference */}
               <div className="bg-[#1a1b1f] rounded-xl p-6">
@@ -971,7 +1066,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                   {data.proposed_deal_structure.liquidation_preference ||
                     "Not disclosed"}
                 </p>
-          </div>
+              </div>
 
               {/* Anti-Dilution Protection */}
               <div className="bg-[#1a1b1f] rounded-xl p-6">
@@ -982,7 +1077,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                   {data.proposed_deal_structure.anti_dilution_protection ||
                     "Yes"}
                 </p>
-        </div>
+              </div>
 
               {/* Board Seat */}
               <div className="bg-[#1a1b1f] rounded-xl p-6">
@@ -990,7 +1085,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                 <p className="text-white text-2xl">
                   {data.proposed_deal_structure.board_seat || "Yes"}
                 </p>
-        </div>
+              </div>
 
               {/* Vesting Schedule */}
               <div className="bg-[#1a1b1f] rounded-xl p-6 md:col-span-2">
@@ -999,8 +1094,8 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                   {data.proposed_deal_structure.vesting_schedule ||
                     "Not disclosed"}
                 </p>
-      </div>
-    </div>
+              </div>
+            </div>
           </div>
           {/* key questions */}
           <div className="bg-[#212228] rounded-xl p-6 mt-8">
@@ -1025,9 +1120,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
 
               {/* Market Expansion Card */}
               <div className="bg-transparent border border-[#ffffff1a] rounded-xl p-4 flex flex-col">
-                <h3 className="text-gray-400 text-lg mb-2">
-                  Market Expansion
-                </h3>
+                <h3 className="text-gray-400 text-lg mb-2">Market Expansion</h3>
                 <div className="flex flex-col">
                   <p className="text-white text-lg">
                     {data.key_questions.market_expansion.question}
@@ -1044,14 +1137,19 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
             <h2 className="text-2xl font-medium text-white mb-6">
               Final Verdict
             </h2>
-            
+
             {/* Company Analysis Card */}
             <div className="bg-[#1a1b1f] rounded-xl p-6 mb-6">
               <h3 className="text-xl text-white mb-2">
                 {data.company_overview.company_name}
               </h3>
               <p className="text-gray-300 text-base leading-relaxed mb-8">
-                {data.company_overview.company_name} presents a compelling investment opportunity with a leading position in the {data.industry_type.toLowerCase()} sector. With validated technology endorsed by international bodies and a robust growth trajectory, the company shows high potential for scalability and market penetration.
+                {data.company_overview.company_name} presents a compelling
+                investment opportunity with a leading position in the{" "}
+                {data.industry_type.toLowerCase()} sector. With validated
+                technology endorsed by international bodies and a robust growth
+                trajectory, the company shows high potential for scalability and
+                market penetration.
               </p>
 
               {/* Investment Potential Bar */}
@@ -1063,9 +1161,9 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                   </span>
                 </div>
                 <div className="h-2 bg-[#ffffff0a] rounded-full overflow-hidden">
-                  <div 
+                  <div
                     className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-1000 ease-out"
-                    style={{ width: '75%' }}
+                    style={{ width: "75%" }}
                   ></div>
                 </div>
               </div>
@@ -1082,9 +1180,9 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                   <ResponsiveContainer width="100%" height="100%">
                     <RechartsRadarChart data={chartData}>
                       <PolarGrid stroke="#ffffff1a" />
-                      <PolarAngleAxis 
-                        dataKey="subject" 
-                        tick={{ fill: '#9CA3AF', fontSize: 12 }}
+                      <PolarAngleAxis
+                        dataKey="subject"
+                        tick={{ fill: "#9CA3AF", fontSize: 12 }}
                       />
                       <Radar
                         name="Metrics"
@@ -1101,37 +1199,160 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                 <div className="space-y-4">
                   <div className="bg-[#ffffff0a] rounded-xl p-4 flex justify-between items-center">
                     <span className="text-gray-300">Product Viability</span>
-                    <span className="text-white text-lg">{data.final_verdict.product_viability}</span>
+                    <span className="text-white text-lg">
+                      {data.final_verdict.product_viability}
+                    </span>
                   </div>
                   <div className="bg-[#ffffff0a] rounded-xl p-4 flex justify-between items-center">
                     <span className="text-gray-300">Market Potential</span>
-                    <span className="text-white text-lg">{data.final_verdict.market_potential}</span>
+                    <span className="text-white text-lg">
+                      {data.final_verdict.market_potential}
+                    </span>
                   </div>
                   <div className="bg-[#ffffff0a] rounded-xl p-4 flex justify-between items-center">
                     <span className="text-gray-300">Sustainability</span>
-                    <span className="text-white text-lg">{data.final_verdict.sustainability}</span>
+                    <span className="text-white text-lg">
+                      {data.final_verdict.sustainability}
+                    </span>
                   </div>
                   <div className="bg-[#ffffff0a] rounded-xl p-4 flex justify-between items-center">
                     <span className="text-gray-300">Exit Potential</span>
-                    <span className="text-white text-lg">{data.final_verdict.exit_potential}</span>
+                    <span className="text-white text-lg">
+                      {data.final_verdict.exit_potential}
+                    </span>
                   </div>
                   <div className="bg-[#ffffff0a] rounded-xl p-4 flex justify-between items-center">
                     <span className="text-gray-300">Risk Factors</span>
-                    <span className="text-white text-lg">{data.final_verdict.risk_factor}</span>
+                    <span className="text-white text-lg">
+                      {data.final_verdict.risk_factor}
+                    </span>
                   </div>
                   <div className="bg-[#ffffff0a] rounded-xl p-4 flex justify-between items-center">
                     <span className="text-gray-300">Innovation</span>
-                    <span className="text-white text-lg">{data.final_verdict.innovation}</span>
+                    <span className="text-white text-lg">
+                      {data.final_verdict.innovation}
+                    </span>
                   </div>
                   <div className="bg-[#ffffff0a] rounded-xl p-4 flex justify-between items-center">
                     <span className="text-gray-300">Competitive Edge</span>
-                    <span className="text-white text-lg">{data.final_verdict.competitive_edge}</span>
+                    <span className="text-white text-lg">
+                      {data.final_verdict.competitive_edge}
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  );
+};
+
+const ReputationAnalysisCard: React.FC<{ data: MistralResponse }> = ({
+  data,
+}) => {
+  const { reputation_analysis } = data;
+
+  if (!reputation_analysis) {
+    return null;
+  }
+
+  const categories = [
+    { name: "News Media", data: reputation_analysis.news_media },
+    { name: "Social Media", data: reputation_analysis.social_media },
+    { name: "Investor Reviews", data: reputation_analysis.investor_reviews },
+    { name: "Customer Feedback", data: reputation_analysis.customer_feedback },
+  ];
+
+  const getSentimentColor = (sentiment: string) => {
+    switch (sentiment) {
+      case "Positive":
+        return "text-green-500";
+      case "Neutral":
+        return "text-yellow-500";
+      case "Negative":
+        return "text-red-500";
+      default:
+        return "text-gray-500";
+    }
+  };
+
+  return (
+    <div className="bg-[#1a1b1f] rounded-xl p-6">
+      <h3 className="text-xl text-white mb-6">Reputation Analysis</h3>
+      <div className="space-y-4">
+        {categories.map((category) => (
+          <div
+            key={category.name}
+            className="flex items-center justify-between p-4 border border-[#ffffff1a] rounded-lg"
+          >
+            <div>
+              <h4 className="text-white font-medium">{category.name}</h4>
+              <p
+                className={`text-sm ${getSentimentColor(
+                  category.data.sentiment
+                )}`}
+              >
+                {category.data.sentiment}
+              </p>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="flex">
+                {[...Array(5)].map((_, i) => (
+                  <svg
+                    key={i}
+                    className={`w-4 h-4 ${
+                      i < category.data.rating
+                        ? "text-yellow-400"
+                        : "text-gray-600"
+                    }`}
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+              <span className="text-white text-sm font-medium">
+                {category.data.score.toFixed(1)}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="mt-6 p-4 border border-[#ffffff1a] rounded-lg">
+        <div className="flex items-center justify-between">
+          <h4 className="text-white font-medium">Overall Reputation</h4>
+          <div className="flex items-center gap-4">
+            <div className="flex">
+              {[...Array(5)].map((_, i) => (
+                <svg
+                  key={i}
+                  className={`w-4 h-4 ${
+                    i < reputation_analysis.overall.rating
+                      ? "text-yellow-400"
+                      : "text-gray-600"
+                  }`}
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+              ))}
+            </div>
+            <span className="text-white text-sm font-medium">
+              {reputation_analysis.overall.score.toFixed(1)}
+            </span>
+          </div>
+        </div>
+        <p
+          className={`mt-2 text-sm ${getSentimentColor(
+            reputation_analysis.overall.sentiment
+          )}`}
+        >
+          Overall Sentiment: {reputation_analysis.overall.sentiment}
+        </p>
       </div>
     </div>
   );
