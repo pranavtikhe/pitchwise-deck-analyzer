@@ -105,6 +105,12 @@ export interface MistralResponse {
   pitch_clarity: number;
   investment_score: number;
   market_position: string;
+  market_analysis: {
+    market_size: string;
+    growth_rate: string;
+    trends: string[];
+    challenges: string[];
+  };
   company_overview: {
     company_name: string;
     industry: string;
@@ -122,22 +128,85 @@ export interface MistralResponse {
       key_investors: string[];
     }[];
   };
+  competitor_analysis: {
+    competitors: {
+      name: string;
+      key_investors: string;
+      amount_raised: string;
+      market_position: string;
+      strengths: string;
+    }[];
+  };
+  market_comparison: {
+    metrics: {
+      startup: {
+        growth_rate: string;
+        market_share: string;
+        revenue_model: string;
+        differentiator: string;
+      };
+      competitors: {
+        growth_rate: string;
+        market_share: string;
+        revenue_model: string;
+        differentiator: string;
+      }[];
+    };
+  };
+  expert_opinions: {
+    name: string;
+    affiliation: string;
+    summary: string;
+    reference: string;
+    date: string;
+  }[];
+  reputation_analysis: {
+    news_media: {
+      sentiment: string;
+      score: number;
+      rating: number;
+    };
+    social_media: {
+      sentiment: string;
+      score: number;
+      rating: number;
+    };
+    investor_reviews: {
+      sentiment: string;
+      score: number;
+      rating: number;
+    };
+    customer_feedback: {
+      sentiment: string;
+      score: number;
+      rating: number;
+    };
+    overall: {
+      sentiment: string;
+      score: number;
+      rating: number;
+    };
+  };
   proposed_deal_structure: {
     investment_amount: string;
     valuation_cap: string;
     equity_stake: string;
+    liquidation_preference: string;
     anti_dilution_protection: string;
     board_seat: string;
-    liquidation_preference: string;
     vesting_schedule: string;
     other_terms: string;
   };
   key_questions: {
-    product_development: {
+    market_strategy: {
       question: string;
       answer: string;
     };
-    market_expansion: {
+    user_retention: {
+      question: string;
+      answer: string;
+    };
+    regulatory_risks: {
       question: string;
       answer: string;
     };
@@ -151,84 +220,7 @@ export interface MistralResponse {
     risk_factor: number;
     competitive_edge: number;
   };
-  // Additional fields for extended analysis
-  innovation: string;
-  industry: string;
-  problem: string;
-  solution: string;
-  funding: string;
-  market: string;
-  competitors: string[];
-  expert_opinions: {
-    name: string;
-    affiliation: string;
-    summary: string;
-    reference: string;
-    date: string;
-  }[];
-  suggested_improvements: string[];
-  market_comparison: string;
-  key_insights: string;
-  exit_potential: string;
-  overall_reputation: string;
-  ratings: {
-    innovation_rating: number;
-    market_potential_rating: number;
-    competitive_advantage_rating: number;
-    financial_strength_rating: number;
-    team_rating: number;
-    overall_rating: number;
-  };
-  rating_insights: {
-    innovation_insights: string;
-    market_potential_insights: string;
-    competitive_advantage_insights: string;
-    financial_strength_insights: string;
-    team_insights: string;
-    overall_insights: string;
-  };
-  market_analysis: {
-    market_size: string;
-    growth_rate: string;
-    trends: string[];
-    challenges: string[];
-  };
-  competitor_analysis: {
-    competitors: {
-      name: string;
-      key_investors: string;
-      amount_raised: string;
-      market_position: string;
-      strengths: string;
-    }[];
-  };
-  reputation_analysis: {
-    news_media: {
-      rating: number;
-      sentiment: 'Positive' | 'Neutral' | 'Negative';
-      score: number;
-    };
-    social_media: {
-      rating: number;
-      sentiment: 'Positive' | 'Neutral' | 'Negative';
-      score: number;
-    };
-    investor_reviews: {
-      rating: number;
-      sentiment: 'Positive' | 'Neutral' | 'Negative';
-      score: number;
-    };
-    customer_feedback: {
-      rating: number;
-      sentiment: 'Positive' | 'Neutral' | 'Negative';
-      score: number;
-    };
-    overall: {
-      rating: number;
-      sentiment: 'Positive' | 'Neutral' | 'Negative';
-      score: number;
-    };
-  };
+  analyzedAt: Date;
 }
 
 /**
@@ -399,3 +391,4 @@ export const fetchInsightById = async (id: string) => {
     throw new Error('Failed to load insight details');
   }
 };
+
