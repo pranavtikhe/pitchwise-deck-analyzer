@@ -2,20 +2,32 @@ import { API_CONFIG } from '../config/api';
 
 const getApiConfig = () => {
   const useOpenAI = import.meta.env.VITE_USE_OPENAI === 'true';
+  const useGemini = import.meta.env.VITE_USE_GEMINI === 'true';
+  
   const config = {
-    baseUrl: useOpenAI ? API_CONFIG.OPENAI_BASE_URL : API_CONFIG.MISTRAL_BASE_URL,
-    apiKey: useOpenAI ? API_CONFIG.OPENAI_API_KEY : API_CONFIG.MISTRAL_API_KEY,
-    model: useOpenAI ? API_CONFIG.DEFAULT_MODEL : 'mistral-tiny',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${useOpenAI ? API_CONFIG.OPENAI_API_KEY : API_CONFIG.MISTRAL_API_KEY}`
+    openai: {
+      baseUrl: API_CONFIG.OPENAI_BASE_URL,
+      apiKey: API_CONFIG.OPENAI_API_KEY,
+      model: API_CONFIG.DEFAULT_MODEL,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${API_CONFIG.OPENAI_API_KEY}`
+      }
+    },
+    gemini: {
+      baseUrl: API_CONFIG.GEMINI_BASE_URL,
+      apiKey: API_CONFIG.GEMINI_API_KEY,
+      model: 'gemini-pro',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-goog-api-key': API_CONFIG.GEMINI_API_KEY
+      }
     }
   };
   
   console.log('=== API Configuration ===');
   console.log('Using OpenAI:', useOpenAI);
-  console.log('Model:', config.model);
-  console.log('Base URL:', config.baseUrl);
+  console.log('Using Gemini:', useGemini);
   console.log('=======================');
   
   return config;
@@ -24,8 +36,7 @@ const getApiConfig = () => {
 export const analyzePitchDeck = async (text: string) => {
   const apiConfig = getApiConfig();
   console.log('\n=== Starting Analysis ===');
-  console.log(`Using ${apiConfig.model} for analysis`);
-  console.log(`Text length: ${text.length} characters`);
+  console.log('Text length:', text.length, 'characters');
   console.log('========================\n');
 
   const systemPrompt = `You are an expert AI system for analyzing pitch decks and providing investment analysis. 
@@ -143,174 +154,261 @@ export const analyzePitchDeck = async (text: string) => {
       "antiDilution": boolean,
       "boardSeat": boolean,
       "vestingSchedule": "string"
+    },
+    "expertInsights": {
+      "expertOpinions": [
+        {
+          "name": "string",
+          "title": "string",
+          "affiliation": "string",
+          "analysis": "string",
+          "reference": "string",
+          "date": "string"
+        }
+      ],
+      "reputationAnalysis": {
+        "newsMedia": number,
+        "socialMedia": number,
+        "investorReviews": number,
+        "customerFeedback": number,
+        "overall": number
+      }
     }
   }`;
 
   try {
-    console.log('\n=== Sending Request ===');
-    console.log(`API Endpoint: ${apiConfig.baseUrl}`);
-    
-    const response = await fetch(apiConfig.baseUrl, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiConfig.apiKey}`
-      },
-      body: JSON.stringify({
-        model: apiConfig.model,
-        messages: [
-          {
-            role: "system",
-            content: systemPrompt
-          },
-          {
-            role: "user",
-            content: text
-          }
-        ],
-        temperature: 0.7,
-        max_tokens: 4096,
-        response_format: { type: "json_object" }
-      })
-    });
+    const results = {
+      openai: null,
+      gemini: null
+    };
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('\n=== API Error ===');
-      console.error(`Status: ${response.status}`);
-      console.error(`Error Details:`, errorData);
-      console.error('================\n');
-      throw new Error(`Analysis failed with status ${response.status}: ${errorData.error?.message || 'Unknown error'}`);
+    // OpenAI Analysis
+    if (import.meta.env.VITE_USE_OPENAI === 'true') {
+      console.log('\n=== Sending OpenAI Request ===');
+      console.log(`API Endpoint: ${apiConfig.openai.baseUrl}`);
+      
+      const openaiResponse = await fetch(apiConfig.openai.baseUrl, {
+        method: 'POST',
+        headers: apiConfig.openai.headers,
+        body: JSON.stringify({
+          model: apiConfig.openai.model,
+          messages: [
+            {
+              role: "system",
+              content: systemPrompt
+            },
+            {
+              role: "user",
+              content: text
+            }
+          ],
+          temperature: 0.7,
+          max_tokens: 4096,
+          response_format: { type: "json_object" }
+        })
+      });
+
+      if (!openaiResponse.ok) {
+        const errorData = await openaiResponse.json();
+        console.error('\n=== OpenAI API Error ===');
+        console.error(`Status: ${openaiResponse.status}`);
+        console.error(`Error Details:`, errorData);
+        console.error('================\n');
+      } else {
+        const result = await openaiResponse.json();
+        results.openai = result.choices[0].message.content;
+      }
     }
 
-    const result = await response.json();
-    console.log('\n=== API Response ===');
-    console.log('Model:', result.model);
-    console.log('Usage:', result.usage);
-    console.log('Response Preview:', result.choices[0].message.content.substring(0, 200) + '...');
-    console.log('==================\n');
-
-    try {
-      const analysisData = JSON.parse(result.choices[0].message.content);
+    // Gemini Analysis
+    if (import.meta.env.VITE_USE_GEMINI === 'true') {
+      console.log('\n=== Sending Gemini Request ===');
+      console.log(`API Endpoint: ${apiConfig.gemini.baseUrl}`);
       
-      // Transform the OpenAI response format to match the existing UI structure
-      const transformedData = {
-        industry_type: analysisData.profile.industry,
-        pitch_clarity: 8,
-        investment_score: analysisData.expertConclusion.productViability,
-        market_position: analysisData.profile.marketPosition,
-        market_analysis: {
-          market_size: analysisData.profile.marketSize,
-          growth_rate: analysisData.marketComparison.metrics.growthRate.startup,
-          trends: ["Market trend 1", "Market trend 2"],
-          challenges: ["Challenge 1", "Challenge 2"]
-        },
-        company_overview: {
-          company_name: analysisData.profile.companyName,
-          industry: analysisData.profile.industry,
-          business_model: analysisData.profile.businessModel,
-          key_offerings: analysisData.profile.keyOfferings,
-          market_position: analysisData.profile.marketPosition,
-          founded_on: "N/A"
-        },
-        strengths: analysisData.strengthsWeaknesses.strengths,
-        weaknesses: analysisData.strengthsWeaknesses.weaknesses,
-        funding_history: {
-          rounds: analysisData.fundingHistory.map(round => ({
-            type: round.round,
-            amount: round.amount,
-            key_investors: round.investors
-          }))
-        },
-        competitor_analysis: {
-          competitors: analysisData.competitors.map(competitor => ({
-            name: competitor.name,
-            key_investors: competitor.keyInvestors,
-            amount_raised: competitor.amountRaised,
-            market_position: competitor.marketPosition,
-            strengths: competitor.strengths,
-            growth_rate: competitor.growthRate,
-            business_model: competitor.businessModel,
-            key_differentiator: competitor.keyDifferentiator
-          }))
-        },
-        market_comparison: {
-          metrics: {
-            startup: {
-              market_share: analysisData.marketComparison.metrics.marketShare.startup,
-              growth_rate: analysisData.marketComparison.metrics.growthRate.startup,
-              revenue_model: analysisData.marketComparison.metrics.revenueModel.startup,
-              differentiator: analysisData.marketComparison.metrics.differentiator.startup
-            },
-            competitors: analysisData.competitors.map((competitor, index) => ({
-              market_share: analysisData.marketComparison.metrics.marketShare[`competitor${index + 1}`],
-              growth_rate: analysisData.marketComparison.metrics.growthRate[`competitor${index + 1}`],
-              revenue_model: analysisData.marketComparison.metrics.revenueModel[`competitor${index + 1}`],
-              differentiator: analysisData.marketComparison.metrics.differentiator[`competitor${index + 1}`]
-            }))
+      const geminiResponse = await fetch(apiConfig.gemini.baseUrl, {
+        method: 'POST',
+        headers: apiConfig.gemini.headers,
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: `${systemPrompt}\n\nPlease analyze the following pitch deck:\n\n${text}`
+            }]
+          }],
+          generationConfig: {
+            temperature: 0.7,
+            maxOutputTokens: 4096,
+            responseMimeType: "application/json"
           }
-        },
-        expert_opinions: analysisData.expertOpinions.map(opinion => ({
-          name: opinion.name,
-          affiliation: opinion.affiliation,
-          summary: opinion.summary,
-          reference: opinion.reference,
-          date: opinion.date
-        })),
-        final_verdict: {
-          product_viability: analysisData.expertConclusion.productViability,
-          market_potential: analysisData.expertConclusion.marketPotential,
-          sustainability: analysisData.expertConclusion.sustainability,
-          innovation: analysisData.expertConclusion.innovation,
-          exit_potential: analysisData.expertConclusion.exitPotential,
-          risk_factor: analysisData.expertConclusion.riskFactors,
-          competitive_edge: analysisData.expertConclusion.competitiveAdvantage
-        },
-        proposed_deal_structure: {
-          investment_amount: analysisData.dealStructure.investmentAmount,
-          valuation_cap: analysisData.dealStructure.valuationCap,
-          equity_stake: analysisData.dealStructure.equityStake,
-          anti_dilution_protection: analysisData.dealStructure.antiDilution ? "Yes" : "No",
-          board_seat: analysisData.dealStructure.boardSeat ? "Yes" : "No",
-          liquidation_preference: analysisData.dealStructure.liquidationPreference,
-          vesting_schedule: analysisData.dealStructure.vestingSchedule
-        },
-        key_questions: {
-          market_strategy: {
-            question: "What is the market strategy?",
-            answer: analysisData.profile.marketStrategy || "N/A"
-          },
-          user_retention: {
-            question: "How is user retention handled?",
-            answer: analysisData.profile.userRetention || "N/A"
-          },
-          regulatory_risks: {
-            question: "What are the regulatory risks?",
-            answer: analysisData.profile.regulatoryRisks || "N/A"
-          },
-          product_development: {
-            question: "What is the product development roadmap?",
-            answer: analysisData.profile.productDevelopment || "N/A"
-          },
-          market_expansion: {
-            question: "What are the market expansion plans?",
-            answer: analysisData.profile.marketExpansion || "N/A"
+        })
+      });
+
+      if (!geminiResponse.ok) {
+        const errorData = await geminiResponse.json();
+        console.error('\n=== Gemini API Error ===');
+        console.error(`Status: ${geminiResponse.status}`);
+        console.error(`Error Details:`, errorData);
+        console.error('================\n');
+      } else {
+        const result = await geminiResponse.json();
+        results.gemini = result.candidates[0].content.parts[0].text;
+      }
+    }
+
+    // Combine and process results
+    let finalAnalysis = null;
+    if (results.openai && results.gemini) {
+      // If both APIs are used, combine their insights
+      const openaiData = JSON.parse(results.openai);
+      const geminiData = JSON.parse(results.gemini);
+      
+      // Merge the analyses, giving preference to more detailed responses
+      finalAnalysis = {
+        ...openaiData,
+        expertInsights: {
+          ...openaiData.expertInsights,
+          expertOpinions: [
+            ...openaiData.expertInsights.expertOpinions,
+            ...geminiData.expertInsights.expertOpinions
+          ],
+          reputationAnalysis: {
+            newsMedia: Math.max(openaiData.expertInsights.reputationAnalysis.newsMedia, geminiData.expertInsights.reputationAnalysis.newsMedia),
+            socialMedia: Math.max(openaiData.expertInsights.reputationAnalysis.socialMedia, geminiData.expertInsights.reputationAnalysis.socialMedia),
+            investorReviews: Math.max(openaiData.expertInsights.reputationAnalysis.investorReviews, geminiData.expertInsights.reputationAnalysis.investorReviews),
+            customerFeedback: Math.max(openaiData.expertInsights.reputationAnalysis.customerFeedback, geminiData.expertInsights.reputationAnalysis.customerFeedback),
+            overall: Math.max(openaiData.expertInsights.reputationAnalysis.overall, geminiData.expertInsights.reputationAnalysis.overall)
           }
         }
       };
-
-      console.log('\n=== Analysis Complete ===');
-      console.log(`Successfully analyzed using ${apiConfig.model}`);
-      console.log('Analysis Timestamp:', new Date());
-      console.log('========================\n');
-      
-      return transformedData;
-    } catch (parseError) {
-      console.error('\n=== Parse Error ===');
-      console.error('Error:', parseError);
-      console.error('==================\n');
-      throw new Error('Failed to parse analysis response');
+    } else if (results.openai) {
+      finalAnalysis = JSON.parse(results.openai);
+    } else if (results.gemini) {
+      finalAnalysis = JSON.parse(results.gemini);
     }
+
+    if (!finalAnalysis) {
+      throw new Error('No valid analysis results received from either API');
+    }
+
+    // Transform the final analysis to match the existing UI structure
+    const transformedData = {
+      industry_type: finalAnalysis.profile.industry,
+      pitch_clarity: 8,
+      investment_score: finalAnalysis.expertConclusion.productViability,
+      market_position: finalAnalysis.profile.marketPosition,
+      market_analysis: {
+        market_size: finalAnalysis.profile.marketSize,
+        growth_rate: finalAnalysis.marketComparison.metrics.growthRate.startup,
+        trends: ["Market trend 1", "Market trend 2"],
+        challenges: ["Challenge 1", "Challenge 2"]
+      },
+      company_overview: {
+        company_name: finalAnalysis.profile.companyName,
+        industry: finalAnalysis.profile.industry,
+        business_model: finalAnalysis.profile.businessModel,
+        key_offerings: finalAnalysis.profile.keyOfferings,
+        market_position: finalAnalysis.profile.marketPosition,
+        founded_on: "N/A"
+      },
+      strengths: finalAnalysis.strengthsWeaknesses.strengths,
+      weaknesses: finalAnalysis.strengthsWeaknesses.weaknesses,
+      funding_history: {
+        rounds: finalAnalysis.fundingHistory.map(round => ({
+          type: round.round,
+          amount: round.amount,
+          key_investors: round.investors
+        }))
+      },
+      competitor_analysis: {
+        competitors: finalAnalysis.competitors.map(competitor => ({
+          name: competitor.name,
+          key_investors: competitor.keyInvestors,
+          amount_raised: competitor.amountRaised,
+          market_position: competitor.marketPosition,
+          strengths: competitor.strengths,
+          growth_rate: competitor.growthRate,
+          business_model: competitor.businessModel,
+          key_differentiator: competitor.keyDifferentiator
+        }))
+      },
+      market_comparison: {
+        metrics: {
+          startup: {
+            market_share: finalAnalysis.marketComparison.metrics.marketShare.startup,
+            growth_rate: finalAnalysis.marketComparison.metrics.growthRate.startup,
+            revenue_model: finalAnalysis.marketComparison.metrics.revenueModel.startup,
+            differentiator: finalAnalysis.marketComparison.metrics.differentiator.startup
+          },
+          competitors: finalAnalysis.competitors.map((competitor, index) => ({
+            market_share: finalAnalysis.marketComparison.metrics.marketShare[`competitor${index + 1}`],
+            growth_rate: finalAnalysis.marketComparison.metrics.growthRate[`competitor${index + 1}`],
+            revenue_model: finalAnalysis.marketComparison.metrics.revenueModel[`competitor${index + 1}`],
+            differentiator: finalAnalysis.marketComparison.metrics.differentiator[`competitor${index + 1}`]
+          }))
+        }
+      },
+      expert_opinions: finalAnalysis.expertOpinions.map(opinion => ({
+        name: opinion.name,
+        affiliation: opinion.affiliation,
+        summary: opinion.summary,
+        reference: opinion.reference,
+        date: opinion.date
+      })),
+      expert_insights: {
+        expert_opinions: finalAnalysis.expertInsights.expertOpinions.map(opinion => ({
+          name: opinion.name,
+          title: opinion.title,
+          affiliation: opinion.affiliation,
+          analysis: opinion.analysis,
+          reference: opinion.reference,
+          date: opinion.date
+        })),
+        reputation_analysis: {
+          news_media: finalAnalysis.expertInsights.reputationAnalysis.newsMedia,
+          social_media: finalAnalysis.expertInsights.reputationAnalysis.socialMedia,
+          investor_reviews: finalAnalysis.expertInsights.reputationAnalysis.investorReviews,
+          customer_feedback: finalAnalysis.expertInsights.reputationAnalysis.customerFeedback,
+          overall: finalAnalysis.expertInsights.reputationAnalysis.overall
+        }
+      },
+      final_verdict: {
+        product_viability: finalAnalysis.expertConclusion.productViability,
+        market_potential: finalAnalysis.expertConclusion.marketPotential,
+        sustainability: finalAnalysis.expertConclusion.sustainability,
+        innovation: finalAnalysis.expertConclusion.innovation,
+        exit_potential: finalAnalysis.expertConclusion.exitPotential,
+        risk_factor: finalAnalysis.expertConclusion.riskFactors,
+        competitive_edge: finalAnalysis.expertConclusion.competitiveAdvantage
+      },
+      proposed_deal_structure: {
+        investment_amount: finalAnalysis.dealStructure.investmentAmount,
+        valuation_cap: finalAnalysis.dealStructure.valuationCap,
+        equity_stake: finalAnalysis.dealStructure.equityStake,
+        anti_dilution_protection: finalAnalysis.dealStructure.antiDilution ? "Yes" : "No",
+        board_seat: finalAnalysis.dealStructure.boardSeat ? "Yes" : "No",
+        liquidation_preference: finalAnalysis.dealStructure.liquidationPreference,
+        vesting_schedule: finalAnalysis.dealStructure.vestingSchedule
+      },
+      key_questions: {
+        market_strategy: {
+          question: "What is the market strategy?",
+          answer: `Based on the analysis, ${finalAnalysis.profile.companyName}'s market strategy focuses on ${finalAnalysis.profile.marketPosition} in the ${finalAnalysis.profile.industry} sector. The company leverages ${finalAnalysis.profile.competitiveAdvantage} to capture market share.`
+        },
+        user_retention: {
+          question: "How is user retention handled?",
+          answer: `The company's user retention strategy is built around ${finalAnalysis.profile.keyOfferings.join(', ')}. This approach is supported by ${finalAnalysis.profile.teamHighlights}.`
+        },
+        regulatory_risks: {
+          question: "What are the regulatory risks?",
+          answer: `In the ${finalAnalysis.profile.industry} sector, key regulatory considerations include ${finalAnalysis.strengthsWeaknesses.weaknesses.join(', ')}. The company addresses these through ${finalAnalysis.profile.solution}.`
+        }
+      }
+    };
+
+    console.log('\n=== Analysis Complete ===');
+    console.log('Analysis Timestamp:', new Date());
+    console.log('========================\n');
+    
+    return transformedData;
   } catch (error) {
     console.error('\n=== Analysis Error ===');
     console.error('Error:', error);

@@ -842,23 +842,23 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
               {/* Expert Opinions Card */}
               <div className="bg-[#1a1b1f] rounded-xl p-6">
                 <h3 className="text-xl text-white mb-4">Expert Opinions</h3>
-                {data.expert_opinions[0] && (
-                  <div>
-                    <h4 className="text-white text-lg">
-                      {data.expert_opinions[0].name}
+                {data.expert_insights?.expert_opinions?.map((opinion, index) => (
+                  <div key={index} className="mb-6">
+                    <h4 className="text-white text-lg font-medium">
+                      {opinion.name}
                     </h4>
-                    <p className="text-gray-400 mb-4">
-                      {data.expert_opinions[0].affiliation}
+                    <p className="text-gray-400 mb-2">
+                      {opinion.title} - {opinion.affiliation}
                     </p>
-                    <p className="text-gray-300 leading-relaxed mb-4">
-                      {data.expert_opinions[0].summary}
+                    <p className="text-gray-300 leading-relaxed mb-2">
+                      {opinion.analysis}
                     </p>
                     <p className="text-gray-500 text-sm">
-                      {data.expert_opinions[0].reference}
+                      Reference: {opinion.reference} | Date: {opinion.date}
                     </p>
-                </div>
-                )}
-                </div>
+                  </div>
+                ))}
+              </div>
 
               {/* Reputation Analysis Card */}
               <div className="bg-[#1a1b1f] rounded-xl p-6">
@@ -868,105 +868,90 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                     <tbody>
                       <tr className="border-b border-[#ffffff1a]">
                         <td className="py-3 font-semibold text-gray-400">News/Media</td>
-                        <td className={`py-3 ${
-                          data.reputation_analysis?.news_media.sentiment === "Positive" 
-                            ? "text-green-500" 
-                            : data.reputation_analysis?.news_media.sentiment === "Negative" 
-                              ? "text-red-500" 
-                              : "text-amber-500"
-                        }`}>
-                          {data.reputation_analysis?.news_media.sentiment}
+                        <td className="py-3 text-white">
+                          {data.expert_insights?.reputation_analysis?.news_media || "N/A"}/10
                         </td>
-                        <td className="py-3 text-white">{data.reputation_analysis?.news_media.score}/10</td>
                         <td className="py-3 flex">
                           {Array.from({ length: 5 }).map((_, i) => (
                             <Star
                               key={i}
-                              className={`w-4 h-4 ${i < (data.reputation_analysis?.news_media.rating || 0) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-600'}`}
+                              className={`w-4 h-4 ${
+                                i < Math.floor((data.expert_insights?.reputation_analysis?.news_media || 0) / 2)
+                                  ? 'text-yellow-400 fill-yellow-400'
+                                  : 'text-gray-600'
+                              }`}
                             />
                           ))}
                         </td>
                       </tr>
                       <tr className="border-b border-[#ffffff1a]">
                         <td className="py-3 font-semibold text-gray-400">Social Media</td>
-                        <td className={`py-3 ${
-                          data.reputation_analysis?.social_media.sentiment === "Positive" 
-                            ? "text-green-500" 
-                            : data.reputation_analysis?.social_media.sentiment === "Negative" 
-                              ? "text-red-500" 
-                              : "text-amber-500"
-                        }`}>
-                          {data.reputation_analysis?.social_media.sentiment}
+                        <td className="py-3 text-white">
+                          {data.expert_insights?.reputation_analysis?.social_media || "N/A"}/10
                         </td>
-                        <td className="py-3 text-white">{data.reputation_analysis?.social_media.score}/10</td>
                         <td className="py-3 flex">
                           {Array.from({ length: 5 }).map((_, i) => (
                             <Star
                               key={i}
-                              className={`w-4 h-4 ${i < (data.reputation_analysis?.social_media.rating || 0) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-600'}`}
+                              className={`w-4 h-4 ${
+                                i < Math.floor((data.expert_insights?.reputation_analysis?.social_media || 0) / 2)
+                                  ? 'text-yellow-400 fill-yellow-400'
+                                  : 'text-gray-600'
+                              }`}
                             />
                           ))}
                         </td>
                       </tr>
                       <tr className="border-b border-[#ffffff1a]">
                         <td className="py-3 font-semibold text-gray-400">Investor Reviews</td>
-                        <td className={`py-3 ${
-                          data.reputation_analysis?.investor_reviews.sentiment === "Positive" 
-                            ? "text-green-500" 
-                            : data.reputation_analysis?.investor_reviews.sentiment === "Negative" 
-                              ? "text-red-500" 
-                              : "text-amber-500"
-                        }`}>
-                          {data.reputation_analysis?.investor_reviews.sentiment}
+                        <td className="py-3 text-white">
+                          {data.expert_insights?.reputation_analysis?.investor_reviews || "N/A"}/10
                         </td>
-                        <td className="py-3 text-white">{data.reputation_analysis?.investor_reviews.score}/10</td>
                         <td className="py-3 flex">
                           {Array.from({ length: 5 }).map((_, i) => (
                             <Star
                               key={i}
-                              className={`w-4 h-4 ${i < (data.reputation_analysis?.investor_reviews.rating || 0) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-600'}`}
+                              className={`w-4 h-4 ${
+                                i < Math.floor((data.expert_insights?.reputation_analysis?.investor_reviews || 0) / 2)
+                                  ? 'text-yellow-400 fill-yellow-400'
+                                  : 'text-gray-600'
+                              }`}
                             />
                           ))}
                         </td>
                       </tr>
                       <tr className="border-b border-[#ffffff1a]">
                         <td className="py-3 font-semibold text-gray-400">Customer Feedback</td>
-                        <td className={`py-3 ${
-                          data.reputation_analysis?.customer_feedback.sentiment === "Positive" 
-                            ? "text-green-500" 
-                            : data.reputation_analysis?.customer_feedback.sentiment === "Negative" 
-                              ? "text-red-500" 
-                              : "text-amber-500"
-                        }`}>
-                          {data.reputation_analysis?.customer_feedback.sentiment}
+                        <td className="py-3 text-white">
+                          {data.expert_insights?.reputation_analysis?.customer_feedback || "N/A"}/10
                         </td>
-                        <td className="py-3 text-white">{data.reputation_analysis?.customer_feedback.score}/10</td>
                         <td className="py-3 flex">
                           {Array.from({ length: 5 }).map((_, i) => (
                             <Star
                               key={i}
-                              className={`w-4 h-4 ${i < (data.reputation_analysis?.customer_feedback.rating || 0) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-600'}`}
+                              className={`w-4 h-4 ${
+                                i < Math.floor((data.expert_insights?.reputation_analysis?.customer_feedback || 0) / 2)
+                                  ? 'text-yellow-400 fill-yellow-400'
+                                  : 'text-gray-600'
+                              }`}
                             />
                           ))}
                         </td>
                       </tr>
                       <tr>
                         <td className="py-3 font-bold text-gray-400">Overall</td>
-                        <td className={`py-3 font-semibold ${
-                          data.reputation_analysis?.overall.sentiment === "Positive" 
-                            ? "text-green-500" 
-                            : data.reputation_analysis?.overall.sentiment === "Negative" 
-                              ? "text-red-500" 
-                              : "text-amber-500"
-                        }`}>
-                          {data.reputation_analysis?.overall.sentiment}
+                        <td className="py-3 text-white font-semibold">
+                          {data.expert_insights?.reputation_analysis?.overall || "N/A"}/10
                         </td>
-                        <td className="py-3 text-white font-semibold">{data.reputation_analysis?.overall.score}/10</td>
                         <td className="py-3 flex">
                           {Array.from({ length: 5 }).map((_, i) => (
                             <Star
                               key={i}
-                              className={`w-4 h-4 ${i < (data.reputation_analysis?.overall.rating || 0) ? 'text-yellow-400 fill-yellow-400' : 'text-gray-600'}`}
+                              className={`w-4 h-4 ${
+                                i < Math.floor((data.expert_insights?.reputation_analysis?.overall || 0) / 2)
+                                  ? 'text-yellow-400 fill-yellow-400'
+                                  : 'text-gray-600'
+                              }`}
                             />
                           ))}
                         </td>
@@ -1041,20 +1026,26 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
                 <h4 className="text-sm font-medium text-gray-300 mb-2">
-                  What is the product development roadmap and timeline for key feature releases?
+                  {data.key_questions?.market_strategy?.question || "What is the market strategy?"}
                 </h4>
                 <p className="text-sm text-gray-400">
-                  {data.key_questions?.product_development?.answer || 
-                    "Analyzing product development strategy, feature prioritization, and release timeline to assess technical feasibility and market readiness."}
+                  {data.key_questions?.market_strategy?.answer || "N/A"}
                 </p>
               </div>
               <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
                 <h4 className="text-sm font-medium text-gray-300 mb-2">
-                  What are the market expansion plans and target geographies for the next 12-24 months?
+                  {data.key_questions?.user_retention?.question || "How is user retention handled?"}
                 </h4>
                 <p className="text-sm text-gray-400">
-                  {data.key_questions?.market_expansion?.answer || 
-                    "Evaluating market entry strategy, geographic expansion plans, and resource allocation for scaling operations."}
+                  {data.key_questions?.user_retention?.answer || "N/A"}
+                </p>
+              </div>
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+                <h4 className="text-sm font-medium text-gray-300 mb-2">
+                  {data.key_questions?.regulatory_risks?.question || "What are the regulatory risks?"}
+                </h4>
+                <p className="text-sm text-gray-400">
+                  {data.key_questions?.regulatory_risks?.answer || "N/A"}
                 </p>
               </div>
             </div>
@@ -1074,9 +1065,8 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                 {data.company_overview.company_name} presents a compelling
                 investment opportunity with a leading position in the{" "}
                 {data.industry_type.toLowerCase()} sector. With validated
-                technology endorsed by international bodies and a robust growth
-                trajectory, the company shows high potential for scalability and
-                market penetration.
+                technology and a robust growth trajectory, the company shows high
+                potential for scalability and market penetration.
               </p>
 
               {/* Investment Potential Bar */}
@@ -1084,13 +1074,13 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-gray-400">Investment Potential</span>
                   <span className="text-white bg-[#ffffff1a] px-3 py-1 rounded-full text-sm">
-                    75%
+                    {data.investment_score * 10}%
                   </span>
                 </div>
                 <div className="h-2 bg-[#ffffff0a] rounded-full overflow-hidden">
                   <div
                     className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full transition-all duration-1000 ease-out"
-                    style={{ width: "75%" }}
+                    style={{ width: `${data.investment_score * 10}%` }}
                   ></div>
                 </div>
               </div>
