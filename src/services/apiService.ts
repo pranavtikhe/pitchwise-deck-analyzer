@@ -258,8 +258,8 @@ export const analyzePitchDeck = async (text: string) => {
     let finalAnalysis = null;
     if (results.openai && results.gemini) {
       // If both APIs are used, combine their insights
-      const openaiData = JSON.parse(results.openai);
-      const geminiData = JSON.parse(results.gemini);
+      const openaiData = JSON.parse(results.openai.replace(/```json\n?|\n?```/g, '').trim());
+      const geminiData = JSON.parse(results.gemini.replace(/```json\n?|\n?```/g, '').trim());
       
       // Merge the analyses, giving preference to more detailed responses
       finalAnalysis = {
@@ -280,9 +280,9 @@ export const analyzePitchDeck = async (text: string) => {
         }
       };
     } else if (results.openai) {
-      finalAnalysis = JSON.parse(results.openai);
+      finalAnalysis = JSON.parse(results.openai.replace(/```json\n?|\n?```/g, '').trim());
     } else if (results.gemini) {
-      finalAnalysis = JSON.parse(results.gemini);
+      finalAnalysis = JSON.parse(results.gemini.replace(/```json\n?|\n?```/g, '').trim());
     }
 
     if (!finalAnalysis) {
