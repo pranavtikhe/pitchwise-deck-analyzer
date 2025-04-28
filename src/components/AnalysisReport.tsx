@@ -932,24 +932,28 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                         </td>
                         <td className="py-3 text-white">
                           {data.expert_insights?.reputation_analysis
-                            ?.news_media || "N/A"}
+                            ?.news_media || <span className="text-xs text-gray-500">N/A</span>}
                           /10
                         </td>
                         <td className="py-3 flex">
-                          {Array.from({ length: 5 }).map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`w-4 h-4 ${
-                                i <
-                                Math.floor(
-                                  (data.expert_insights?.reputation_analysis
-                                    ?.news_media || 0) / 2
-                                )
-                                  ? "text-yellow-400 fill-yellow-400"
-                                  : "text-gray-600"
-                              }`}
-                            />
-                          ))}
+                          {(() => {
+                            const score = data.expert_insights?.reputation_analysis?.news_media || 0;
+                            const fullStars = Math.floor(score / 2);
+                            const halfStar = score % 2 >= 1 ? 1 : 0;
+                            return (
+                              <>
+                                {Array.from({ length: 5 }).map((_, i) => {
+                                  if (i < fullStars) {
+                                    return <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />;
+                                  } else if (i === fullStars && halfStar) {
+                                    return <Star key={i} className="w-4 h-4 text-yellow-400" style={{ fill: 'url(#halfStarGradient)' }} />;
+                                  } else {
+                                    return <Star key={i} className="w-4 h-4 text-gray-600" />;
+                                  }
+                                })}
+                              </>
+                            );
+                          })()}
                         </td>
                       </tr>
                       <tr className="border-b border-[#ffffff1a]">
@@ -958,24 +962,28 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                         </td>
                         <td className="py-3 text-white">
                           {data.expert_insights?.reputation_analysis
-                            ?.social_media || "N/A"}
+                            ?.social_media || <span className="text-xs text-gray-500">N/A</span>}
                           /10
                         </td>
                         <td className="py-3 flex">
-                          {Array.from({ length: 5 }).map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`w-4 h-4 ${
-                                i <
-                                Math.floor(
-                                  (data.expert_insights?.reputation_analysis
-                                    ?.social_media || 0) / 2
-                                )
-                                  ? "text-yellow-400 fill-yellow-400"
-                                  : "text-gray-600"
-                              }`}
-                            />
-                          ))}
+                          {(() => {
+                            const score = data.expert_insights?.reputation_analysis?.social_media || 0;
+                            const fullStars = Math.floor(score / 2);
+                            const halfStar = score % 2 >= 1 ? 1 : 0;
+                            return (
+                              <>
+                                {Array.from({ length: 5 }).map((_, i) => {
+                                  if (i < fullStars) {
+                                    return <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />;
+                                  } else if (i === fullStars && halfStar) {
+                                    return <Star key={i} className="w-4 h-4 text-yellow-400" style={{ fill: 'url(#halfStarGradient)' }} />;
+                                  } else {
+                                    return <Star key={i} className="w-4 h-4 text-gray-600" />;
+                                  }
+                                })}
+                              </>
+                            );
+                          })()}
                         </td>
                       </tr>
                       <tr className="border-b border-[#ffffff1a]">
@@ -984,24 +992,28 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                         </td>
                         <td className="py-3 text-white">
                           {data.expert_insights?.reputation_analysis
-                            ?.investor_reviews || "N/A"}
+                            ?.investor_reviews || <span className="text-xs text-gray-500">N/A</span>}
                           /10
                         </td>
                         <td className="py-3 flex">
-                          {Array.from({ length: 5 }).map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`w-4 h-4 ${
-                                i <
-                                Math.floor(
-                                  (data.expert_insights?.reputation_analysis
-                                    ?.investor_reviews || 0) / 2
-                                )
-                                  ? "text-yellow-400 fill-yellow-400"
-                                  : "text-gray-600"
-                              }`}
-                            />
-                          ))}
+                          {(() => {
+                            const score = data.expert_insights?.reputation_analysis?.investor_reviews || 0;
+                            const fullStars = Math.floor(score / 2);
+                            const halfStar = score % 2 >= 1 ? 1 : 0;
+                            return (
+                              <>
+                                {Array.from({ length: 5 }).map((_, i) => {
+                                  if (i < fullStars) {
+                                    return <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />;
+                                  } else if (i === fullStars && halfStar) {
+                                    return <Star key={i} className="w-4 h-4 text-yellow-400" style={{ fill: 'url(#halfStarGradient)' }} />;
+                                  } else {
+                                    return <Star key={i} className="w-4 h-4 text-gray-600" />;
+                                  }
+                                })}
+                              </>
+                            );
+                          })()}
                         </td>
                       </tr>
                       <tr className="border-b border-[#ffffff1a]">
@@ -1010,24 +1022,28 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                         </td>
                         <td className="py-3 text-white">
                           {data.expert_insights?.reputation_analysis
-                            ?.customer_feedback || "N/A"}
+                            ?.customer_feedback || <span className="text-xs text-gray-500">N/A</span>}
                           /10
                         </td>
                         <td className="py-3 flex">
-                          {Array.from({ length: 5 }).map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`w-4 h-4 ${
-                                i <
-                                Math.floor(
-                                  (data.expert_insights?.reputation_analysis
-                                    ?.customer_feedback || 0) / 2
-                                )
-                                  ? "text-yellow-400 fill-yellow-400"
-                                  : "text-gray-600"
-                              }`}
-                            />
-                          ))}
+                          {(() => {
+                            const score = data.expert_insights?.reputation_analysis?.customer_feedback || 0;
+                            const fullStars = Math.floor(score / 2);
+                            const halfStar = score % 2 >= 1 ? 1 : 0;
+                            return (
+                              <>
+                                {Array.from({ length: 5 }).map((_, i) => {
+                                  if (i < fullStars) {
+                                    return <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />;
+                                  } else if (i === fullStars && halfStar) {
+                                    return <Star key={i} className="w-4 h-4 text-yellow-400" style={{ fill: 'url(#halfStarGradient)' }} />;
+                                  } else {
+                                    return <Star key={i} className="w-4 h-4 text-gray-600" />;
+                                  }
+                                })}
+                              </>
+                            );
+                          })()}
                         </td>
                       </tr>
                       <tr>
@@ -1035,25 +1051,28 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                           Overall
                         </td>
                         <td className="py-3 text-white font-semibold">
-                          {data.expert_insights?.reputation_analysis?.overall ||
-                            "N/A"}
+                          {data.expert_insights?.reputation_analysis?.overall || <span className="text-xs text-gray-500">N/A</span>}
                           /10
                         </td>
                         <td className="py-3 flex">
-                          {Array.from({ length: 5 }).map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`w-4 h-4 ${
-                                i <
-                                Math.floor(
-                                  (data.expert_insights?.reputation_analysis
-                                    ?.overall || 0) / 2
-                                )
-                                  ? "text-yellow-400 fill-yellow-400"
-                                  : "text-gray-600"
-                              }`}
-                            />
-                          ))}
+                          {(() => {
+                            const score = data.expert_insights?.reputation_analysis?.overall || 0;
+                            const fullStars = Math.floor(score / 2);
+                            const halfStar = score % 2 >= 1 ? 1 : 0;
+                            return (
+                              <>
+                                {Array.from({ length: 5 }).map((_, i) => {
+                                  if (i < fullStars) {
+                                    return <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />;
+                                  } else if (i === fullStars && halfStar) {
+                                    return <Star key={i} className="w-4 h-4 text-yellow-400" style={{ fill: 'url(#halfStarGradient)' }} />;
+                                  } else {
+                                    return <Star key={i} className="w-4 h-4 text-gray-600" />;
+                                  }
+                                })}
+                              </>
+                            );
+                          })()}
                         </td>
                       </tr>
                     </tbody>
