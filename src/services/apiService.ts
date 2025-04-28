@@ -50,8 +50,17 @@ export const analyzePitchDeck = async (text: string) => {
 
   IMPORTANT: Provide detailed competitor analysis, market comparison, and expert opinions. 
   For competitors, identify at least 3-4 major players in the market.
-  For market comparison, include specific metrics and data points.
-  For expert opinions, provide at least 2-3 detailed opinions from industry experts.
+  For market comparison, include specific metrics and data points.Such as Key Investors, Amount Raised, Market Share, Revenue Model, Growth Rate, Differentiator, etc.
+  For expert opinions, provide 1 detailed genuine opinions from industry experts.
+
+  For reputation analysis, provide:
+  - News/Media rating (1-10)
+  - Social Media rating (1-10)
+  - Investor Reviews rating (1-10)
+  - Customer Feedback rating (1-10)
+  - Overall rating (1-10)
+  - Overall sentiment (Positive/Negative/Neutral)
+  - Star rating (1-5)
 
   Return the analysis in the following JSON format:
   {
@@ -292,7 +301,9 @@ export const analyzePitchDeck = async (text: string) => {
     // Transform the final analysis to match the existing UI structure
     const transformedData = {
       industry_type: finalAnalysis.profile.industry,
-      pitch_clarity: 8,
+      pitch_clarity: Math.round((finalAnalysis.expertConclusion.productViability + 
+                               finalAnalysis.expertConclusion.marketPotential + 
+                               finalAnalysis.expertConclusion.innovation) / 3),
       investment_score: finalAnalysis.expertConclusion.productViability,
       market_position: finalAnalysis.profile.marketPosition,
       market_analysis: {
@@ -309,13 +320,13 @@ export const analyzePitchDeck = async (text: string) => {
         market_position: finalAnalysis.profile.marketPosition,
         founded_on: "N/A"
       },
-      strengths: finalAnalysis.strengthsWeaknesses.strengths,
-      weaknesses: finalAnalysis.strengthsWeaknesses.weaknesses,
+      strengths: finalAnalysis.strengthsWeaknesses?.strengths || [],
+      weaknesses: finalAnalysis.strengthsWeaknesses?.weaknesses || [],
       funding_history: {
-        rounds: finalAnalysis.fundingHistory.map(round => ({
-          type: round.round,
-          amount: round.amount,
-          key_investors: round.investors
+        rounds: (finalAnalysis.fundingHistory || []).map(round => ({
+          type: round.round || 'Unknown',
+          amount: round.amount || 'Not specified',
+          key_investors: round.investors || []
         }))
       },
       competitor_analysis: {
@@ -354,20 +365,22 @@ export const analyzePitchDeck = async (text: string) => {
         date: opinion.date
       })),
       expert_insights: {
-        expert_opinions: finalAnalysis.expertInsights.expertOpinions.map(opinion => ({
-          name: opinion.name,
-          title: opinion.title,
-          affiliation: opinion.affiliation,
-          analysis: opinion.analysis,
-          reference: opinion.reference,
-          date: opinion.date
+        expert_opinions: (finalAnalysis.expertInsights?.expertOpinions || []).map(opinion => ({
+          name: opinion.name || "Unknown",
+          title: opinion.title || "Unknown",
+          affiliation: opinion.affiliation || "Unknown",
+          analysis: opinion.analysis || "Unknown",
+          reference: opinion.reference || "Unknown",
+          date: opinion.date || "Unknown"
         })),
         reputation_analysis: {
-          news_media: finalAnalysis.expertInsights.reputationAnalysis.newsMedia,
-          social_media: finalAnalysis.expertInsights.reputationAnalysis.socialMedia,
-          investor_reviews: finalAnalysis.expertInsights.reputationAnalysis.investorReviews,
-          customer_feedback: finalAnalysis.expertInsights.reputationAnalysis.customerFeedback,
-          overall: finalAnalysis.expertInsights.reputationAnalysis.overall
+          news_media: finalAnalysis.expertInsights?.reputationAnalysis?.newsMedia || 0,
+          social_media: finalAnalysis.expertInsights?.reputationAnalysis?.socialMedia || 0,
+          investor_reviews: finalAnalysis.expertInsights?.reputationAnalysis?.investorReviews || 0,
+          customer_feedback: finalAnalysis.expertInsights?.reputationAnalysis?.customerFeedback || 0,
+          overall: finalAnalysis.expertInsights?.reputationAnalysis?.overall || 0,
+          sentiment: finalAnalysis.expertInsights?.reputationAnalysis?.sentiment || "Neutral",
+          rating: finalAnalysis.expertInsights?.reputationAnalysis?.rating || 0
         }
       },
       final_verdict: {
@@ -380,13 +393,13 @@ export const analyzePitchDeck = async (text: string) => {
         competitive_edge: finalAnalysis.expertConclusion.competitiveAdvantage
       },
       proposed_deal_structure: {
-        investment_amount: finalAnalysis.dealStructure.investmentAmount,
-        valuation_cap: finalAnalysis.dealStructure.valuationCap,
-        equity_stake: finalAnalysis.dealStructure.equityStake,
-        anti_dilution_protection: finalAnalysis.dealStructure.antiDilution ? "Yes" : "No",
-        board_seat: finalAnalysis.dealStructure.boardSeat ? "Yes" : "No",
-        liquidation_preference: finalAnalysis.dealStructure.liquidationPreference,
-        vesting_schedule: finalAnalysis.dealStructure.vestingSchedule
+        investment_amount: finalAnalysis.dealStructure?.investmentAmount || 'Not specified',
+        valuation_cap: finalAnalysis.dealStructure?.valuationCap || 'Not specified',
+        equity_stake: finalAnalysis.dealStructure?.equityStake || 'Not specified',
+        anti_dilution_protection: finalAnalysis.dealStructure?.antiDilution ? "Yes" : "No",
+        board_seat: finalAnalysis.dealStructure?.boardSeat ? "Yes" : "No",
+        liquidation_preference: finalAnalysis.dealStructure?.liquidationPreference || 'Not specified',
+        vesting_schedule: finalAnalysis.dealStructure?.vestingSchedule || 'Not specified'
       },
       key_questions: {
         market_strategy: {

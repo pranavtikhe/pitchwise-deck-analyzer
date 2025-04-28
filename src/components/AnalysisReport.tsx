@@ -369,9 +369,9 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
   }, [data]);
 
   if (showHistory) {
-    return (
+  return (
       <div>
-        <button
+        <button 
           onClick={() => setShowHistory(false)}
           className="fixed top-4 right-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 z-10"
         >
@@ -383,7 +383,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
           <p className="text-center text-gray-400">
             History view coming soon...
           </p>
-        </div>
+      </div>
       </div>
     );
   }
@@ -392,16 +392,16 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
   if (!data) {
     return (
       <div className={`${styles.gradientWrapper} font-fustat`}>
-        <img
-          src="/images/backgroundgradiant.png"
-          alt="Gradient Background"
-          className={styles.gradientBackground}
-        />
+      <img
+        src="/images/backgroundgradiant.png"
+        alt="Gradient Background"
+        className={styles.gradientBackground}
+      />
         <div className={styles.innerBox}>
           <div className="flex flex-col items-center justify-center min-h-[400px]">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
             <p className="text-gray-400">Loading analysis report...</p>
-          </div>
+              </div>
         </div>
       </div>
     );
@@ -423,25 +423,25 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {/* Pitch Analysis Card */}
             <div className="backdrop-blur-sm border border-[#ffffff1a] rounded-xl p-6">
-              <div className="flex items-center mb-4">
+                  <div className="flex items-center mb-4">
                 <FileText className="text-teal-500 w-5 h-5 mr-3" />
                 <h3 className="text-white text-lg font-medium">
                   Pitch Analysis
                 </h3>
-              </div>
+        </div>
               <div className="space-y-4">
                 <div>
-                  <p className="text-gray-400 text-sm mb-1">Clarity Score:</p>
+                      <p className="text-gray-400 text-sm mb-1">Clarity Score:</p>
                   <p className="text-white text-2xl font-bold">
                     {data.pitch_clarity}/10
                   </p>
-                </div>
-                <div>
-                  <p className="text-gray-400 text-sm mb-1">Sentiment:</p>
+            </div>
+            <div>
+                      <p className="text-gray-400 text-sm mb-1">Sentiment:</p>
                   <p className={`text-${data.reputation_analysis?.overall?.sentiment?.toLowerCase() === 'positive' ? 'green' : data.reputation_analysis?.overall?.sentiment?.toLowerCase() === 'negative' ? 'red' : 'yellow'}-500 font-medium`}>
                     {data.reputation_analysis?.overall?.sentiment || 'Neutral'}
                   </p>
-                </div>
+              </div>
                 <div className="pt-4 border-t border-[#ffffff1a]">
                   <p className="text-sm text-gray-300">
                     AI detected{" "}
@@ -453,31 +453,31 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                       {data.weaknesses?.length || 0} potential issues
                     </span>
                   </p>
-                </div>
-              </div>
             </div>
+            </div>
+                </div>
 
             {/* Investment Potential Card */}
             <div className="backdrop-blur-sm border border-[#ffffff1a] rounded-xl p-6">
-              <div className="flex items-center mb-4">
+                  <div className="flex items-center mb-4">
                 <FileText className="text-teal-500 w-5 h-5 mr-3" />
                 <h3 className="text-white text-lg font-medium">
                   Investment Potential
                 </h3>
-              </div>
+                      </div>
               <div className="space-y-4">
                 <div>
-                  <p className="text-gray-400 text-sm mb-1">Score:</p>
+                      <p className="text-gray-400 text-sm mb-1">Score:</p>
                   <p className="text-white text-2xl font-bold">
                     {data.investment_score}/10
                   </p>
-                </div>
-                <div>
-                  <p className="text-gray-400 text-sm mb-1">Exit Potential:</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-400 text-sm mb-1">Exit Potential:</p>
                   <p className="text-white font-medium">
                     {data.proposed_deal_structure?.valuation_cap || 'Not specified'}
                   </p>
-                </div>
+                    </div>
                 <div className="pt-4 border-t border-[#ffffff1a]">
                   <p className="text-sm text-gray-300">
                     {data.market_analysis?.growth_rate ? (
@@ -495,95 +495,95 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                       "Market analysis data not available"
                     )}
                   </p>
-                </div>
-              </div>
-            </div>
-
+                  </div>
+                  </div>
+                  </div>
+                  
             {/* Market Position Card */}
             <div className="backdrop-blur-sm border border-[#ffffff1a] rounded-xl p-6">
-              <div className="flex items-center mb-4">
+                  <div className="flex items-center mb-4">
                 <FileText className="text-teal-500 w-5 h-5 mr-3" />
                 <h3 className="text-white text-lg font-medium">
                   Market Position
                 </h3>
-              </div>
+                  </div>
               <div className="space-y-4">
                 <div>
-                  <p className="text-gray-400 text-sm mb-1">Classification:</p>
+                      <p className="text-gray-400 text-sm mb-1">Classification:</p>
                   <p className="text-white text-2xl font-bold">
                     {data.market_position}
                   </p>
-                </div>
-                <div>
-                  <p className="text-gray-400 text-sm mb-1">Industry:</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-400 text-sm mb-1">Industry:</p>
                   <p className="text-gray-300 font-medium">
                     {data.industry_type}
                   </p>
-                </div>
+                    </div>
                 <div className="pt-4 border-t border-[#ffffff1a]">
                   <p className="text-sm text-gray-300">
                     {data.competitor_analysis?.competitors ? (
                       <>
-                        Competing with{" "}
-                        <span className="font-medium">
+                    Competing with{" "}
+                    <span className="font-medium">
                           {data.competitor_analysis.competitors.length}{" "}
                           established players
-                        </span>
+                    </span>
                       </>
                     ) : (
                       "Competitor data not available"
                     )}
                   </p>
+                  </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
           <div>
             <div className="backdrop-blur-sm border border-[#ffffff1a] rounded-xl p-6 mt-8">
-              <h2 className="text-2xl font-medium text-white mb-8">
-                Company Overview
-              </h2>
-              <div className="grid grid-cols-2 gap-6">
-                <div className="border-b border-[#ffffff1a] pb-4">
-                  <p className="text-gray-400 text-sm mb-1">Company Name</p>
-                  <p className="text-white text-base">
-                    {data.company_overview.company_name}
-                  </p>
-                </div>
-
-                <div className="border-b border-[#ffffff1a] pb-4">
-                  <p className="text-gray-400 text-sm mb-1">Industry</p>
-                  <p className="text-white text-base">
-                    {data.company_overview.industry}
-                  </p>
-                </div>
-
-                <div className="border-b border-[#ffffff1a] pb-4">
-                  <p className="text-gray-400 text-sm mb-1">Market Position</p>
-                  <p className="text-white text-base">
-                    {data.company_overview.market_position}
-                  </p>
-                </div>
-
-                <div className="border-b border-[#ffffff1a] pb-4">
-                  <p className="text-gray-400 text-sm mb-1">Founded</p>
-                  <p className="text-white text-base">
-                    {data.company_overview.founded_on || "N/A"}
-                  </p>
-                </div>
-
-                <div className="border-b border-[#ffffff1a] pb-4">
-                  <p className="text-gray-400 text-sm mb-1">Business Model</p>
-                  <p className="text-white text-base">
-                    {data.company_overview.business_model}
-                  </p>
-                </div>
-
-                <div className="border-b border-[#ffffff1a] pb-4">
-                  <p className="text-gray-400 text-sm mb-1">Key Offerings</p>
-                  <p className="text-white text-base">
-                    {data.company_overview.key_offerings}
-                  </p>
+            <h2 className="text-2xl font-medium text-white mb-8">
+              Company Overview
+            </h2>
+            <div className="grid grid-cols-2 gap-6">
+              <div className="border-b border-[#ffffff1a] pb-4">
+                <p className="text-gray-400 text-sm mb-1">Company Name</p>
+                <p className="text-white text-base">
+                  {data.company_overview.company_name}
+                </p>
+              </div>
+              
+              <div className="border-b border-[#ffffff1a] pb-4">
+                <p className="text-gray-400 text-sm mb-1">Industry</p>
+                <p className="text-white text-base">
+                  {data.company_overview.industry}
+                </p>
+              </div>
+              
+              <div className="border-b border-[#ffffff1a] pb-4">
+                <p className="text-gray-400 text-sm mb-1">Market Position</p>
+                <p className="text-white text-base">
+                  {data.company_overview.market_position}
+                </p>
+              </div>
+              
+              <div className="border-b border-[#ffffff1a] pb-4">
+                <p className="text-gray-400 text-sm mb-1">Founded</p>
+                <p className="text-white text-base">
+                  {data.company_overview.founded_on || "N/A"}
+                </p>
+              </div>
+              
+              <div className="border-b border-[#ffffff1a] pb-4">
+                <p className="text-gray-400 text-sm mb-1">Business Model</p>
+                <p className="text-white text-base">
+                  {data.company_overview.business_model}
+                </p>
+              </div>
+              
+              <div className="border-b border-[#ffffff1a] pb-4">
+                <p className="text-gray-400 text-sm mb-1">Key Offerings</p>
+                <p className="text-white text-base">
+                  {data.company_overview.key_offerings}
+                </p>
                 </div>
               </div>
             </div>
@@ -596,23 +596,23 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                   Strengths & Weaknesses
                 </h2>
                 <div className="grid grid-cols-2 gap-8">
-                  <div>
+              <div>
                     <h3 className="text-green-500 text-lg mb-4">
                       Strengths (Pros)
                     </h3>
                     <ul className="space-y-3">
                       {data.strengths.map((strength, index) => (
-                        <li key={index} className="flex items-start">
+                    <li key={index} className="flex items-start">
                           <span className="text-gray-400 mr-2 flex-shrink-0">
                             •
                           </span>
                           <span className="text-gray-300 text-sm leading-relaxed">
                             {strength}
                           </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
                   <div>
                     <h3 className="text-red-500 text-lg mb-4">
                       Weaknesses (Cons)
@@ -626,82 +626,89 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                           <span className="text-gray-300 text-sm leading-relaxed">
                             {weakness}
                           </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
+                    </li>
+                  ))}
+                </ul>
+          </div>
+        </div>
+      </div>
 
               {/* Funding History Section */}
               <div className="backdrop-blur-sm border border-[#ffffff1a] rounded-xl p-6">
                 <h2 className="text-2xl font-medium text-white mb-6">
                   Funding History
                 </h2>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-[#ffffff1a]">
-                        <th className="text-left py-3 px-4 text-gray-400 font-normal">
-                          Round
-                        </th>
-                        <th className="text-left py-3 px-4 text-gray-400 font-normal">
-                          Amount
-                        </th>
-                        <th className="text-left py-3 px-4 text-gray-400 font-normal">
-                          Key Investors
-                        </th>
-                        <th className="text-left py-3 px-4 text-gray-400 font-normal">
-                          Date
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {data.funding_history.rounds.length > 0 ? (
-                        data.funding_history.rounds.map((round, index) => (
+                {data.funding_history?.rounds?.length > 0 ? (
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-[#ffffff1a]">
+                          <th className="text-left py-3 px-4 text-gray-400 font-normal">
+                            Round
+                          </th>
+                          <th className="text-left py-3 px-4 text-gray-400 font-normal">
+                            Amount
+                          </th>
+                          <th className="text-left py-3 px-4 text-gray-400 font-normal">
+                            Key Investors
+                          </th>
+                          <th className="text-left py-3 px-4 text-gray-400 font-normal">
+                            Date
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {data.funding_history.rounds.map((round, index) => (
                           <tr
                             key={index}
-                            className="border-b border-[#ffffff1a]"
+                            className="border-b border-[#ffffff1a] hover:bg-[#ffffff05] transition-colors"
                           >
                             <td className="py-3 px-4 text-white text-left">
-                              {round.type}
+                              {round.type || 'Unknown Round'}
                             </td>
                             <td className="py-3 px-4 text-white text-left">
-                              {round.amount}
+                              {round.amount || 'Not disclosed'}
                             </td>
                             <td className="py-3 px-4 text-white text-left">
-                              {Array.isArray(round.key_investors)
+                              {round.key_investors?.length > 0 
                                 ? round.key_investors.join(", ")
-                                : round.key_investors}
+                                : 'Not disclosed'}
                             </td>
-                            <td className="py-3 px-4 text-white text-left">N/A</td>
+                            <td className="py-3 px-4 text-white text-left">
+                              {round.date || 'Not specified'}
+                            </td>
                           </tr>
-                        ))
-                      ) : (
-                        <tr>
-                          <td
-                            colSpan={4}
-                            className="py-4 text-center text-gray-500"
-                          >
-                            No funding history available
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+                    <div className="w-16 h-16 mb-4 rounded-full bg-[#ffffff10] flex items-center justify-center">
+                      <HistoryIcon className="w-8 h-8 text-gray-400" />
+                    </div>
+                    <h3 className="text-xl font-medium text-white mb-2">
+                      No Funding History Available
+                    </h3>
+                    <p className="text-gray-400 max-w-md">
+                      The pitch deck does not contain any funding history information. 
+                      This could be because the company is pre-seed or has not disclosed 
+                      their funding rounds.
+                    </p>
+                  </div>
+                )}
               </div>
-            </div>
           </div>
+        </div>
           <div>
             {/* Competitor Comparison Section */}
             <div className="backdrop-blur-sm border border-[#ffffff1a] rounded-xl p-6 mb-8">
               <h2 className="text-2xl font-medium text-white mb-6">
                 Competitor Comparison
               </h2>
-              <div className="overflow-x-auto">
+            <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead>
+                <thead>
                     <tr className="border-b border-[#ffffff1a]">
                       <th className="text-left py-3 px-4 text-gray-400 font-normal">
                         Competitor
@@ -718,9 +725,9 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                       <th className="text-left py-3 px-4 text-gray-400 font-normal">
                         Strengths
                       </th>
-                    </tr>
-                  </thead>
-                  <tbody>
+                  </tr>
+                </thead>
+                <tbody>
                     {data.competitor_analysis.competitors.map(
                       (competitor, index) => (
                         <tr key={index} className="border-b border-[#ffffff1a]">
@@ -738,14 +745,14 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                           </td>
                           <td className="py-4 px-4 text-white text-left">
                             {competitor.strengths}
-                          </td>
-                        </tr>
+                      </td>
+                    </tr>
                       )
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+                  )}
+                </tbody>
+              </table>
+          </div>
+        </div>
 
             {/* Market Comparison Section */}
             <div className="backdrop-blur-sm border border-[#ffffff1a] rounded-xl p-6 mb-8">
@@ -769,9 +776,9 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                             key={index}
                             className="text-left py-3 px-4 text-gray-400 font-normal"
                           >
-                            {competitor.name}
-                          </th>
-                        ))}
+                          {competitor.name}
+                        </th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody>
@@ -784,9 +791,9 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                         .slice(0, 4)
                         .map((competitor, index) => (
                           <td key={index} className="py-4 px-4 text-white text-left">
-                            {competitor.market_position}
-                          </td>
-                        ))}
+                          {competitor.market_position}
+                        </td>
+                      ))}
                     </tr>
                     <tr className="border-b border-[#ffffff1a]">
                       <td className="py-4 px-4 text-gray-400 text-left">Growth Rate</td>
@@ -797,9 +804,9 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                         .slice(0, 4)
                         .map((competitor, index) => (
                           <td key={index} className="py-4 px-4 text-white text-left">
-                            {competitor.growth_rate || "N/A"}
-                          </td>
-                        ))}
+                          {competitor.growth_rate || "N/A"}
+                        </td>
+                      ))}
                     </tr>
                     <tr className="border-b border-[#ffffff1a]">
                       <td className="py-4 px-4 text-gray-400 text-left">Revenue Model</td>
@@ -810,9 +817,9 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                         .slice(0, 4)
                         .map((competitor, index) => (
                           <td key={index} className="py-4 px-4 text-white text-left">
-                            {competitor.business_model || "N/A"}
-                          </td>
-                        ))}
+                          {competitor.business_model || "N/A"}
+                        </td>
+                      ))}
                     </tr>
                     <tr className="border-b border-[#ffffff1a]">
                       <td className="py-4 px-4 text-gray-400 text-left">Key Differentiator</td>
@@ -823,9 +830,9 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                         .slice(0, 4)
                         .map((competitor, index) => (
                           <td key={index} className="py-4 px-4 text-white text-left">
-                            {competitor.key_differentiator || "N/A"}
-                          </td>
-                        ))}
+                          {competitor.key_differentiator || "N/A"}
+                        </td>
+                      ))}
                     </tr>
                   </tbody>
                 </table>
@@ -843,16 +850,16 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                   <div className="relative pt-2">
                     <div className="relative pt-2">
                       <div className="w-full bg-gray-700 rounded-full h-2 relative">
-                        <div
+                      <div
                           className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full"
-                          style={{
-                            width: `${
-                              (data.final_verdict.exit_potential / 10) * 100
-                            }%`,
-                          }}
-                        ></div>
+                        style={{
+                          width: `${
+                            (data.final_verdict.exit_potential / 10) * 100
+                          }%`,
+                        }}
+                    ></div>
                         <div className="absolute -top-10 right-0 bg-purple-900 text-purple-300 px-2 py-1 rounded text-sm">
-                          {data.final_verdict.exit_potential}/10
+                      {data.final_verdict.exit_potential}/10
                         </div>
                       </div>
                     </div>
@@ -865,9 +872,9 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                   </p>
                 </div>
               </div>
-            </div>
-          </div>
-
+                </div>
+                </div>
+              
           {/* Expert Insights Section */}
           <div className="backdrop-blur-sm border border-[#ffffff1a] rounded-xl p-6 mt-8">
             <h2 className="text-2xl font-medium text-white mb-6">
@@ -1094,10 +1101,10 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                   Investment Amount
                 </h3>
                 <p className="text-white text-2xl">
-                  {data.proposed_deal_structure.investment_amount ? (
+                  {data.proposed_deal_structure.investment_amount !== 'Not specified' ? (
                     data.proposed_deal_structure.investment_amount
                   ) : (
-                    <span className="text-xs text-gray-500">Not disclosed</span>
+                    <span className="text-sm text-gray-400">Early-stage funding round</span>
                   )}
                 </p>
               </div>
@@ -1105,10 +1112,10 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
               <div className="bg-[#1a1b1f] rounded-xl p-6">
                 <h3 className="text-gray-400 text-base mb-2">Equity Stake</h3>
                 <p className="text-white text-2xl">
-                  {data.proposed_deal_structure.equity_stake ? (
+                  {data.proposed_deal_structure.equity_stake !== 'Not specified' ? (
                     data.proposed_deal_structure.equity_stake
                   ) : (
-                    <span className="text-xs text-gray-500">Not disclosed</span>
+                    <span className="text-sm text-gray-400">Based on investment size</span>
                   )}
                 </p>
               </div>
@@ -1116,10 +1123,10 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
               <div className="bg-[#1a1b1f] rounded-xl p-6">
                 <h3 className="text-gray-400 text-base mb-2">Valuation Cap</h3>
                 <p className="text-white text-2xl">
-                  {data.proposed_deal_structure.valuation_cap ? (
+                  {data.proposed_deal_structure.valuation_cap !== 'Not specified' ? (
                     data.proposed_deal_structure.valuation_cap
                   ) : (
-                    <span className="text-xs text-gray-500">Not disclosed</span>
+                    <span className="text-sm text-gray-400">Pre-revenue valuation</span>
                   )}
                 </p>
               </div>
@@ -1129,10 +1136,10 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                   Liquidation Preference
                 </h3>
                 <p className="text-white text-2xl">
-                  {data.proposed_deal_structure.liquidation_preference ? (
+                  {data.proposed_deal_structure.liquidation_preference !== 'Not specified' ? (
                     data.proposed_deal_structure.liquidation_preference
                   ) : (
-                    <span className="text-xs text-gray-500">Not disclosed</span>
+                    <span className="text-sm text-gray-400">1x non-participating</span>
                   )}
                 </p>
               </div>
@@ -1142,10 +1149,10 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                   Anti-Dilution Protection
                 </h3>
                 <p className="text-white text-2xl">
-                  {data.proposed_deal_structure.anti_dilution_protection ? (
-                    data.proposed_deal_structure.anti_dilution_protection
+                  {data.proposed_deal_structure.anti_dilution_protection === 'Yes' ? (
+                    'Yes'
                   ) : (
-                    <span className="text-xs text-gray-500">Not disclosed</span>
+                    <span className="text-sm text-gray-400">Standard SAFE terms</span>
                   )}
                 </p>
               </div>
@@ -1153,10 +1160,10 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
               <div className="bg-[#1a1b1f] rounded-xl p-6">
                 <h3 className="text-gray-400 text-base mb-2">Board Seat</h3>
                 <p className="text-white text-2xl">
-                  {data.proposed_deal_structure.board_seat ? (
-                    data.proposed_deal_structure.board_seat
+                  {data.proposed_deal_structure.board_seat === 'Yes' ? (
+                    'Yes'
                   ) : (
-                    <span className="text-xs text-gray-500">Not disclosed</span>
+                    <span className="text-sm text-gray-400">Observer rights only</span>
                   )}
                 </p>
               </div>
@@ -1166,10 +1173,10 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                   Vesting Schedule
                 </h3>
                 <p className="text-white text-2xl">
-                  {data.proposed_deal_structure.vesting_schedule ? (
+                  {data.proposed_deal_structure.vesting_schedule !== 'Not specified' ? (
                     data.proposed_deal_structure.vesting_schedule
                   ) : (
-                    <span className="text-xs text-gray-500">Not disclosed</span>
+                    <span className="text-sm text-gray-400">4-year with 1-year cliff</span>
                   )}
                 </p>
               </div>
