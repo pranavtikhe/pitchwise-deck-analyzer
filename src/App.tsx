@@ -9,6 +9,9 @@ import NotFound from "./pages/NotFound";
 import History from "./pages/History";
 import LoginPage from "./pages/auth/login";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PrivacyPolicy from './components/PrivacyPolicy';
+import TermsOfUse from './components/TermsOfUse';
+import ResponsibleAI from './components/ResponsibleAI';
 
 const queryClient = new QueryClient();
 
@@ -37,6 +40,9 @@ const App = () => (
               </ProtectedRoute>
             }
           />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-use" element={<TermsOfUse />} />
+          <Route path="/responsible-ai" element={<ResponsibleAI />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

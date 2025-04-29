@@ -1,7 +1,7 @@
 export const API_CONFIG = {
   MISTRAL_BASE_URL: 'https://api.mistral.ai/v1/chat/completions',
   OPENAI_BASE_URL: 'https://api.openai.com/v1/chat/completions',
-  GEMINI_BASE_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent',
+  GEMINI_BASE_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent',
   MISTRAL_API_KEY: import.meta.env.VITE_MISTRAL_API_KEY,
   OPENAI_API_KEY: import.meta.env.VITE_OPENAI_API_KEY,
   GEMINI_API_KEY: import.meta.env.VITE_GEMINI_API_KEY,

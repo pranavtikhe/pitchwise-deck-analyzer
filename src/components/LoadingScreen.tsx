@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 import styles from '@/styles/upload.module.scss';
 
 const steps = [
-  { title: 'Document Processing', description: 'Extracting text and data from pitch deck.' },
-  { title: 'Startup Profile', description: 'Analyzing company information and business model.' },
-  { title: 'Market Analysis', description: 'Evaluating market position and competition.' },
-  { title: 'Sentiment Analysis', description: 'Assessing pitch clarity and investor impact.' },
-  { title: 'Report Generation', description: 'Creating comprehensive investment analysis.' }
+  { title: 'Document Processing' },
+  { title: 'Startup Profile' },
+  { title: 'Market Analysis' },
+  { title: 'Sentiment Analysis' },
+  { title: 'Report Generation' }
 ];
 
 interface LoadingScreenProps {
@@ -19,8 +19,7 @@ const LoadingScreen = ({ progress = 0, text = 'Generating' }: LoadingScreenProps
   const [animatedProgress, setAnimatedProgress] = useState(0);
 
   useEffect(() => {
-    // Smoothly animate to the target progress
-    const animationDuration = 500; // 500ms for smooth animation
+    const animationDuration = 500;
     const startTime = Date.now();
     const startProgress = animatedProgress;
     const targetProgress = progress;
@@ -30,7 +29,6 @@ const LoadingScreen = ({ progress = 0, text = 'Generating' }: LoadingScreenProps
       const elapsed = currentTime - startTime;
       const progress = Math.min(elapsed / animationDuration, 1);
 
-      // Ease out cubic function for smooth animation
       const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
       const currentProgress = startProgress + (targetProgress - startProgress) * easeOut(progress);
 
@@ -44,11 +42,7 @@ const LoadingScreen = ({ progress = 0, text = 'Generating' }: LoadingScreenProps
     requestAnimationFrame(animate);
   }, [progress]);
 
-  // Calculate which step is active based on animated progress
   const currentStep = Math.min(Math.floor(animatedProgress / 20), steps.length - 1);
-  
-  // Calculate the fill height for the timeline
-  const fillHeight = `${(animatedProgress / 100) * 100}%`;
 
   return (
     <div className={styles.gradientWrapper}>
@@ -57,38 +51,28 @@ const LoadingScreen = ({ progress = 0, text = 'Generating' }: LoadingScreenProps
       <div className={styles.innerBox}>
         <h2 className="text-2xl font-medium text-white mb-10">{text}<span className="animate-pulse">...</span></h2>
 
-        <div className={styles.timelineWrapper}>
-          <div className={styles.timeline}>
+        <div className={styles.simpleProgress}>
+          <div className={styles.progressBar}>
             <div 
-              className={styles.timelineFill} 
+              className={styles.progressFill} 
               style={{ 
-                height: fillHeight,
-                transition: 'height 0.3s ease-in-out'
+                width: `${animatedProgress}%`,
+                transition: 'width 0.3s ease-in-out'
               }} 
             />
-            {steps.map((_, index) => (
+          </div>
+          <div className={styles.progressText}>{Math.round(animatedProgress)}%</div>
+          
+          <div className={styles.stepsGrid}>
+            {steps.map((step, index) => (
               <div 
                 key={index} 
-                className={`${styles.timelineStep} ${index <= currentStep ? styles.active : ''}`}
+                className={`${styles.stepBlock} ${index <= currentStep ? styles.completed : ''}`}
               >
-                <div className={styles.square}>
-                  <div className={styles.circle}>
-                    {index <= currentStep && <div className={styles.dot} />}
-                  </div>
+                <div className={styles.stepCheck}>
+                  {index <= currentStep && '✓'}
                 </div>
-              </div>
-            ))}
-          </div>
-
-          <div className={styles.textSteps}>
-            {steps.map((step, index) => (
-              <div key={index} className={styles.stepContent}>
-                <h3 className={index <= currentStep ? styles.stepTitleActive : styles.stepTitle}>
-                  {step.title}
-                </h3>
-                <p className={index <= currentStep ? styles.stepDescActive : styles.stepDesc}>
-                  {step.description}
-                </p>
+                <div className={styles.stepTitle}>{step.title}</div>
               </div>
             ))}
           </div>

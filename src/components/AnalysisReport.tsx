@@ -369,9 +369,9 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
   }, [data]);
 
   if (showHistory) {
-  return (
+    return (
       <div>
-        <button 
+        <button
           onClick={() => setShowHistory(false)}
           className="fixed top-4 right-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-4 py-2 rounded-lg flex items-center gap-2 z-10"
         >
@@ -383,7 +383,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
           <p className="text-center text-gray-400">
             History view coming soon...
           </p>
-      </div>
+        </div>
       </div>
     );
   }
@@ -392,16 +392,16 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
   if (!data) {
     return (
       <div className={`${styles.gradientWrapper} font-fustat`}>
-      <img
-        src="/images/backgroundgradiant.png"
-        alt="Gradient Background"
-        className={styles.gradientBackground}
-      />
+        <img
+          src="/images/backgroundgradiant.png"
+          alt="Gradient Background"
+          className={styles.gradientBackground}
+        />
         <div className={styles.innerBox}>
           <div className="flex flex-col items-center justify-center min-h-[400px]">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
             <p className="text-gray-400">Loading analysis report...</p>
-              </div>
+          </div>
         </div>
       </div>
     );
@@ -416,32 +416,47 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
       />
       <div className={styles.innerBox}>
         <div className="flex flex-col items-start mb-4">
-          <h4 className="text-xl font-medium text-white">Analysis For: {data.company_overview.company_name}</h4>
-          <p className="text-gray-400 text-sm mt-1">Industry: {data.industry_type} | Date: {format(data.analyzedAt, "MMMM dd yyyy")}</p>
+          <h4 className="text-xl font-medium text-white">
+            Analysis For: {data.company_overview.company_name}
+          </h4>
+          <p className="text-gray-400 text-sm mt-1">
+            Industry: {data.industry_type} | Date:{" "}
+            {format(data.analyzedAt, "MMMM dd yyyy")}
+          </p>
         </div>
         <div className="bg-[#212228] bg-opacity-50 backdrop-blur-md rounded-xl p-6">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {/* Pitch Analysis Card */}
             <div className="backdrop-blur-sm border border-[#ffffff1a] rounded-xl p-6">
-                  <div className="flex items-center mb-4">
+              <div className="flex items-center mb-4">
                 <FileText className="text-teal-500 w-5 h-5 mr-3" />
                 <h3 className="text-white text-lg font-medium">
                   Pitch Analysis
                 </h3>
-        </div>
+              </div>
               <div className="space-y-4">
                 <div>
-                      <p className="text-gray-400 text-sm mb-1">Clarity Score:</p>
+                  <p className="text-gray-400 text-sm mb-1">Clarity Score:</p>
                   <p className="text-white text-2xl font-bold">
                     {data.pitch_clarity}/10
                   </p>
-            </div>
-            <div>
-                      <p className="text-gray-400 text-sm mb-1">Sentiment:</p>
-                  <p className={`text-${data.reputation_analysis?.overall?.sentiment?.toLowerCase() === 'positive' ? 'green' : data.reputation_analysis?.overall?.sentiment?.toLowerCase() === 'negative' ? 'red' : 'yellow'}-500 font-medium`}>
-                    {data.reputation_analysis?.overall?.sentiment || 'Neutral'}
+                </div>
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Sentiment:</p>
+                  <p
+                    className={`text-${
+                      data.reputation_analysis?.overall?.sentiment?.toLowerCase() ===
+                      "positive"
+                        ? "green"
+                        : data.reputation_analysis?.overall?.sentiment?.toLowerCase() ===
+                          "negative"
+                        ? "red"
+                        : "yellow"
+                    }-500 font-medium`}
+                  >
+                    {data.reputation_analysis?.overall?.sentiment || "Neutral"}
                   </p>
-              </div>
+                </div>
                 <div className="pt-4 border-t border-[#ffffff1a]">
                   <p className="text-sm text-gray-300">
                     AI detected{" "}
@@ -453,31 +468,32 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                       {data.weaknesses?.length || 0} potential issues
                     </span>
                   </p>
-            </div>
-            </div>
                 </div>
+              </div>
+            </div>
 
             {/* Investment Potential Card */}
             <div className="backdrop-blur-sm border border-[#ffffff1a] rounded-xl p-6">
-                  <div className="flex items-center mb-4">
+              <div className="flex items-center mb-4">
                 <FileText className="text-teal-500 w-5 h-5 mr-3" />
                 <h3 className="text-white text-lg font-medium">
                   Investment Potential
                 </h3>
-                      </div>
+              </div>
               <div className="space-y-4">
                 <div>
-                      <p className="text-gray-400 text-sm mb-1">Score:</p>
+                  <p className="text-gray-400 text-sm mb-1">Score:</p>
                   <p className="text-white text-2xl font-bold">
                     {data.investment_score}/10
                   </p>
-                    </div>
-                    <div>
-                      <p className="text-gray-400 text-sm mb-1">Exit Potential:</p>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Exit Potential:</p>
                   <p className="text-white font-medium">
-                    {data.proposed_deal_structure?.valuation_cap || 'Not specified'}
+                    {data.proposed_deal_structure?.valuation_cap ||
+                      "Not specified"}
                   </p>
-                    </div>
+                </div>
                 <div className="pt-4 border-t border-[#ffffff1a]">
                   <p className="text-sm text-gray-300">
                     {data.market_analysis?.growth_rate ? (
@@ -485,105 +501,110 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                         Growth rate:{" "}
                         <span className="font-medium">
                           {data.market_analysis.growth_rate}
-                        </span>
-                        {" "}with{" "}
+                        </span>{" "}
+                        with{" "}
                         <span className="font-medium">
-                          {data.final_verdict.risk_factor >= 7 ? 'high' : data.final_verdict.risk_factor >= 4 ? 'moderate' : 'low'} risk factors
+                          {data.final_verdict.risk_factor >= 7
+                            ? "high"
+                            : data.final_verdict.risk_factor >= 4
+                            ? "moderate"
+                            : "low"}{" "}
+                          risk factors
                         </span>
                       </>
                     ) : (
                       "Market analysis data not available"
                     )}
                   </p>
-                  </div>
-                  </div>
-                  </div>
-                  
+                </div>
+              </div>
+            </div>
+
             {/* Market Position Card */}
             <div className="backdrop-blur-sm border border-[#ffffff1a] rounded-xl p-6">
-                  <div className="flex items-center mb-4">
+              <div className="flex items-center mb-4">
                 <FileText className="text-teal-500 w-5 h-5 mr-3" />
                 <h3 className="text-white text-lg font-medium">
                   Market Position
                 </h3>
-                  </div>
+              </div>
               <div className="space-y-4">
                 <div>
-                      <p className="text-gray-400 text-sm mb-1">Classification:</p>
+                  <p className="text-gray-400 text-sm mb-1">Classification:</p>
                   <p className="text-white text-2xl font-bold">
                     {data.market_position}
                   </p>
-                    </div>
-                    <div>
-                      <p className="text-gray-400 text-sm mb-1">Industry:</p>
+                </div>
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Industry:</p>
                   <p className="text-gray-300 font-medium">
                     {data.industry_type}
                   </p>
-                    </div>
+                </div>
                 <div className="pt-4 border-t border-[#ffffff1a]">
                   <p className="text-sm text-gray-300">
                     {data.competitor_analysis?.competitors ? (
                       <>
-                    Competing with{" "}
-                    <span className="font-medium">
+                        Competing with{" "}
+                        <span className="font-medium">
                           {data.competitor_analysis.competitors.length}{" "}
                           established players
-                    </span>
+                        </span>
                       </>
                     ) : (
                       "Competitor data not available"
                     )}
                   </p>
-                  </div>
-                  </div>
                 </div>
               </div>
+            </div>
+          </div>
           <div>
             <div className="backdrop-blur-sm border border-[#ffffff1a] rounded-xl p-6 mt-8">
-            <h2 className="text-2xl font-medium text-white mb-8">
-              Company Overview
-            </h2>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="border-b border-[#ffffff1a] pb-4">
-                <p className="text-gray-400 text-sm mb-1">Company Name</p>
-                <p className="text-white text-base">
-                  {data.company_overview.company_name}
-                </p>
-              </div>
-              
-              <div className="border-b border-[#ffffff1a] pb-4">
-                <p className="text-gray-400 text-sm mb-1">Industry</p>
-                <p className="text-white text-base">
-                  {data.company_overview.industry}
-                </p>
-              </div>
-              
-              <div className="border-b border-[#ffffff1a] pb-4">
-                <p className="text-gray-400 text-sm mb-1">Market Position</p>
-                <p className="text-white text-base">
-                  {data.company_overview.market_position}
-                </p>
-              </div>
-              
-              <div className="border-b border-[#ffffff1a] pb-4">
-                <p className="text-gray-400 text-sm mb-1">Founded</p>
-                <p className="text-white text-base">
-                  {data.company_overview.founded_on || "N/A"}
-                </p>
-              </div>
-              
-              <div className="border-b border-[#ffffff1a] pb-4">
-                <p className="text-gray-400 text-sm mb-1">Business Model</p>
-                <p className="text-white text-base">
-                  {data.company_overview.business_model}
-                </p>
-              </div>
-              
-              <div className="border-b border-[#ffffff1a] pb-4">
-                <p className="text-gray-400 text-sm mb-1">Key Offerings</p>
-                <p className="text-white text-base">
-                  {data.company_overview.key_offerings}
-                </p>
+              <h2 className="text-2xl font-medium text-white mb-8">
+                Company Overview
+              </h2>
+              <div className="grid grid-cols-2 gap-6">
+                <div className="border-b border-[#ffffff1a] pb-4">
+                  <p className="text-gray-400 text-sm mb-1">Company Name</p>
+                  <p className="text-white text-base">
+                    {data.company_overview.company_name}
+                  </p>
+                </div>
+
+                <div className="border-b border-[#ffffff1a] pb-4">
+                  <p className="text-gray-400 text-sm mb-1">Industry</p>
+                  <p className="text-white text-base">
+                    {data.company_overview.industry}
+                  </p>
+                </div>
+
+                <div className="border-b border-[#ffffff1a] pb-4">
+                  <p className="text-gray-400 text-sm mb-1">Market Position</p>
+                  <p className="text-white text-base">
+                    {data.company_overview.market_position}
+                  </p>
+                </div>
+
+                <div className="border-b border-[#ffffff1a] pb-4">
+                  <p className="text-gray-400 text-sm mb-1">Founded</p>
+                  <p className="text-white text-base">
+                    {data.company_overview.founded_on || "N/A"}
+                  </p>
+                </div>
+
+                <div className="border-b border-[#ffffff1a] pb-4">
+                  <p className="text-gray-400 text-sm mb-1">Business Model</p>
+                  <p className="text-white text-base">
+                    {data.company_overview.business_model}
+                  </p>
+                </div>
+
+                <div className="border-b border-[#ffffff1a] pb-4">
+                  <p className="text-gray-400 text-sm mb-1">Key Offerings</p>
+                  <p className="text-white text-base">
+                    {data.company_overview.key_offerings}
+                  </p>
                 </div>
               </div>
             </div>
@@ -596,23 +617,23 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                   Strengths & Weaknesses
                 </h2>
                 <div className="grid grid-cols-2 gap-8">
-              <div>
+                  <div>
                     <h3 className="text-green-500 text-lg mb-4">
                       Strengths (Pros)
                     </h3>
                     <ul className="space-y-3">
                       {data.strengths.map((strength, index) => (
-                    <li key={index} className="flex items-start">
+                        <li key={index} className="flex items-start">
                           <span className="text-gray-400 mr-2 flex-shrink-0">
                             •
                           </span>
                           <span className="text-gray-300 text-sm leading-relaxed">
                             {strength}
                           </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                   <div>
                     <h3 className="text-red-500 text-lg mb-4">
                       Weaknesses (Cons)
@@ -626,12 +647,12 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                           <span className="text-gray-300 text-sm leading-relaxed">
                             {weakness}
                           </span>
-                    </li>
-                  ))}
-                </ul>
-          </div>
-        </div>
-      </div>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
 
               {/* Funding History Section */}
               <div className="backdrop-blur-sm border border-[#ffffff1a] rounded-xl p-6">
@@ -664,18 +685,18 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                             className="border-b border-[#ffffff1a] hover:bg-[#ffffff05] transition-colors"
                           >
                             <td className="py-3 px-4 text-white text-left">
-                              {round.type || 'Unknown Round'}
+                              {round.type || "Unknown Round"}
                             </td>
                             <td className="py-3 px-4 text-white text-left">
-                              {round.amount || 'Not disclosed'}
+                              {round.amount || "Not disclosed"}
                             </td>
                             <td className="py-3 px-4 text-white text-left">
-                              {round.key_investors?.length > 0 
+                              {round.key_investors?.length > 0
                                 ? round.key_investors.join(", ")
-                                : 'Not disclosed'}
+                                : "Not disclosed"}
                             </td>
                             <td className="py-3 px-4 text-white text-left">
-                              {round.date || 'Not specified'}
+                              {round.date || "Not specified"}
                             </td>
                           </tr>
                         ))}
@@ -691,24 +712,24 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                       No Funding History Available
                     </h3>
                     <p className="text-gray-400 max-w-md">
-                      The pitch deck does not contain any funding history information. 
-                      This could be because the company is pre-seed or has not disclosed 
-                      their funding rounds.
+                      The pitch deck does not contain any funding history
+                      information. This could be because the company is pre-seed
+                      or has not disclosed their funding rounds.
                     </p>
                   </div>
                 )}
               </div>
+            </div>
           </div>
-        </div>
           <div>
             {/* Competitor Comparison Section */}
             <div className="backdrop-blur-sm border border-[#ffffff1a] rounded-xl p-6 mb-8">
               <h2 className="text-2xl font-medium text-white mb-6">
                 Competitor Comparison
               </h2>
-            <div className="overflow-x-auto">
+              <div className="overflow-x-auto">
                 <table className="w-full">
-                <thead>
+                  <thead>
                     <tr className="border-b border-[#ffffff1a]">
                       <th className="text-left py-3 px-4 text-gray-400 font-normal">
                         Competitor
@@ -725,9 +746,9 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                       <th className="text-left py-3 px-4 text-gray-400 font-normal">
                         Strengths
                       </th>
-                  </tr>
-                </thead>
-                <tbody>
+                    </tr>
+                  </thead>
+                  <tbody>
                     {data.competitor_analysis.competitors.map(
                       (competitor, index) => (
                         <tr key={index} className="border-b border-[#ffffff1a]">
@@ -745,14 +766,14 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                           </td>
                           <td className="py-4 px-4 text-white text-left">
                             {competitor.strengths}
-                      </td>
-                    </tr>
+                          </td>
+                        </tr>
                       )
-                  )}
-                </tbody>
-              </table>
-          </div>
-        </div>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
 
             {/* Market Comparison Section */}
             <div className="backdrop-blur-sm border border-[#ffffff1a] rounded-xl p-6 mb-8">
@@ -776,63 +797,83 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                             key={index}
                             className="text-left py-3 px-4 text-gray-400 font-normal"
                           >
-                          {competitor.name}
-                        </th>
-                      ))}
+                            {competitor.name}
+                          </th>
+                        ))}
                     </tr>
                   </thead>
                   <tbody>
                     <tr className="border-b border-[#ffffff1a]">
-                      <td className="py-4 px-4 text-gray-400 text-left">Market Share</td>
+                      <td className="py-4 px-4 text-gray-400 text-left">
+                        Market Share
+                      </td>
                       <td className="py-4 px-4 text-white text-left">
                         {data.market_position}
                       </td>
                       {data.competitor_analysis.competitors
                         .slice(0, 4)
                         .map((competitor, index) => (
-                          <td key={index} className="py-4 px-4 text-white text-left">
-                          {competitor.market_position}
-                        </td>
-                      ))}
+                          <td
+                            key={index}
+                            className="py-4 px-4 text-white text-left"
+                          >
+                            {competitor.market_position}
+                          </td>
+                        ))}
                     </tr>
                     <tr className="border-b border-[#ffffff1a]">
-                      <td className="py-4 px-4 text-gray-400 text-left">Growth Rate</td>
+                      <td className="py-4 px-4 text-gray-400 text-left">
+                        Growth Rate
+                      </td>
                       <td className="py-4 px-4 text-white text-left">
                         {data.market_analysis.growth_rate}
                       </td>
                       {data.competitor_analysis.competitors
                         .slice(0, 4)
                         .map((competitor, index) => (
-                          <td key={index} className="py-4 px-4 text-white text-left">
-                          {competitor.growth_rate || "N/A"}
-                        </td>
-                      ))}
+                          <td
+                            key={index}
+                            className="py-4 px-4 text-white text-left"
+                          >
+                            {competitor.growth_rate || "N/A"}
+                          </td>
+                        ))}
                     </tr>
                     <tr className="border-b border-[#ffffff1a]">
-                      <td className="py-4 px-4 text-gray-400 text-left">Revenue Model</td>
+                      <td className="py-4 px-4 text-gray-400 text-left">
+                        Revenue Model
+                      </td>
                       <td className="py-4 px-4 text-white text-left">
                         {data.company_overview.business_model}
                       </td>
                       {data.competitor_analysis.competitors
                         .slice(0, 4)
                         .map((competitor, index) => (
-                          <td key={index} className="py-4 px-4 text-white text-left">
-                          {competitor.business_model || "N/A"}
-                        </td>
-                      ))}
+                          <td
+                            key={index}
+                            className="py-4 px-4 text-white text-left"
+                          >
+                            {competitor.business_model || "N/A"}
+                          </td>
+                        ))}
                     </tr>
                     <tr className="border-b border-[#ffffff1a]">
-                      <td className="py-4 px-4 text-gray-400 text-left">Key Differentiator</td>
+                      <td className="py-4 px-4 text-gray-400 text-left">
+                        Key Differentiator
+                      </td>
                       <td className="py-4 px-4 text-white text-left">
                         {data.strengths[0] || "N/A"}
                       </td>
                       {data.competitor_analysis.competitors
                         .slice(0, 4)
                         .map((competitor, index) => (
-                          <td key={index} className="py-4 px-4 text-white text-left">
-                          {competitor.key_differentiator || "N/A"}
-                        </td>
-                      ))}
+                          <td
+                            key={index}
+                            className="py-4 px-4 text-white text-left"
+                          >
+                            {competitor.key_differentiator || "N/A"}
+                          </td>
+                        ))}
                     </tr>
                   </tbody>
                 </table>
@@ -850,16 +891,16 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                   <div className="relative pt-2">
                     <div className="relative pt-2">
                       <div className="w-full bg-gray-700 rounded-full h-2 relative">
-                      <div
+                        <div
                           className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full"
-                        style={{
-                          width: `${
-                            (data.final_verdict.exit_potential / 10) * 100
-                          }%`,
-                        }}
-                    ></div>
+                          style={{
+                            width: `${
+                              (data.final_verdict.exit_potential / 10) * 100
+                            }%`,
+                          }}
+                        ></div>
                         <div className="absolute -top-10 right-0 bg-purple-900 text-purple-300 px-2 py-1 rounded text-sm">
-                      {data.final_verdict.exit_potential}/10
+                          {data.final_verdict.exit_potential}/10
                         </div>
                       </div>
                     </div>
@@ -868,13 +909,14 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                 <div className="bg-[#1a1b1f] rounded-xl p-6">
                   <h3 className="text-gray-400 mb-4">Potential Exit Value</h3>
                   <p className="text-3xl font-semibold text-white">
-                    {data.proposed_deal_structure?.valuation_cap || "Not disclosed"}
+                    {data.proposed_deal_structure?.valuation_cap ||
+                      "Not disclosed"}
                   </p>
                 </div>
               </div>
-                </div>
-                </div>
-              
+            </div>
+          </div>
+
           {/* Expert Insights Section */}
           <div className="backdrop-blur-sm border border-[#ffffff1a] rounded-xl p-6 mt-8">
             <h2 className="text-2xl font-medium text-white mb-6">
@@ -896,7 +938,8 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                       {data.expert_opinions[0].summary}
                     </p>
                     <p className="text-gray-500 text-sm">
-                      Reference: {data.expert_opinions[0].reference} | Date: {data.expert_opinions[0].date}
+                      Reference: {data.expert_opinions[0].reference} | Date:{" "}
+                      {data.expert_opinions[0].date}
                     </p>
                   </div>
                 ) : (
@@ -939,23 +982,45 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                         </td>
                         <td className="py-3 text-white">
                           {data.expert_insights?.reputation_analysis
-                            ?.news_media || <span className="text-xs text-gray-500">N/A</span>}
+                            ?.news_media || (
+                            <span className="text-xs text-gray-500">N/A</span>
+                          )}
                           /10
                         </td>
                         <td className="py-3 flex">
                           {(() => {
-                            const score = data.expert_insights?.reputation_analysis?.news_media || 0;
+                            const score =
+                              data.expert_insights?.reputation_analysis
+                                ?.news_media || 0;
                             const fullStars = Math.floor(score / 2);
                             const halfStar = score % 2 >= 1 ? 1 : 0;
                             return (
                               <>
                                 {Array.from({ length: 5 }).map((_, i) => {
                                   if (i < fullStars) {
-                                    return <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />;
+                                    return (
+                                      <Star
+                                        key={i}
+                                        className="w-4 h-4 text-yellow-400 fill-yellow-400"
+                                      />
+                                    );
                                   } else if (i === fullStars && halfStar) {
-                                    return <Star key={i} className="w-4 h-4 text-yellow-400" style={{ fill: 'url(#halfStarGradient)' }} />;
+                                    return (
+                                      <Star
+                                        key={i}
+                                        className="w-4 h-4 text-yellow-400"
+                                        style={{
+                                          fill: "url(#halfStarGradient)",
+                                        }}
+                                      />
+                                    );
                                   } else {
-                                    return <Star key={i} className="w-4 h-4 text-gray-600" />;
+                                    return (
+                                      <Star
+                                        key={i}
+                                        className="w-4 h-4 text-gray-600"
+                                      />
+                                    );
                                   }
                                 })}
                               </>
@@ -969,23 +1034,45 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                         </td>
                         <td className="py-3 text-white">
                           {data.expert_insights?.reputation_analysis
-                            ?.social_media || <span className="text-xs text-gray-500">N/A</span>}
+                            ?.social_media || (
+                            <span className="text-xs text-gray-500">N/A</span>
+                          )}
                           /10
                         </td>
                         <td className="py-3 flex">
                           {(() => {
-                            const score = data.expert_insights?.reputation_analysis?.social_media || 0;
+                            const score =
+                              data.expert_insights?.reputation_analysis
+                                ?.social_media || 0;
                             const fullStars = Math.floor(score / 2);
                             const halfStar = score % 2 >= 1 ? 1 : 0;
                             return (
                               <>
                                 {Array.from({ length: 5 }).map((_, i) => {
                                   if (i < fullStars) {
-                                    return <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />;
+                                    return (
+                                      <Star
+                                        key={i}
+                                        className="w-4 h-4 text-yellow-400 fill-yellow-400"
+                                      />
+                                    );
                                   } else if (i === fullStars && halfStar) {
-                                    return <Star key={i} className="w-4 h-4 text-yellow-400" style={{ fill: 'url(#halfStarGradient)' }} />;
+                                    return (
+                                      <Star
+                                        key={i}
+                                        className="w-4 h-4 text-yellow-400"
+                                        style={{
+                                          fill: "url(#halfStarGradient)",
+                                        }}
+                                      />
+                                    );
                                   } else {
-                                    return <Star key={i} className="w-4 h-4 text-gray-600" />;
+                                    return (
+                                      <Star
+                                        key={i}
+                                        className="w-4 h-4 text-gray-600"
+                                      />
+                                    );
                                   }
                                 })}
                               </>
@@ -999,23 +1086,45 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                         </td>
                         <td className="py-3 text-white">
                           {data.expert_insights?.reputation_analysis
-                            ?.investor_reviews || <span className="text-xs text-gray-500">N/A</span>}
+                            ?.investor_reviews || (
+                            <span className="text-xs text-gray-500">N/A</span>
+                          )}
                           /10
                         </td>
                         <td className="py-3 flex">
                           {(() => {
-                            const score = data.expert_insights?.reputation_analysis?.investor_reviews || 0;
+                            const score =
+                              data.expert_insights?.reputation_analysis
+                                ?.investor_reviews || 0;
                             const fullStars = Math.floor(score / 2);
                             const halfStar = score % 2 >= 1 ? 1 : 0;
                             return (
                               <>
                                 {Array.from({ length: 5 }).map((_, i) => {
                                   if (i < fullStars) {
-                                    return <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />;
+                                    return (
+                                      <Star
+                                        key={i}
+                                        className="w-4 h-4 text-yellow-400 fill-yellow-400"
+                                      />
+                                    );
                                   } else if (i === fullStars && halfStar) {
-                                    return <Star key={i} className="w-4 h-4 text-yellow-400" style={{ fill: 'url(#halfStarGradient)' }} />;
+                                    return (
+                                      <Star
+                                        key={i}
+                                        className="w-4 h-4 text-yellow-400"
+                                        style={{
+                                          fill: "url(#halfStarGradient)",
+                                        }}
+                                      />
+                                    );
                                   } else {
-                                    return <Star key={i} className="w-4 h-4 text-gray-600" />;
+                                    return (
+                                      <Star
+                                        key={i}
+                                        className="w-4 h-4 text-gray-600"
+                                      />
+                                    );
                                   }
                                 })}
                               </>
@@ -1029,23 +1138,45 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                         </td>
                         <td className="py-3 text-white">
                           {data.expert_insights?.reputation_analysis
-                            ?.customer_feedback || <span className="text-xs text-gray-500">N/A</span>}
+                            ?.customer_feedback || (
+                            <span className="text-xs text-gray-500">N/A</span>
+                          )}
                           /10
                         </td>
                         <td className="py-3 flex">
                           {(() => {
-                            const score = data.expert_insights?.reputation_analysis?.customer_feedback || 0;
+                            const score =
+                              data.expert_insights?.reputation_analysis
+                                ?.customer_feedback || 0;
                             const fullStars = Math.floor(score / 2);
                             const halfStar = score % 2 >= 1 ? 1 : 0;
                             return (
                               <>
                                 {Array.from({ length: 5 }).map((_, i) => {
                                   if (i < fullStars) {
-                                    return <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />;
+                                    return (
+                                      <Star
+                                        key={i}
+                                        className="w-4 h-4 text-yellow-400 fill-yellow-400"
+                                      />
+                                    );
                                   } else if (i === fullStars && halfStar) {
-                                    return <Star key={i} className="w-4 h-4 text-yellow-400" style={{ fill: 'url(#halfStarGradient)' }} />;
+                                    return (
+                                      <Star
+                                        key={i}
+                                        className="w-4 h-4 text-yellow-400"
+                                        style={{
+                                          fill: "url(#halfStarGradient)",
+                                        }}
+                                      />
+                                    );
                                   } else {
-                                    return <Star key={i} className="w-4 h-4 text-gray-600" />;
+                                    return (
+                                      <Star
+                                        key={i}
+                                        className="w-4 h-4 text-gray-600"
+                                      />
+                                    );
                                   }
                                 })}
                               </>
@@ -1058,23 +1189,46 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                           Overall
                         </td>
                         <td className="py-3 text-white font-semibold">
-                          {data.expert_insights?.reputation_analysis?.overall || <span className="text-xs text-gray-500">N/A</span>}
+                          {data.expert_insights?.reputation_analysis
+                            ?.overall || (
+                            <span className="text-xs text-gray-500">N/A</span>
+                          )}
                           /10
                         </td>
                         <td className="py-3 flex">
                           {(() => {
-                            const score = data.expert_insights?.reputation_analysis?.overall || 0;
+                            const score =
+                              data.expert_insights?.reputation_analysis
+                                ?.overall || 0;
                             const fullStars = Math.floor(score / 2);
                             const halfStar = score % 2 >= 1 ? 1 : 0;
                             return (
                               <>
                                 {Array.from({ length: 5 }).map((_, i) => {
                                   if (i < fullStars) {
-                                    return <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />;
+                                    return (
+                                      <Star
+                                        key={i}
+                                        className="w-4 h-4 text-yellow-400 fill-yellow-400"
+                                      />
+                                    );
                                   } else if (i === fullStars && halfStar) {
-                                    return <Star key={i} className="w-4 h-4 text-yellow-400" style={{ fill: 'url(#halfStarGradient)' }} />;
+                                    return (
+                                      <Star
+                                        key={i}
+                                        className="w-4 h-4 text-yellow-400"
+                                        style={{
+                                          fill: "url(#halfStarGradient)",
+                                        }}
+                                      />
+                                    );
                                   } else {
-                                    return <Star key={i} className="w-4 h-4 text-gray-600" />;
+                                    return (
+                                      <Star
+                                        key={i}
+                                        className="w-4 h-4 text-gray-600"
+                                      />
+                                    );
                                   }
                                 })}
                               </>
@@ -1094,93 +1248,140 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
             <h2 className="text-2xl font-medium text-white mb-6">
               Proposed Deal Structure
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Deal Term Cards */}
-              <div className="bg-[#1a1b1f] rounded-xl p-6">
-                <h3 className="text-gray-400 text-base mb-2">
-                  Investment Amount
-                </h3>
-                <p className="text-white text-2xl">
-                  {data.proposed_deal_structure.investment_amount !== 'Not specified' ? (
-                    data.proposed_deal_structure.investment_amount
-                  ) : (
-                    <span className="text-sm text-gray-400">Early-stage funding round</span>
-                  )}
-                </p>
+            {(!data.proposed_deal_structure || 
+              (!data.proposed_deal_structure.investment_amount && 
+               !data.proposed_deal_structure.valuation_cap && 
+               !data.proposed_deal_structure.equity_stake && 
+               !data.proposed_deal_structure.liquidation_preference && 
+               !data.proposed_deal_structure.anti_dilution_protection && 
+               !data.proposed_deal_structure.board_seat && 
+               !data.proposed_deal_structure.vesting_schedule)) ? (
+              <div className="bg-[#1a1b1f] rounded-xl p-8 text-center">
+                <div className="flex flex-col items-center justify-center py-8">
+                  <svg className="w-12 h-12 text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <h3 className="text-xl font-medium text-gray-300 mb-2">No Deal Structure Information</h3>
+                  <p className="text-gray-400">No deal structure information was proposed or disclosed in the deck</p>
+                </div>
               </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {data.proposed_deal_structure.investment_amount && data.proposed_deal_structure.investment_amount !== "Not specified" ? (
+                  <div className="bg-[#1a1b1f] rounded-xl p-6">
+                    <h3 className="text-gray-400 text-base mb-2">
+                      Investment Amount
+                    </h3>
+                    <p className="text-white text-2xl">
+                      {data.proposed_deal_structure.investment_amount}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="bg-[#1a1b1f] rounded-xl p-6">
+                    <h3 className="text-gray-400 text-base mb-2">
+                      Investment Amount
+                    </h3>
+                    <p className="text-gray-400 text-sm">The company has not disclosed their investment ask in the pitch deck</p>
+                  </div>
+                )}
 
-              <div className="bg-[#1a1b1f] rounded-xl p-6">
-                <h3 className="text-gray-400 text-base mb-2">Equity Stake</h3>
-                <p className="text-white text-2xl">
-                  {data.proposed_deal_structure.equity_stake !== 'Not specified' ? (
-                    data.proposed_deal_structure.equity_stake
-                  ) : (
-                    <span className="text-sm text-gray-400">Based on investment size</span>
-                  )}
-                </p>
-              </div>
+                {data.proposed_deal_structure.equity_stake && data.proposed_deal_structure.equity_stake !== "Not specified" ? (
+                  <div className="bg-[#1a1b1f] rounded-xl p-6">
+                    <h3 className="text-gray-400 text-base mb-2">Equity Stake</h3>
+                    <p className="text-white text-2xl">
+                      {data.proposed_deal_structure.equity_stake}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="bg-[#1a1b1f] rounded-xl p-6">
+                    <h3 className="text-gray-400 text-base mb-2">Equity Stake</h3>
+                    <p className="text-gray-400 text-sm">The company has not specified the equity stake they are offering</p>
+                  </div>
+                )}
 
-              <div className="bg-[#1a1b1f] rounded-xl p-6">
-                <h3 className="text-gray-400 text-base mb-2">Valuation Cap</h3>
-                <p className="text-white text-2xl">
-                  {data.proposed_deal_structure.valuation_cap !== 'Not specified' ? (
-                    data.proposed_deal_structure.valuation_cap
-                  ) : (
-                    <span className="text-sm text-gray-400">Pre-revenue valuation</span>
-                  )}
-                </p>
-              </div>
+                {data.proposed_deal_structure.valuation_cap && data.proposed_deal_structure.valuation_cap !== "Not specified" ? (
+                  <div className="bg-[#1a1b1f] rounded-xl p-6">
+                    <h3 className="text-gray-400 text-base mb-2">Valuation Cap</h3>
+                    <p className="text-white text-2xl">
+                      {data.proposed_deal_structure.valuation_cap}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="bg-[#1a1b1f] rounded-xl p-6">
+                    <h3 className="text-gray-400 text-base mb-2">Valuation Cap</h3>
+                    <p className="text-gray-400 text-sm">The company has not provided their valuation expectations</p>
+                  </div>
+                )}
 
-              <div className="bg-[#1a1b1f] rounded-xl p-6">
-                <h3 className="text-gray-400 text-base mb-2">
-                  Liquidation Preference
-                </h3>
-                <p className="text-white text-2xl">
-                  {data.proposed_deal_structure.liquidation_preference !== 'Not specified' ? (
-                    data.proposed_deal_structure.liquidation_preference
-                  ) : (
-                    <span className="text-sm text-gray-400">1x non-participating</span>
-                  )}
-                </p>
-              </div>
+                {data.proposed_deal_structure.liquidation_preference && data.proposed_deal_structure.liquidation_preference !== "Not specified" ? (
+                  <div className="bg-[#1a1b1f] rounded-xl p-6">
+                    <h3 className="text-gray-400 text-base mb-2">
+                      Liquidation Preference
+                    </h3>
+                    <p className="text-white text-2xl">
+                      {data.proposed_deal_structure.liquidation_preference}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="bg-[#1a1b1f] rounded-xl p-6">
+                    <h3 className="text-gray-400 text-base mb-2">
+                      Liquidation Preference
+                    </h3>
+                    <p className="text-gray-400 text-sm">Liquidation preference terms have not been specified in the deck</p>
+                  </div>
+                )}
 
-              <div className="bg-[#1a1b1f] rounded-xl p-6">
-                <h3 className="text-gray-400 text-base mb-2">
-                  Anti-Dilution Protection
-                </h3>
-                <p className="text-white text-2xl">
-                  {data.proposed_deal_structure.anti_dilution_protection === 'Yes' ? (
-                    'Yes'
-                  ) : (
-                    <span className="text-sm text-gray-400">Standard SAFE terms</span>
-                  )}
-                </p>
-              </div>
+                {data.proposed_deal_structure.anti_dilution_protection && data.proposed_deal_structure.anti_dilution_protection !== "Not specified" ? (
+                  <div className="bg-[#1a1b1f] rounded-xl p-6">
+                    <h3 className="text-gray-400 text-base mb-2">
+                      Anti-Dilution Protection
+                    </h3>
+                    <p className="text-white text-2xl">
+                      {data.proposed_deal_structure.anti_dilution_protection}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="bg-[#1a1b1f] rounded-xl p-6">
+                    <h3 className="text-gray-400 text-base mb-2">
+                      Anti-Dilution Protection
+                    </h3>
+                    <p className="text-gray-400 text-sm">Anti-dilution protection terms have not been disclosed</p>
+                  </div>
+                )}
 
-              <div className="bg-[#1a1b1f] rounded-xl p-6">
-                <h3 className="text-gray-400 text-base mb-2">Board Seat</h3>
-                <p className="text-white text-2xl">
-                  {data.proposed_deal_structure.board_seat === 'Yes' ? (
-                    'Yes'
-                  ) : (
-                    <span className="text-sm text-gray-400">Observer rights only</span>
-                  )}
-                </p>
-              </div>
+                {data.proposed_deal_structure.board_seat && data.proposed_deal_structure.board_seat !== "Not specified" ? (
+                  <div className="bg-[#1a1b1f] rounded-xl p-6">
+                    <h3 className="text-gray-400 text-base mb-2">Board Seat</h3>
+                    <p className="text-white text-2xl">
+                      {data.proposed_deal_structure.board_seat}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="bg-[#1a1b1f] rounded-xl p-6">
+                    <h3 className="text-gray-400 text-base mb-2">Board Seat</h3>
+                    <p className="text-gray-400 text-sm">Board seat arrangements have not been mentioned in the deck</p>
+                  </div>
+                )}
 
-              <div className="bg-[#1a1b1f] rounded-xl p-6 md:col-span-2">
-                <h3 className="text-gray-400 text-base mb-2">
-                  Vesting Schedule
-                </h3>
-                <p className="text-white text-2xl">
-                  {data.proposed_deal_structure.vesting_schedule !== 'Not specified' ? (
-                    data.proposed_deal_structure.vesting_schedule
-                  ) : (
-                    <span className="text-sm text-gray-400">4-year with 1-year cliff</span>
-                  )}
-                </p>
+                {data.proposed_deal_structure.vesting_schedule && data.proposed_deal_structure.vesting_schedule !== "Not specified" ? (
+                  <div className="bg-[#1a1b1f] rounded-xl p-6 md:col-span-2">
+                    <h3 className="text-gray-400 text-base mb-2">
+                      Vesting Schedule
+                    </h3>
+                    <p className="text-white text-2xl">
+                      {data.proposed_deal_structure.vesting_schedule}
+                    </p>
+                  </div>
+                ) : (
+                  <div className="bg-[#1a1b1f] rounded-xl p-6 md:col-span-2">
+                    <h3 className="text-gray-400 text-base mb-2">
+                      Vesting Schedule
+                    </h3>
+                    <p className="text-gray-400 text-sm">The company has not outlined their vesting schedule in the pitch deck</p>
+                  </div>
+                )}
               </div>
-            </div>
+            )}
           </div>
           {/* Key Questions Section */}
           <div className="backdrop-blur-sm border border-[#ffffff1a] rounded-xl p-6 mt-8">
@@ -1206,7 +1407,7 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                   {data.key_questions?.user_retention?.answer || "N/A"}
                 </p>
               </div>
-              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700">
+              <div className="bg-gray-800/50 p-4 rounded-lg border border-gray-700 md:col-span-2">
                 <h4 className="text-sm font-medium text-gray-300 mb-2">
                   {data.key_questions?.regulatory_risks?.question ||
                     "What are the regulatory risks?"}
@@ -1229,13 +1430,19 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                 {data.company_overview.company_name}
               </h3>
               <p className="text-gray-300 text-base leading-relaxed mb-8">
-                {data.company_overview.company_name} presents a compelling
-                investment opportunity with a leading position in the{" "}
-                {data.industry_type.toLowerCase()} sector. With validated
-                technology and a robust growth trajectory, the company shows
-                high potential for scalability and market penetration.
+                {(() => {
+                  const score = data.investment_score;
+                  if (score >= 8) {
+                    return `${data.company_overview.company_name} presents an excellent investment opportunity with a strong position in the ${data.industry_type.toLowerCase()} sector. The company demonstrates exceptional market potential, innovative solutions, and a clear competitive advantage, making it a highly attractive investment prospect.`;
+                  } else if (score >= 6) {
+                    return `${data.company_overview.company_name} shows promising investment potential in the ${data.industry_type.toLowerCase()} sector. While there are some areas for improvement, the company's market position and growth trajectory indicate good potential for returns.`;
+                  } else if (score >= 4) {
+                    return `${data.company_overview.company_name} presents a moderate investment opportunity in the ${data.industry_type.toLowerCase()} sector. The company shows some potential but faces significant challenges that need to be addressed for better investment prospects.`;
+                  } else {
+                    return `${data.company_overview.company_name} currently presents a high-risk investment opportunity in the ${data.industry_type.toLowerCase()} sector. The company faces substantial challenges and requires significant improvements before being considered a viable investment option.`;
+                  }
+                })()}
               </p>
-
               {/* Investment Potential Bar */}
               <div className="mb-8">
                 <div className="flex justify-between items-center mb-2">
@@ -1260,11 +1467,21 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
               {/* Radar Chart and Metrics Grid */}
               <div className="flex flex-row gap-8 items-start justify-center">
                 {/* Radar Chart */}
-                <div style={{ width: 420, height: 420 }} className="flex-shrink-0">
+                <div
+                  style={{ width: 420, height: 420 }}
+                  className="flex-shrink-0"
+                >
                   <ResponsiveContainer width="100%" height="100%">
                     <RechartsRadarChart data={chartData}>
                       <defs>
-                        <radialGradient id="radarGradient" cx="50%" cy="50%" r="80%" fx="50%" fy="50%">
+                        <radialGradient
+                          id="radarGradient"
+                          cx="50%"
+                          cy="50%"
+                          r="80%"
+                          fx="50%"
+                          fy="50%"
+                        >
                           <stop offset="28%" stopColor="#29272C" />
                           <stop offset="65%" stopColor="#B0B0B0" />
                           <stop offset="100%" stopColor="#FFFFFF" />
@@ -1344,8 +1561,8 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
             <Download className="w-5 h-5" />
             Download Analysis
           </PDFDownloadLink>
-          
-          <button 
+
+          <button
             onClick={() => window.location.reload()}
             className="flex items-center gap-2 px-6 py-3 text-white font-medium rounded-lg bg-[#212228] hover:bg-[#2a2b33] border border-[#ffffff1a] transition-all duration-200"
           >

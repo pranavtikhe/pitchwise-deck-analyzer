@@ -8,11 +8,12 @@ const Footer = () => {
       <div className={styles.container}>
         <div className={styles.content}>
           <div className={styles.links}>
-            <Link to="/terms">Terms of use</Link>
+            <Link to="/terms-of-use">Terms of use</Link>
             <span>•</span>
-            <Link to="/privacy">Privacy Policy</Link>
-            <span>•</span>
-            <Link to="/disclaimer">AI Enabled Content Notice</Link>
+            <Link to="/privacy-policy" className="text-gray-400 hover:text-white">
+              Privacy Policy
+            </Link>
+            
             <span>•</span>
             <Link to="/responsible-ai">Responsible AI</Link>
           </div>

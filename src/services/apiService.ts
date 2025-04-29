@@ -2,32 +2,22 @@ import { API_CONFIG } from '../config/api';
 
 const getApiConfig = () => {
   const useOpenAI = import.meta.env.VITE_USE_OPENAI === 'true';
-  const useGemini = import.meta.env.VITE_USE_GEMINI === 'true';
   
   const config = {
     openai: {
       baseUrl: API_CONFIG.OPENAI_BASE_URL,
       apiKey: API_CONFIG.OPENAI_API_KEY,
-      model: API_CONFIG.DEFAULT_MODEL,
+      model: 'gpt-4-turbo',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${API_CONFIG.OPENAI_API_KEY}`
-      }
-    },
-    gemini: {
-      baseUrl: API_CONFIG.GEMINI_BASE_URL,
-      apiKey: API_CONFIG.GEMINI_API_KEY,
-      model: 'gemini-pro',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-goog-api-key': API_CONFIG.GEMINI_API_KEY
       }
     }
   };
   
   console.log('=== API Configuration ===');
   console.log('Using OpenAI:', useOpenAI);
-  console.log('Using Gemini:', useGemini);
+  console.log('Model:', config.openai.model);
   console.log('=======================');
   
   return config;
@@ -186,124 +176,50 @@ export const analyzePitchDeck = async (text: string) => {
   }`;
 
   try {
-    const results = {
-      openai: null,
-      gemini: null
-    };
-
-    // OpenAI Analysis
-    if (import.meta.env.VITE_USE_OPENAI === 'true') {
-      console.log('\n=== Sending OpenAI Request ===');
-      console.log(`API Endpoint: ${apiConfig.openai.baseUrl}`);
-      
-      const openaiResponse = await fetch(apiConfig.openai.baseUrl, {
-        method: 'POST',
-        headers: apiConfig.openai.headers,
-        body: JSON.stringify({
-          model: apiConfig.openai.model,
-          messages: [
-            {
-              role: "system",
-              content: systemPrompt
-            },
-            {
-              role: "user",
-              content: text
-            }
-          ],
-          temperature: 0.7,
-          max_tokens: 4096,
-          response_format: { type: "json_object" }
-        })
-      });
-
-      if (!openaiResponse.ok) {
-        const errorData = await openaiResponse.json();
-        console.error('\n=== OpenAI API Error ===');
-        console.error(`Status: ${openaiResponse.status}`);
-        console.error(`Error Details:`, errorData);
-        console.error('================\n');
-      } else {
-        const result = await openaiResponse.json();
-        results.openai = result.choices[0].message.content;
-      }
-    }
-
-    // Gemini Analysis
-    if (import.meta.env.VITE_USE_GEMINI === 'true') {
-      console.log('\n=== Sending Gemini Request ===');
-      console.log(`API Endpoint: ${apiConfig.gemini.baseUrl}`);
-      
-      const geminiResponse = await fetch(apiConfig.gemini.baseUrl, {
-        method: 'POST',
-        headers: apiConfig.gemini.headers,
-        body: JSON.stringify({
-          contents: [{
-            parts: [{
-              text: `${systemPrompt}\n\nPlease analyze the following pitch deck:\n\n${text}`
-            }]
-          }],
-          generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 4096,
-            responseMimeType: "application/json"
+    console.log('\n=== Sending OpenAI Request ===');
+    console.log(`API Endpoint: ${apiConfig.openai.baseUrl}`);
+    
+    const openaiResponse = await fetch(apiConfig.openai.baseUrl, {
+      method: 'POST',
+      headers: apiConfig.openai.headers,
+      body: JSON.stringify({
+        model: apiConfig.openai.model,
+        messages: [
+          {
+            role: "system",
+            content: systemPrompt
+          },
+          {
+            role: "user",
+            content: text
           }
-        })
-      });
+        ],
+        temperature: 0.7,
+        max_tokens: 4096,
+        response_format: { type: "json_object" }
+      })
+    });
 
-      if (!geminiResponse.ok) {
-        const errorData = await geminiResponse.json();
-        console.error('\n=== Gemini API Error ===');
-        console.error(`Status: ${geminiResponse.status}`);
-        console.error(`Error Details:`, errorData);
-        console.error('================\n');
-      } else {
-        const result = await geminiResponse.json();
-        results.gemini = result.candidates[0].content.parts[0].text;
-      }
+    if (!openaiResponse.ok) {
+      const errorData = await openaiResponse.json();
+      console.error('\n=== OpenAI API Error ===');
+      console.error(`Status: ${openaiResponse.status}`);
+      console.error(`Error Details:`, errorData);
+      console.error('================\n');
+      throw new Error(`OpenAI API Error: ${errorData.error?.message || 'Unknown error'}`);
     }
 
-    // Combine and process results
-    let finalAnalysis = null;
-    if (results.openai && results.gemini) {
-      // If both APIs are used, combine their insights
-      const openaiData = JSON.parse(results.openai.replace(/```json\n?|\n?```/g, '').trim());
-      const geminiData = JSON.parse(results.gemini.replace(/```json\n?|\n?```/g, '').trim());
-      
-      // Merge the analyses, giving preference to more detailed responses
-      finalAnalysis = {
-        ...openaiData,
-        expertInsights: {
-          ...openaiData.expertInsights,
-          expertOpinions: [
-            ...openaiData.expertInsights.expertOpinions,
-            ...geminiData.expertInsights.expertOpinions
-          ],
-          reputationAnalysis: {
-            newsMedia: Math.max(openaiData.expertInsights.reputationAnalysis.newsMedia, geminiData.expertInsights.reputationAnalysis.newsMedia),
-            socialMedia: Math.max(openaiData.expertInsights.reputationAnalysis.socialMedia, geminiData.expertInsights.reputationAnalysis.socialMedia),
-            investorReviews: Math.max(openaiData.expertInsights.reputationAnalysis.investorReviews, geminiData.expertInsights.reputationAnalysis.investorReviews),
-            customerFeedback: Math.max(openaiData.expertInsights.reputationAnalysis.customerFeedback, geminiData.expertInsights.reputationAnalysis.customerFeedback),
-            overall: Math.max(openaiData.expertInsights.reputationAnalysis.overall, geminiData.expertInsights.reputationAnalysis.overall)
-          }
-        }
-      };
-    } else if (results.openai) {
-      finalAnalysis = JSON.parse(results.openai.replace(/```json\n?|\n?```/g, '').trim());
-    } else if (results.gemini) {
-      finalAnalysis = JSON.parse(results.gemini.replace(/```json\n?|\n?```/g, '').trim());
-    }
+    const result = await openaiResponse.json();
+    const finalAnalysis = JSON.parse(result.choices[0].message.content.replace(/```json\n?|\n?```/g, '').trim());
 
     if (!finalAnalysis) {
-      throw new Error('No valid analysis results received from either API');
+      throw new Error('No valid analysis results received from OpenAI API');
     }
 
     // Transform the final analysis to match the existing UI structure
     const transformedData = {
       industry_type: finalAnalysis.profile.industry,
-      pitch_clarity: Math.round((finalAnalysis.expertConclusion.productViability + 
-                               finalAnalysis.expertConclusion.marketPotential + 
-                               finalAnalysis.expertConclusion.innovation) / 3),
+      pitch_clarity: 8,
       investment_score: finalAnalysis.expertConclusion.productViability,
       market_position: finalAnalysis.profile.marketPosition,
       market_analysis: {
@@ -393,13 +309,17 @@ export const analyzePitchDeck = async (text: string) => {
         competitive_edge: finalAnalysis.expertConclusion.competitiveAdvantage
       },
       proposed_deal_structure: {
-        investment_amount: finalAnalysis.dealStructure?.investmentAmount || 'Not specified',
-        valuation_cap: finalAnalysis.dealStructure?.valuationCap || 'Not specified',
-        equity_stake: finalAnalysis.dealStructure?.equityStake || 'Not specified',
-        anti_dilution_protection: finalAnalysis.dealStructure?.antiDilution ? "Yes" : "No",
-        board_seat: finalAnalysis.dealStructure?.boardSeat ? "Yes" : "No",
-        liquidation_preference: finalAnalysis.dealStructure?.liquidationPreference || 'Not specified',
-        vesting_schedule: finalAnalysis.dealStructure?.vestingSchedule || 'Not specified'
+        ...(finalAnalysis.dealStructure && Object.keys(finalAnalysis.dealStructure).length > 0 ? {
+          investment_amount: finalAnalysis.dealStructure.investmentAmount,
+          valuation_cap: finalAnalysis.dealStructure.valuationCap,
+          equity_stake: finalAnalysis.dealStructure.equityStake,
+          anti_dilution_protection: finalAnalysis.dealStructure.antiDilution ? "Yes" : "No",
+          board_seat: finalAnalysis.dealStructure.boardSeat ? "Yes" : "No",
+          liquidation_preference: finalAnalysis.dealStructure.liquidationPreference,
+          vesting_schedule: finalAnalysis.dealStructure.vestingSchedule
+        } : {
+          message: "No deal structure information was proposed or disclosed in the deck"
+        })
       },
       key_questions: {
         market_strategy: {

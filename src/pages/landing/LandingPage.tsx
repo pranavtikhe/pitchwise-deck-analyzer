@@ -621,9 +621,11 @@ const LandingPage = () => {
               </div>
 
               <div className={styles.footerLinks}>
-                <a href="/terms">Terms of use</a>
+                <a href="/terms-of-use">Terms of use</a>
                 <span>•</span>
-                <a href="/privacy">Privacy Policy</a>
+                <a href="/privacy-policy">Privacy Policy</a>
+                <span>•</span>
+                <a href="/responsible-ai">Responsible AI</a>
               </div>
 
               <div className={styles.footerBottom}>
@@ -647,7 +649,7 @@ const LandingPage = () => {
 
             <div className={styles.footerRight}>
               <img
-                src="/images/footer-illustration.png"
+                src="/images/footerimg.png"
                 alt="Footer Illustration"
                 width={400}
                 height={200}

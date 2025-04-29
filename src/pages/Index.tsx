@@ -12,7 +12,6 @@ import { StarField } from "@/components/StarField";
 import Footer from "@/components/Footer";
 import styles from "@/styles/upload.module.scss";
 
-
 const starfieldVariants = {
   initial: { opacity: 0 },
   animate: { opacity: 1, transition: { duration: 1 } },
@@ -29,6 +28,7 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [insights, setInsights] = useState<any>(null);
   const [progress, setProgress] = useState(0);
+  const [isDisclaimerAccepted, setIsDisclaimerAccepted] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -119,15 +119,21 @@ const Index = () => {
     }, 2000); // Adjust timing as needed
   };
 
-
-
-  
-
   return (
     <div className="flex flex-col min-h-screen overflow-hidden">
       <Navbar />
 
-      <div className={styles.backgroundElements} style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: -1 }}>
+      <div
+        className={styles.backgroundElements}
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: -1,
+        }}
+      >
         <motion.div
           className={styles.starfieldWrapper}
           initial="hidden"
@@ -197,10 +203,31 @@ const Index = () => {
                   />
                 </div>
 
+                <div className={styles.disclaimerContainer}>
+                  <div className={styles.requiredIndicator}>
+                    <span className={styles.asterisk}>*</span>
+                    <span className={styles.requiredText}>(required)</span>
+                  </div>
+                  <div className={styles.disclaimerCheckbox}>
+                    <input
+                      type="checkbox"
+                      id="disclaimer"
+                      checked={isDisclaimerAccepted}
+                      onChange={(e) => setIsDisclaimerAccepted(e.target.checked)}
+                      className={styles.checkbox}
+                    />
+                    <div className={styles.disclaimerText}>
+                      This website is a platform developed and maintained by Neural Paths(Spider). All information, content, tools, and services provided through this platform are intended solely for use by authorized personnel for official and approved purposes.
+                      The materials and data provided are offered on an "as is" and "as available" basis. No warranties, either express or implied, are made regarding the accuracy, completeness, reliability, or availability of the content on this platform. Use of the site is at your own risk.
+                      Unauthorized access, distribution, modification, or misuse of this website or its data is strictly prohibited and may result in disciplinary action and/or legal proceedings under applicable laws and organizational policies.
+                    </div>
+                  </div>
+                </div>
+
                 <button
                   onClick={handleAnalyze}
                   className={styles.analyzeButton}
-                  disabled={!file || isLoading}
+                  disabled={!file || isLoading || !isDisclaimerAccepted}
                 >
                   Analyze your document now
                   <ArrowRight className="w-5 h-5" />
@@ -209,7 +236,12 @@ const Index = () => {
             </div>
           )}
 
-          {isLoading && <LoadingScreen progress={progress} />}
+          {isLoading && (
+            <LoadingScreen
+              text="Analyzing pitch deck..."
+              progress={progress}
+            />
+          )}
 
           {insights && !isLoading && (
             <div className="mt-8">

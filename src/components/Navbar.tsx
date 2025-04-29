@@ -14,8 +14,9 @@ const Navbar = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const isHistoryPage = location.pathname === '/history';
-    const isTermsPage = location.pathname === '/terms';
-    const isPrivacyPage = location.pathname === '/privacy';
+    const isTermsPage = location.pathname === '/terms-of-use';
+    const isPrivacyPage = location.pathname === '/privacy-policy';
+    const isResponsibleAIPage = location.pathname === '/responsible-ai';
     const isSpiderPage = location.pathname === '/spider';
     const supabase = getSupabaseClient();
 
@@ -49,7 +50,7 @@ const Navbar = () => {
     const handleBack = () => {
         if (isHistoryPage) {
             navigate('/spider');
-        } else if (isTermsPage || isPrivacyPage) {
+        } else if (isTermsPage || isPrivacyPage || isResponsibleAIPage) {
             navigate('/');
         }
     };
@@ -66,7 +67,7 @@ const Navbar = () => {
     return (
         <nav className={styles.navbar}>
             <div className={styles.container}>
-                {(isHistoryPage || isTermsPage || isPrivacyPage) ? (
+                {(isHistoryPage || isTermsPage || isPrivacyPage || isResponsibleAIPage) ? (
                     <button
                         className={styles.backButton}
                         onClick={handleBack}
