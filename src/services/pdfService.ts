@@ -36,7 +36,6 @@ export const extractTextFromPdf = async (file: File): Promise<string> => {
     
     // Loop through each page and extract text
     for (let i = 1; i <= numPages; i++) {
-      console.log(`Processing page ${i} of ${numPages}...`);
       const page = await pdf.getPage(i);
       
       // Extract regular text content
@@ -44,8 +43,6 @@ export const extractTextFromPdf = async (file: File): Promise<string> => {
       const pageText = textContent.items
         .map((item: any) => item.str)
         .join(' ');
-      
-      console.log(`Regular text extracted from page ${i}: ${pageText.length} characters`);
       
       // Extract images from the page using a more reliable method
       let imageText = '';
@@ -66,11 +63,9 @@ export const extractTextFromPdf = async (file: File): Promise<string> => {
         await page.render(renderContext).promise;
         
         // Perform OCR on the entire page
-        console.log(`Starting OCR on page ${i}...`);
         const { data: { text } } = await worker.recognize(canvas);
         if (text && text.trim()) {
           imageText = text;
-          console.log(`OCR extracted ${imageText.length} characters from page ${i}`);
         }
       } catch (imgError) {
         console.error(`Error processing page ${i} with OCR:`, imgError);
@@ -79,17 +74,18 @@ export const extractTextFromPdf = async (file: File): Promise<string> => {
       // Combine regular text and OCR text
       fullText += `--- PAGE ${i} ---\n`;
       fullText += pageText + '\n';
+      
       if (imageText) {
         fullText += `--- OCR TEXT FROM PAGE ${i} ---\n`;
         fullText += imageText + '\n';
       }
+      
       fullText += '\n\n';
     }
     
     // Terminate the Tesseract worker
     await worker.terminate();
     
-    console.log(`Total extracted text: ${fullText.length} characters`);
     return fullText;
   } catch (error) {
     console.error('Error extracting text from PDF:', error);
