@@ -228,7 +228,7 @@ const LoginPage = () => {
         >
           <StarField />
         </motion.div>
-       <div className={landingStyles.ellipselog}>
+        <div className={landingStyles.ellipselog}>
           <img
             src="/images/white-radial.svg"
             alt="Radial gradient"
@@ -255,11 +255,10 @@ const LoginPage = () => {
             transition={{ duration: 0.3 }}
           >
             <motion.button
-              className={`px-8 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                activeTab === "login"
+              className={`px-8 py-2 rounded-full text-sm font-medium transition-all duration-200 ${activeTab === "login"
                   ? "bg-gradient-to-r from-[#2B8CFF] to-[#7B5AFF] text-white"
                   : "text-muted-foreground hover:text-white"
-              }`}
+                }`}
               onClick={() => {
                 setActiveTab("login");
                 setFormData({
@@ -277,11 +276,10 @@ const LoginPage = () => {
               Log In
             </motion.button>
             <motion.button
-              className={`px-8 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
-                activeTab === "signup"
+              className={`px-8 py-2 rounded-full text-sm font-medium transition-all duration-200 ${activeTab === "signup"
                   ? "bg-gradient-to-r from-[#2B8CFF] to-[#7B5AFF] text-white"
                   : "text-muted-foreground hover:text-white"
-              }`}
+                }`}
               onClick={() => {
                 setActiveTab("signup");
                 setFormData({
@@ -348,11 +346,10 @@ const LoginPage = () => {
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
-                          className={`w-full h-16 bg-[#2A2A2A] border ${
-                            errors.email
+                          className={`w-full h-16 bg-[#2A2A2A] border ${errors.email
                               ? "border-destructive"
                               : "border-[#3A3A3A]"
-                          } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
+                            } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
                           placeholder="Enter your email"
                           required
                         />
@@ -379,11 +376,10 @@ const LoginPage = () => {
                           name="password"
                           value={formData.password}
                           onChange={handleInputChange}
-                          className={`w-full h-16 bg-[#2A2A2A] border ${
-                            errors.password
+                          className={`w-full h-16 bg-[#2A2A2A] border ${errors.password
                               ? "border-destructive"
                               : "border-[#3A3A3A]"
-                          } rounded-lg py-2 pl-4 pr-10 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
+                            } rounded-lg py-2 pl-4 pr-10 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
                           placeholder="Enter your password"
                           required
                         />
@@ -408,9 +404,8 @@ const LoginPage = () => {
 
                     <motion.button
                       type="submit"
-                      className={`${uploadStyles.analyzeButton} ${
-                        loading ? "opacity-70 cursor-not-allowed" : ""
-                      }`}
+                      className={`${uploadStyles.analyzeButton} ${loading ? "opacity-70 cursor-not-allowed" : ""
+                        }`}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       disabled={loading}
@@ -437,11 +432,10 @@ const LoginPage = () => {
                           name="fullName"
                           value={formData.fullName}
                           onChange={handleInputChange}
-                          className={`w-full h-16 bg-[#2A2A2A] border ${
-                            errors.fullName
+                          className={`w-full h-16 bg-[#2A2A2A] border ${errors.fullName
                               ? "border-destructive"
                               : "border-[#3A3A3A]"
-                          } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
+                            } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
                           placeholder="Enter your full name"
                           required
                         />
@@ -463,11 +457,10 @@ const LoginPage = () => {
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
-                          className={`w-full h-16 bg-[#2A2A2A] border ${
-                            errors.email
+                          className={`w-full h-16 bg-[#2A2A2A] border ${errors.email
                               ? "border-destructive"
                               : "border-[#3A3A3A]"
-                          } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
+                            } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
                           placeholder="Enter your email"
                           required
                         />
@@ -489,11 +482,10 @@ const LoginPage = () => {
                           name="password"
                           value={formData.password}
                           onChange={handleInputChange}
-                          className={`w-full h-16 bg-[#2A2A2A] border ${
-                            errors.password
+                          className={`w-full h-16 bg-[#2A2A2A] border ${errors.password
                               ? "border-destructive"
                               : "border-[#3A3A3A]"
-                          } rounded-lg py-2 pl-4 pr-10 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
+                            } rounded-lg py-2 pl-4 pr-10 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
                           placeholder="Create a password"
                           required
                         />
@@ -584,11 +576,10 @@ const LoginPage = () => {
                           name="confirmPassword"
                           value={formData.confirmPassword}
                           onChange={handleInputChange}
-                          className={`w-full h-16 bg-[#2A2A2A] border ${
-                            errors.confirmPassword
+                          className={`w-full h-16 bg-[#2A2A2A] border ${errors.confirmPassword
                               ? "border-destructive"
                               : "border-[#3A3A3A]"
-                          } rounded-lg py-2 pl-4 pr-10 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
+                            } rounded-lg py-2 pl-4 pr-10 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
                           placeholder="Confirm your password"
                           required
                         />
@@ -621,11 +612,10 @@ const LoginPage = () => {
                           name="mobile"
                           value={formData.mobile}
                           onChange={handleInputChange}
-                          className={`w-full h-16 bg-[#2A2A2A] border ${
-                            errors.mobile
+                          className={`w-full h-16 bg-[#2A2A2A] border ${errors.mobile
                               ? "border-destructive"
                               : "border-[#3A3A3A]"
-                          } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
+                            } rounded-lg py-2 pl-4 pr-4 text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary`}
                           placeholder="Enter your mobile number"
                         />
                       </div>
@@ -638,9 +628,8 @@ const LoginPage = () => {
 
                     <motion.button
                       type="submit"
-                      className={`${uploadStyles.analyzeButton} ${
-                        loading ? "opacity-70 cursor-not-allowed" : ""
-                      }`}
+                      className={`${uploadStyles.analyzeButton} ${loading ? "opacity-70 cursor-not-allowed" : ""
+                        }`}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       disabled={loading}
@@ -668,14 +657,7 @@ const LoginPage = () => {
                 className={uploadStyles.googleButton}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={async () => {
-                  try {
-                    const { error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
-                    if (error) throw error;
-                  } catch (error) {
-                    console.error('Google sign-in error:', error.message);
-                  }
-                }}
+
               >
                 <img
                   src="/google-white-icon.svg"
