@@ -2,6 +2,7 @@ import * as pdfjs from 'pdfjs-dist';
 import { supabase } from "@/integrations/supabase/client";
 import { createWorker } from 'tesseract.js';
 import { analyzePitchDeck } from './apiService';
+import { uploadPitchDeck } from './storageService';
 
 // Import Supabase URL and key
 const SUPABASE_URL = "https://objyddwihcupdeflwcty.supabase.co";
@@ -385,6 +386,27 @@ export const fetchInsightById = async (id: string) => {
   } catch (error) {
     console.error('Error fetching insight from database:', error);
     throw new Error('Failed to load insight details');
+  }
+};
+
+/**
+ * Process a pitch deck: upload PDF, extract text, and analyze
+ */
+export const processPitchDeck = async (file: File): Promise<{ pdfUrl: string; analysis: MistralResponse }> => {
+  try {
+    // 1. Upload PDF to pitch-decks bucket
+    const pdfUrl = await uploadPitchDeck(file);
+    
+    // 2. Extract text from PDF
+    const text = await extractTextFromPdf(file);
+    
+    // 3. Analyze the text
+    const analysis = await analyzeWithBackend(text);
+    
+    return { pdfUrl, analysis };
+  } catch (error) {
+    console.error('Error processing pitch deck:', error);
+    throw error;
   }
 };
 

@@ -1,4 +1,5 @@
 import { MistralResponse } from './pdfService';
+import { uploadAnalysisReport, getAnalysisReport, listAnalysisReports } from './storageService';
 
 export interface HistoryEntry {
   id: string;
@@ -7,33 +8,60 @@ export interface HistoryEntry {
   riskLevel: string;
   clausesIdentified: number;
   status: 'Completed' | 'Failed' | 'In Progress';
+  reportUrl?: string;
+  pdfUrl?: string;
 }
 
-const HISTORY_STORAGE_KEY = 'pitch-deck-analysis-history';
-
-export const saveToHistory = (insights: MistralResponse): void => {
+export const saveToHistory = async (insights: MistralResponse, pdfUrl: string): Promise<void> => {
   try {
-    const history = getHistory();
     const entry: HistoryEntry = {
       id: generateId(),
       timestamp: new Date().toISOString(),
       insights,
       riskLevel: calculateRiskLevel(insights),
       clausesIdentified: 10, // This could be dynamic based on actual analysis
-      status: 'Completed'
+      status: 'Completed',
+      pdfUrl
     };
 
-    history.unshift(entry); // Add new entry at the beginning
-    localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(history));
+    // Upload the analysis report to Supabase storage
+    const reportUrl = await uploadAnalysisReport(entry, entry.id);
+    entry.reportUrl = reportUrl;
   } catch (error) {
     console.error('Failed to save to history:', error);
+    throw error;
   }
 };
 
-export const getHistory = (): HistoryEntry[] => {
+export const getHistory = async (): Promise<HistoryEntry[]> => {
   try {
-    const history = localStorage.getItem(HISTORY_STORAGE_KEY);
-    return history ? JSON.parse(history) : [];
+    const reports = await listAnalysisReports();
+    const history: HistoryEntry[] = [];
+
+    for (const report of reports) {
+      try {
+        // Skip files named "Unnamed file"
+        if (report.fileName.toLowerCase().includes('unnamed')) {
+          continue;
+        }
+
+        // Extract the base name without timestamp and extension
+        const baseName = report.fileName.replace(/^\d+-/, '').replace('.json', '');
+        const content = await getAnalysisReport(baseName);
+        
+        // Only add entries that have both a reportUrl and pdfUrl
+        if (content.pdfUrl && report.url) {
+          history.push({
+            ...content,
+            reportUrl: report.url
+          });
+        }
+      } catch (error) {
+        console.error(`Failed to load report ${report.fileName}:`, error);
+      }
+    }
+
+    return history.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
   } catch (error) {
     console.error('Failed to get history:', error);
     return [];

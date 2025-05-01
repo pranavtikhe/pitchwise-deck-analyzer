@@ -2,7 +2,8 @@ import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import FileUpload from "@/components/FileUpload";
-import { extractTextFromPdf, analyzeWithBackend } from "@/services/pdfService";
+import { processPitchDeck } from "@/services/pdfService";
+import { saveToHistory } from "@/services/historyService";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/sonner";
 import { ArrowRight } from "lucide-react";
@@ -51,31 +52,19 @@ const Index = () => {
     setProgress(0);
 
     try {
-      // Document Processing (0-20%)
+      // Process the pitch deck (upload PDF and analyze)
       setProgress(5);
-      const extractedText = await extractTextFromPdf(file);
-      setProgress(20);
-
-      // Startup Profile (20-40%)
-      setProgress(25);
-      const analysisResults = await analyzeWithBackend(extractedText);
+      const { pdfUrl, analysis } = await processPitchDeck(file);
       setProgress(40);
 
-      // Market Analysis (40-60%)
-      setProgress(45);
-      // Wait for market analysis to complete
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Save to history
       setProgress(60);
-
-      // Sentiment Analysis (60-80%)
-      setProgress(65);
-      // Wait for sentiment analysis to complete
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await saveToHistory(analysis, pdfUrl);
       setProgress(80);
 
-      // Report Generation (80-100%)
+      // Update UI
       setProgress(85);
-      setInsights(analysisResults);
+      setInsights(analysis);
       setProgress(100);
 
       toast.success("Analysis complete!");

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import InsightsTable from "@/components/InsightsTable";
-import { fetchInsightsFromSupabase } from "@/services/pdfService";
+import { getHistory } from "@/services/historyService";
 import { toast } from "@/components/ui/sonner";
 import { Loader2 } from "lucide-react";
 
@@ -15,7 +15,7 @@ const History = () => {
     const loadInsights = async () => {
       try {
         setLoading(true);
-        const data = await fetchInsightsFromSupabase();
+        const data = await getHistory();
         setInsights(data || []);
       } catch (error) {
         console.error("Error loading insights:", error);

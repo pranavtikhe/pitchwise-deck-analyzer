@@ -1,19 +1,11 @@
-
 import { useState } from "react";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { formatDistanceToNow } from "date-fns";
-
-interface InsightRecord {
-  id: string;
-  company_name: string;
-  created_at: string;
-  file_name?: string;
-  fund_value?: number;
-}
+import { formatDistanceToNow, parseISO } from "date-fns";
+import { HistoryEntry } from "@/services/historyService";
 
 interface InsightsTableProps {
-  insights: InsightRecord[];
+  insights: HistoryEntry[];
   onViewInsight: (id: string) => void;
 }
 
@@ -31,6 +23,21 @@ const InsightsTable = ({ insights, onViewInsight }: InsightsTableProps) => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
+  const formatFileName = (fileName: string | undefined) => {
+    if (!fileName) return "Unnamed file";
+    // Remove the timestamp prefix if it exists
+    return fileName.replace(/^\d+-/, '').replace(/\.pdf$/, '');
+  };
+
+  const formatDate = (timestamp: string | undefined) => {
+    if (!timestamp) return "Unknown date";
+    try {
+      return formatDistanceToNow(parseISO(timestamp), { addSuffix: true });
+    } catch (error) {
+      return "Invalid date";
+    }
+  };
   
   return (
     <div className="w-full">
@@ -38,7 +45,6 @@ const InsightsTable = ({ insights, onViewInsight }: InsightsTableProps) => {
         <TableCaption>A history of analyzed pitch decks</TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[250px]">Company</TableHead>
             <TableHead>File Name</TableHead>
             <TableHead className="text-right">Analyzed</TableHead>
             <TableHead className="text-right">Actions</TableHead>
@@ -47,17 +53,16 @@ const InsightsTable = ({ insights, onViewInsight }: InsightsTableProps) => {
         <TableBody>
           {currentInsights.length === 0 ? (
             <TableRow>
-              <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+              <TableCell colSpan={3} className="text-center py-8 text-muted-foreground">
                 No insights available yet. Upload a pitch deck to get started.
               </TableCell>
             </TableRow>
           ) : (
             currentInsights.map((item) => (
               <TableRow key={item.id}>
-                <TableCell className="font-medium">{item.company_name}</TableCell>
-                <TableCell>{item.file_name || "Unnamed file"}</TableCell>
+                <TableCell className="font-medium">{formatFileName(item.pdfUrl?.split('/').pop())}</TableCell>
                 <TableCell className="text-right">
-                  {formatDistanceToNow(new Date(item.created_at), { addSuffix: true })}
+                  {formatDate(item.timestamp)}
                 </TableCell>
                 <TableCell className="text-right">
                   <button

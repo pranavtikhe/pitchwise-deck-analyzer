@@ -7,6 +7,7 @@ import LandingPage from "./pages/landing/LandingPage";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import History from "./pages/History";
+import Insight from "./pages/Insight";
 import LoginPage from "./pages/auth/login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PrivacyPolicy from './components/PrivacyPolicy';
@@ -37,6 +38,14 @@ const App = () => (
             element={
               <ProtectedRoute>
                 <History />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/insight/:id"
+            element={
+              <ProtectedRoute>
+                <Insight />
               </ProtectedRoute>
             }
           />
