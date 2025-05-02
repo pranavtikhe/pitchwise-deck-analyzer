@@ -47,6 +47,7 @@ export const getHistory = async (): Promise<HistoryEntry[]> => {
 
         // Extract the base name without timestamp and extension
         const baseName = report.fileName.replace(/^\d+-/, '').replace('.json', '');
+        console.log('Loading report:', baseName);
         const content = await getAnalysisReport(baseName);
         
         // Only add entries that have both a reportUrl and pdfUrl

@@ -232,10 +232,10 @@ export const getAnalysisReport = async (fileName: string): Promise<any> => {
       throw new Error('You must be logged in to view analysis reports');
     }
 
-    // List files in the user's directory to find the correct file
+    // List all files in the user's reports directory
     const { data: files, error: listError } = await supabase.storage
       .from('analysis-report')
-      .list(`reports/${session.user.id}/`);
+      .list(`reports/${session.user.id}`);
 
     if (listError) {
       throw listError;
@@ -245,10 +245,14 @@ export const getAnalysisReport = async (fileName: string): Promise<any> => {
     const matchingFile = files.find(file => {
       // Remove timestamp and .json extension from stored file
       const storedBaseName = file.name.replace(/^\d+-/, '').replace('.json', '');
-      return storedBaseName === fileName;
+      // Remove analysis- prefix and .json extension from the requested file name if present
+      const requestedBaseName = fileName.replace('analysis-', '').replace('.json', '');
+      return storedBaseName === requestedBaseName;
     });
 
     if (!matchingFile) {
+      console.error('No matching file found for:', fileName);
+      console.error('Available files:', files.map(f => f.name));
       throw new Error('Analysis report not found');
     }
 
@@ -258,6 +262,7 @@ export const getAnalysisReport = async (fileName: string): Promise<any> => {
       .download(`reports/${session.user.id}/${matchingFile.name}`);
 
     if (error) {
+      console.error('Error downloading file:', error);
       throw error;
     }
 
