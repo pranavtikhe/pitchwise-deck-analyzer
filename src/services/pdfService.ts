@@ -115,6 +115,7 @@ export interface MistralResponse {
     key_offerings: string;
     market_position: string;
     founded_on: string;
+    founded_year?: string;
   };
   strengths: string[];
   weaknesses: string[];

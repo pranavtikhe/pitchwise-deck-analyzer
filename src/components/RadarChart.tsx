@@ -128,9 +128,9 @@ const CustomTick = (props: any) => {
     textLines = [text];
   }
   
-  // Add more space for labels
-  const offsetX = dx * 10; 
-  const offsetY = dy * 10;
+  // Add more space for labels and adjust positioning
+  const offsetX = dx * 20;
+  const offsetY = dy * 20;
   
   return (
     <g>
@@ -142,7 +142,10 @@ const CustomTick = (props: any) => {
           textAnchor={x > cx ? 'start' : x < cx ? 'end' : 'middle'}
           dominantBaseline={y > cy ? 'hanging' : y < cy ? 'auto' : 'middle'}
           fill="#9CA3AF"
-          fontSize={12}
+          fontSize={11}
+          style={{
+            filter: 'drop-shadow(0 0 2px rgba(0, 0, 0, 0.5))'
+          }}
         >
           {line}
         </text>
@@ -162,52 +165,52 @@ const RadarChart: React.FC<RadarChartProps> = ({ data }) => {
     { 
       subject: 'Product Viability', 
       value: normalizeValue(data.product_viability),
-      analysis: data.analysis?.product_viability || 'Analysis pending'
+      analysis: data.analysis?.product_viability 
     },
     { 
       subject: 'Financial Health', 
       value: normalizeValue(data.financial_health),
-      analysis: data.analysis?.financial_health || 'Analysis pending'
+      analysis: data.analysis?.financial_health 
     },
     { 
       subject: 'Market Potential', 
       value: normalizeValue(data.market_potential),
-      analysis: data.analysis?.market_potential || 'Analysis pending'
+      analysis: data.analysis?.market_potential 
     },
     { 
       subject: 'Sustainability', 
       value: normalizeValue(data.sustainability),
-      analysis: data.analysis?.sustainability || 'Analysis pending'
+      analysis: data.analysis?.sustainability
     },
     { 
       subject: 'Innovation', 
       value: normalizeValue(data.innovation),
-      analysis: data.analysis?.innovation || 'Analysis pending'
+      analysis: data.analysis?.innovation 
     },
     { 
       subject: 'Exit Potential', 
       value: normalizeValue(data.exit_potential),
-      analysis: data.analysis?.exit_potential || 'Analysis pending'
+      analysis: data.analysis?.exit_potential 
     },
     { 
       subject: 'Risk Factors', 
       value: normalizeValue(data.risk_factors),
-      analysis: data.analysis?.risk_factors || 'Analysis pending'
+      analysis: data.analysis?.risk_factors 
     },
     { 
       subject: 'Customer Traction', 
       value: normalizeValue(data.customer_traction),
-      analysis: data.analysis?.customer_traction || 'Analysis pending'
+      analysis: data.analysis?.customer_traction 
     },
     { 
       subject: 'Competitive Edge', 
       value: normalizeValue(data.competitive_edge),
-      analysis: data.analysis?.competitive_edge || 'Analysis pending'
+      analysis: data.analysis?.competitive_edge 
     },
     { 
       subject: 'Team Strength', 
       value: normalizeValue(data.team_strength),
-      analysis: data.analysis?.team_strength || 'Analysis pending'
+      analysis: data.analysis?.team_strength 
     },
   ];
 
@@ -236,36 +239,83 @@ const RadarChart: React.FC<RadarChartProps> = ({ data }) => {
   };
 
   return (
-    <ResponsiveContainer width="100%" height={450}>
+    <ResponsiveContainer width="100%" height={380}>
       <RechartsRadarChart
         data={chartData}
-        outerRadius={130}
-        margin={{ top: 40, right: 50, bottom: 40, left: 50 }}
+        outerRadius="65%"
+        margin={{ top: 30, right: 40, bottom: 30, left: 40 }}
       >
+        <defs>
+          <radialGradient
+            id="radarGradient"
+            cx="50%"
+            cy="50%"
+            r="80%"
+            fx="50%"
+            fy="50%"
+          >
+            <stop offset="28%" stopColor="#29272C" />
+            <stop offset="65%" stopColor="#B0B0B0" />
+            <stop offset="100%" stopColor="#FFFFFF" />
+          </radialGradient>
+        </defs>
         <PolarGrid 
           strokeDasharray="3 3"
+          stroke="#ffffff1a"
         />
         <PolarAngleAxis
           dataKey="subject"
           tick={<CustomTick />}
+          stroke="#ffffff1a"
+          tickLine={{ stroke: '#ffffff1a' }}
         />
         <PolarRadiusAxis 
           angle={30} 
           domain={[0, 10]}
-          tick={{ fill: '#9CA3AF', fontSize: 10 }}
+          tick={false}
+          stroke="#ffffff1a"
+          tickCount={6}
         />
         <Radar
           name="Performance"
           dataKey="value"
-          stroke="#4776E6"
-          fill="#4776E6"
-          fillOpacity={0.3}
-          dot={false}
+          stroke="#B0B0B0"
+          fill="url(#radarGradient)"
+          fillOpacity={0.8}
+          dot={(props) => {
+            const { cx, cy, value, payload } = props;
+            return (
+              <circle
+                key={`dot-${payload.subject}`}
+                cx={cx}
+                cy={cy}
+                r={5}
+                fill={value >= 8 ? "#4CAF50" : value <= 4 ? "#F44336" : "#B0B0B0"}
+                stroke="#fff"
+                strokeWidth={2}
+                style={{
+                  filter: 'drop-shadow(0 0 2px rgba(255, 255, 255, 0.3))'
+                }}
+              />
+            );
+          }}
+          activeDot={{
+            r: 8,
+            fill: "#FFFFFF",
+            stroke: "#B0B0B0",
+            strokeWidth: 2,
+            style: {
+              cursor: 'pointer',
+              filter: 'drop-shadow(0 0 4px rgba(255, 255, 255, 0.5))'
+            }
+          }}
           animationDuration={1500}
           animationEasing="ease-in-out"
         />
-        <Customized component={ScoreIndicator} />
-        <Tooltip content={<CustomTooltip />} />
+        <Tooltip 
+          content={<CustomTooltip />}
+          cursor={false}
+        />
       </RechartsRadarChart>
     </ResponsiveContainer>
   );

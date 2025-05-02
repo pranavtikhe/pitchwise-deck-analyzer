@@ -295,7 +295,7 @@ const LandingPage = () => {
             style={{
               whiteSpace: "nowrap",
               overflow: "visible",
-              marginBottom: "2rem",
+              marginBottom: "5rem",
             }}
           >
             Transform Your Investment Decisions <br /> with Cutting-Edge AI
@@ -344,6 +344,8 @@ const LandingPage = () => {
             style={{
               whiteSpace: "nowrap",
               textAlign: "center",
+              marginBottom: "5rem",
+              marginTop: "5rem",
             }}
           >
             Three Simple Steps To Success
@@ -406,7 +408,7 @@ const LandingPage = () => {
             style={{
               whiteSpace: "nowrap",
               overflow: "visible",
-              marginBottom: "2rem",
+              marginBottom: "0rem",
             }}
           >
             Why Choose Spider?
@@ -417,7 +419,7 @@ const LandingPage = () => {
               textAlign: "center",
               color: "#959595",
               fontSize: "1.2rem",
-              marginBottom: "4rem",
+              marginBottom: "5rem",
             }}
           >
             Experience the future of investment analysis with AI-powered
@@ -456,7 +458,7 @@ const LandingPage = () => {
       {/* Pricing Section */}
       <section id="pricing" className={styles.pricing}>
         <div className={styles.container}>
-          <motion.h1 
+          <motion.h1
             className={styles.title}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -464,7 +466,7 @@ const LandingPage = () => {
           >
             Choose your investment analysis plan
           </motion.h1>
-          <motion.p 
+          <motion.p
             className={styles.sectionSubtitle}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -475,14 +477,20 @@ const LandingPage = () => {
           </motion.p>
           <div className={styles.pricingGrid}>
             {pricing.map((plan, index) => (
-              <motion.div 
+              <motion.div
                 key={plan.title}
-                className={`${styles.pricingCard} ${plan.isPopular ? styles.popular : ''}`}
+                className={`${styles.pricingCard} ${plan.isPopular ? styles.popular : ''} relative`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                {plan.isPopular && <div className={styles.popularBadge}>MOST POPULAR</div>}
+                {plan.isPopular && (
+                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    <div className="bg-[#212228] rounded-full px-4 py-1 text-sm font-medium text-white border border-[#ffffff1a]">
+                      MOST POPULAR
+                    </div>
+                  </div>
+                )}
                 <h3>{plan.title}</h3>
                 <div className={styles.price}>
                   {plan.price && <span className={styles.period}>{plan.price}</span>}
@@ -495,7 +503,7 @@ const LandingPage = () => {
                     <li key={feature}>{feature}</li>
                   ))}
                 </ul>
-                <Button 
+                <Button
                   title={plan.buttonText}
                   className={`${styles.pricingButton} ${plan.isPopular ? styles.primary : styles.secondary}`}
                   onClick={() => handlePricingButtonClick(plan.title)}
@@ -517,7 +525,8 @@ const LandingPage = () => {
             style={{
               whiteSpace: "nowrap",
               overflow: "visible",
-              marginBottom: "2rem",
+              marginBottom: "1rem",
+              marginTop: "5rem",
             }}
           >
             Frequently Asked Questions
@@ -528,7 +537,7 @@ const LandingPage = () => {
               textAlign: "center",
               color: "#959595",
               fontSize: "1.2rem",
-              marginBottom: "4rem",
+              marginBottom: "5rem",
             }}
           >
             Have more questions? Our support team is here to help you make

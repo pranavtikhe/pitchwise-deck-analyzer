@@ -381,13 +381,13 @@ html, body {
 }
 
 .pricingGrid {
-    padding-top: 24px;
+    margin-top: 5rem;
     display: grid;
     grid-template-columns: repeat(3, 400px);
     gap: 32px;
     position: relative;
     justify-content: center;
-    margin-top: 4rem;
+    margin-top: 5rem;
     
     @media (max-width: 1300px) {
         grid-template-columns: repeat(2, 400px);
@@ -895,14 +895,14 @@ html, body {
 
 // Steps Section
 .steps {
-    padding: 4rem 0;
+    padding: 0rem 0;
     
     .stepsGrid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
         gap: 2rem;
         max-width: 1200px;
-        margin: 0 auto;
+        margin-bottom: 5rem;
         padding: 0 2rem;
         
         @media (max-width: 1024px) {

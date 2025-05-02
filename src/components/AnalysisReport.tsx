@@ -25,6 +25,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Star } from "lucide-react";
+import RadarChart from "./RadarChart";
 
 interface AnalysisReportProps {
   data?: MistralResponse & {
@@ -623,13 +624,9 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                     </h3>
                     <ul className="space-y-3">
                       {data.strengths.map((strength, index) => (
-                        <li key={index} className="flex items-start">
-                          <span className="text-gray-400 mr-2 flex-shrink-0">
-                            •
-                          </span>
-                          <span className="text-gray-300 text-sm leading-relaxed">
-                            {strength}
-                          </span>
+                        <li key={index} className="flex">
+                          <span className="text-gray-400 mr-2 flex-shrink-0">•</span>
+                          <span className="text-gray-300 text-sm leading-relaxed">{strength}</span>
                         </li>
                       ))}
                     </ul>
@@ -638,15 +635,11 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                     <h3 className="text-red-500 text-lg mb-4">
                       Weaknesses (Cons)
                     </h3>
-                    <ul className="space-y-2">
+                    <ul className="space-y-3">
                       {data.weaknesses.map((weakness, index) => (
-                        <li key={index} className="flex items-start gap-2">
-                          <span className="text-gray-400 mt-1 flex-shrink-0">
-                            •
-                          </span>
-                          <span className="text-gray-300 text-sm leading-relaxed">
-                            {weakness}
-                          </span>
+                        <li key={index} className="flex">
+                          <span className="text-gray-400 mr-2 flex-shrink-0">•</span>
+                          <span className="text-gray-300 text-sm leading-relaxed">{weakness}</span>
                         </li>
                       ))}
                     </ul>
@@ -1434,9 +1427,9 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                   const score = data.investment_score;
                   if (score >= 8) {
                     return `${data.company_overview.company_name} presents an excellent investment opportunity with a strong position in the ${data.industry_type.toLowerCase()} sector. The company demonstrates exceptional market potential, innovative solutions, and a clear competitive advantage, making it a highly attractive investment prospect.`;
-                  } else if (score >= 6) {
+                  } else if (score >= 5 && score <= 7) {
                     return `${data.company_overview.company_name} shows promising investment potential in the ${data.industry_type.toLowerCase()} sector. While there are some areas for improvement, the company's market position and growth trajectory indicate good potential for returns.`;
-                  } else if (score >= 4) {
+                  } else if (score >= 1 && score <= 4) {
                     return `${data.company_overview.company_name} presents a moderate investment opportunity in the ${data.industry_type.toLowerCase()} sector. The company shows some potential but faces significant challenges that need to be addressed for better investment prospects.`;
                   } else {
                     return `${data.company_overview.company_name} currently presents a high-risk investment opportunity in the ${data.industry_type.toLowerCase()} sector. The company faces substantial challenges and requires significant improvements before being considered a viable investment option.`;
@@ -1471,36 +1464,18 @@ const AnalysisReport: React.FC<AnalysisReportProps> = ({ data }) => {
                   style={{ width: 420, height: 420 }}
                   className="flex-shrink-0"
                 >
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RechartsRadarChart data={chartData}>
-                      <defs>
-                        <radialGradient
-                          id="radarGradient"
-                          cx="50%"
-                          cy="50%"
-                          r="80%"
-                          fx="50%"
-                          fy="50%"
-                        >
-                          <stop offset="28%" stopColor="#29272C" />
-                          <stop offset="65%" stopColor="#B0B0B0" />
-                          <stop offset="100%" stopColor="#FFFFFF" />
-                        </radialGradient>
-                      </defs>
-                      <PolarGrid stroke="#ffffff1a" />
-                      <PolarAngleAxis
-                        dataKey="subject"
-                        tick={{ fill: "#9CA3AF", fontSize: 12 }}
-                      />
-                      <Radar
-                        name="Metrics"
-                        dataKey="value"
-                        stroke="#B0B0B0"
-                        fill="url(#radarGradient)"
-                        fillOpacity={0.8}
-                      />
-                    </RechartsRadarChart>
-                  </ResponsiveContainer>
+                  <RadarChart data={{
+                    product_viability: data.final_verdict.product_viability,
+                    market_potential: data.final_verdict.market_potential,
+                    sustainability: data.final_verdict.sustainability,
+                    innovation: data.final_verdict.innovation,
+                    exit_potential: data.final_verdict.exit_potential,
+                    risk_factors: data.final_verdict.risk_factor,
+                    financial_health: data.final_verdict.product_viability,
+                    customer_traction: data.final_verdict.market_potential,
+                    competitive_edge: data.final_verdict.competitive_edge,
+                    team_strength: data.final_verdict.innovation
+                  }} />
                 </div>
 
                 {/* Metrics List */}

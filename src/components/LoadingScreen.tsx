@@ -3,11 +3,26 @@ import React, { useEffect, useState } from 'react';
 import styles from '@/styles/upload.module.scss';
 
 const steps = [
-  { title: 'Document Processing' },
-  { title: 'Startup Profile' },
-  { title: 'Market Analysis' },
-  { title: 'Sentiment Analysis' },
-  { title: 'Report Generation' }
+  {
+    title: 'Document Processing',
+    description: 'Extracting text and data from pitch deck.'
+  },
+  {
+    title: 'Startup Profile',
+    description: 'Analyzing company information and business model.'
+  },
+  {
+    title: 'Market Analysis',
+    description: 'Evaluating market position and competition.'
+  },
+  {
+    title: 'Sentiment Analysis',
+    description: 'Assessing pitch clarity and investor impact.'
+  },
+  {
+    title: 'Report Generation',
+    description: 'Creating comprehensive investment analysis.'
+  }
 ];
 
 interface LoadingScreenProps {
@@ -49,36 +64,45 @@ const LoadingScreen = ({ progress = 0, text = 'Generating' }: LoadingScreenProps
       <img src="/images/backgroundgradiant.png" alt="Gradient Background" className={styles.gradientBackground} />
 
       <div className={styles.innerBox}>
-        <h2 className="text-2xl font-medium text-white mb-10">{text}<span className="animate-pulse">...</span></h2>
+        <h2 className="text-[20px] font-medium text-white mb-1 font-fustat"><span className="animate-pulse">Generating...</span></h2>
 
         <div className={styles.simpleProgress}>
           <div className={styles.progressBar}>
-            <div 
-              className={styles.progressFill} 
-              style={{ 
+            <div
+              className={styles.progressFill}
+              style={{
                 width: `${animatedProgress}%`,
                 transition: 'width 0.3s ease-in-out'
-              }} 
+              }}
             />
           </div>
           <div className={styles.progressText}>{Math.round(animatedProgress)}%</div>
-          
-          <div className={styles.stepsGrid}>
+
+          <div className="grid grid-cols-3 gap-4 place-items-center">
             {steps.map((step, index) => (
-              <div 
-                key={index} 
-                className={`${styles.stepBlock} ${index <= currentStep ? styles.completed : ''}`}
+              <div
+                key={index}
+                className={`${styles.stepBlock} ${index <= currentStep ? styles.completed : ''
+                  } p-4 rounded-lg bg-[#1a1a1a] border border-[#333333] w-full max-w-xs`}
               >
-                <div className={styles.stepCheck}>
-                  {index <= currentStep && '✓'}
+                <div className="flex flex-col items-start w-full">
+                  <div className="flex items-center gap-2  w-full">
+                    <div className={`w-5 h-5 rounded-full flex items-center justify-center ${index <= currentStep ? 'bg-purple' : 'bg-gray-600 opacity-40'}`}>
+                      <span className={`text-xs ${index <= currentStep ? 'text-white' : 'text-gray-400'}`}>✓</span>
+                    </div>
+                    <h3 className={`font-medium font-fustat ${index <= currentStep ? 'text-white' : 'text-gray-400'}`}>{step.title}</h3>
+                  </div>
+                  <div className="pl-7">
+                    <p className="text-sm text-gray-400 text-left w-full break-words">{step.description}</p>
+                  </div>
                 </div>
-                <div className={styles.stepTitle}>{step.title}</div>
               </div>
             ))}
-          </div>
         </div>
+
       </div>
     </div>
+    </div >
   );
 };
 

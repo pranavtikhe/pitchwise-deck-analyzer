@@ -156,7 +156,7 @@ const Index = () => {
             fontWeight: 700,
             fontFamily: "Fustat, sans-serif",
             fontSize: "48px",
-            marginTop: "100px",
+            marginTop: "32px",
           }}
         >
           {isLoading
@@ -194,8 +194,8 @@ const Index = () => {
 
                 <div className={styles.disclaimerContainer}>
                   <div className={styles.requiredIndicator}>
+                    <h2 className="text-[18px] font-bold">Disclaimer</h2>
                     <span className={styles.asterisk}>*</span>
-                    <span className={styles.requiredText}>(required)</span>
                   </div>
                   <div className={styles.disclaimerCheckbox}>
                     <input
@@ -206,9 +206,11 @@ const Index = () => {
                       className={styles.checkbox}
                     />
                     <div className={styles.disclaimerText}>
-                      This website is a platform developed and maintained by Neural Paths(Spider). All information, content, tools, and services provided through this platform are intended solely for use by authorized personnel for official and approved purposes.
-                      The materials and data provided are offered on an "as is" and "as available" basis. No warranties, either express or implied, are made regarding the accuracy, completeness, reliability, or availability of the content on this platform. Use of the site is at your own risk.
-                      Unauthorized access, distribution, modification, or misuse of this website or its data is strictly prohibited and may result in disciplinary action and/or legal proceedings under applicable laws and organizational policies.
+                      <p className="text-muted-foreground text-justify leading-relaxed font-fustat">
+                        This website is a platform developed and maintained by Neural Paths(Spider). All information, content, tools, and services provided through this platform are intended solely for use by authorized personnel for official and approved purposes.
+                        The materials and data provided are offered on an "as is" and "as available" basis. No warranties, either express or implied, are made regarding the accuracy, completeness, reliability, or availability of the content on this platform. Use of the site is at your own risk.
+                        Unauthorized access, distribution, modification, or misuse of this website or its data is strictly prohibited and may result in disciplinary action and/or legal proceedings under applicable laws and organizational policies.
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -226,10 +228,24 @@ const Index = () => {
           )}
 
           {isLoading && (
-            <LoadingScreen
-              text="Analyzing pitch deck..."
-              progress={progress}
-            />
+            <div>
+              <LoadingScreen
+                progress={progress}
+              />
+              <div className={styles.disclaimerContainer}>
+                <div className={styles.disclaimerText}>
+                  <h2 className="text-[18px] font-bold mb-2 text-red-500 font-fustat">Important Notice</h2>
+                  <div className="bg-red-500/10 border border-red-500 rounded-lg p-4">
+                    <p className="text-white text-justify leading-relaxed text-lg font-fustat">
+                      Please stay on the screen. Do not refresh or change screen while analysis is in progress. This process will take a few minutes to complete.
+                    </p>
+                    <p className="text-white text-lg mt-2 font-fustat">
+                      Thank you for patience!
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           )}
 
           {insights && !isLoading && (

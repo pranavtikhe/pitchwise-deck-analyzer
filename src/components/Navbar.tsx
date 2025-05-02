@@ -18,6 +18,7 @@ const Navbar = () => {
     const isPrivacyPage = location.pathname === '/privacy-policy';
     const isResponsibleAIPage = location.pathname === '/responsible-ai';
     const isSpiderPage = location.pathname === '/spider';
+    const isInsightPage = location.pathname.startsWith('/insight/');
     const supabase = getSupabaseClient();
 
     useEffect(() => {
@@ -52,6 +53,8 @@ const Navbar = () => {
             navigate('/spider');
         } else if (isTermsPage || isPrivacyPage || isResponsibleAIPage) {
             navigate('/');
+        } else if (isInsightPage) {
+            navigate('/history');
         }
     };
 
@@ -67,7 +70,7 @@ const Navbar = () => {
     return (
         <nav className={styles.navbar}>
             <div className={styles.container}>
-                {(isHistoryPage || isTermsPage || isPrivacyPage || isResponsibleAIPage) ? (
+                {(isHistoryPage || isTermsPage || isPrivacyPage || isResponsibleAIPage || isInsightPage) ? (
                     <button
                         className={styles.backButton}
                         onClick={handleBack}
